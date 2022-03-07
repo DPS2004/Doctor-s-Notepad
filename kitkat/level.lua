@@ -11,3 +11,9 @@ level:clearevents({
   'ShowStatusSign',
   'TintRows'
 })
+
+
+for i=0,40 do
+print(i)
+print(level:getbm(i))
+end

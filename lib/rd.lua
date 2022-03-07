@@ -32,6 +32,47 @@ function rd.load(filename)
     self:clearevents(eventtypes, true)
   end
   
+  -- convert beatnumber (0 indexed) to bar measure pair (1 indexed)
+  function level:getbm(inbeat)
+    local crotchet = 8
+    local bar = 1
+    local beat = 1
+    local cbeat = 0
+    
+    local remainder = inbeat - math.floor(inbeat)
+    inbeat = math.floor(inbeat)
+    
+    local crotchetevents = {}
+    
+    for eventi,event in ipairs(self.data.events) do
+      if event.type == 'SetCrotchetsPerBar' then
+        table.insert(crotchetevents,event)
+      end
+    end
+    
+    while true do
+      if cbeat == inbeat then
+        break
+      end
+      
+      for eventi,event in ipairs(crotchetevents) do
+        if event.bar == bar and event.beat == beat then
+          crotchet = event.crotchetsPerBar
+        end
+      end
+      
+      beat = beat + 1
+      if beat > crotchet then
+        bar = bar + 1
+        beat = 1
+      end
+      
+      cbeat = cbeat + 1
+    end
+    return bar, beat + remainder
+    
+  end
+  
   return level
 end
 
