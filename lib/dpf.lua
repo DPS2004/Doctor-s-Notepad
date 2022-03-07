@@ -39,5 +39,12 @@ function dpf.savejson(f,w)
   cf:close()
 end
 
+function dpf.saverdlevel(f,w)
+  local cf = io.open(f, "w")
+  local str = json.encode(w)
+  str = string.gsub(str,'"_DN_NULL"','null')
+  cf:write(str)
+  cf:close()
+end
 
 return dpf
