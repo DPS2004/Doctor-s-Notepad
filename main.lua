@@ -33,6 +33,7 @@ end
 null = "_DN_NULL"
 
 function getvalue(self, vname, beat)
+	beat = beat + level.eos
     local matchbeat = 0
     local matchval = nil
     for i, v in ipairs(self.values[vname]) do

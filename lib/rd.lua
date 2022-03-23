@@ -40,15 +40,21 @@ function rd.load(filename)
     -- add fake event, to be turned into a real event upon saving
     function level:addfakeevent(beat, event, params)
         params = params or {}
-        local newevent = {}
-
-        newevent.beat = beat + self.eos
+        local newevent = {}		
 		
+		newevent.beat = beat
         newevent.type = event
+		
         for k, v in pairs(params) do
             newevent[k] = v
         end
-        table.insert(self.fakeevents, newevent)
+		if newevent.duration == 0 and newevent.beat + self.eos ~= 0 then
+			self:makereal(newevent)
+		else
+			newevent.beat = newevent.beat + self.eos
+			table.insert(self.fakeevents, newevent)
+		end
+        
     end
 
     -- create row object from index
@@ -200,7 +206,12 @@ function rd.load(filename)
             y = {{beat = 0, state = 50}},
             sx = {{beat = 0, state = 100}},
             sy = {{beat = 0, state = 100}},
+			px = {{beat = 0, state = 50}},
+            py = {{beat = 0, state = 50}},
             stretch = {{beat = 0, state = true}},
+			xflip = {{beat = 0, state = false}},
+			yflip = {{beat = 0, state = false}},
+			
             --boolean presets
             Sepia = {{beat = 0, state = false}},
             VHS = {{beat = 0, state = false}},
@@ -237,6 +248,23 @@ function rd.load(filename)
             self.level:addfakeevent(beat, "updateroomscale", {room = index, duration = duration, ease = ease})
 			
         end
+		
+		function room:movepx(beat, px, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "px", beat, px)
+            self.level:addfakeevent(beat, "updateroompivot", {room = index, duration = duration, ease = ease})
+        end
+
+        function room:movepy(beat, py, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "py", beat, py)
+            self.level:addfakeevent(beat, "updateroompivot", {room = index, duration = duration, ease = ease})
+			
+        end
+		
+		
 
         function room:move(beat, p, duration, ease)
             duration = duration or 0
@@ -250,14 +278,36 @@ function rd.load(filename)
                     self:movesx(beat, v, duration, ease)
                 elseif k == "sy" then
                     self:movesy(beat, v, duration, ease)
+				elseif k == "px" then
+                    self:movepx(beat, v, duration, ease)
+                elseif k == "py" then
+                    self:movepy(beat, v, duration, ease)
                 end
             end
         end
+		
+		--flip
+		function room:xflip(beat,state)
+			if state == nil then
+				state = not getvalue(self, "xflip", beat)
+			end
+			setvalue(self,'xflip',beat,state)
+			self.level:addfakeevent(beat,'updateroomflip', {room = index})
+		end
+		
+		function room:yflip(beat,state)
+			if state == nil then
+				state = not getvalue(self, "yflip", beat)
+			end
+			setvalue(self,'yflip',beat,state)
+			self.level:addfakeevent(beat,'updateroomflip', {room = index})
+		end
 
         -- change content mode
         function room:stretchmode(beat, state)
             state = state or not getvalue(self, "stretch", beat)
-            self:addfakeevent(0, "updateroommode", {room = index})
+			setvalue(self,'stretch',beat,stretch)
+            self.level:addfakeevent(beat, "updateroommode", {room = index})
         end
 
         -- set theme
@@ -308,9 +358,19 @@ function rd.load(filename)
             self:setpreset(beat, "VHS", state)
         end
 		
-		--flash shorthand
 		function room:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
 			self.level:customflash(beat,index,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
+		end
+		
+		function room:screentile(beat,x,y)
+			self.level:screentile(beat,index,x,y)
+		end
+		
+		function room:screenscroll(beat,x,y)
+			self.level:screenscroll(beat,index,x,y)
+		end
+		function room:pulsecamera(beat,count,frequency,strength)
+			self.level:pulsecamera(beat,index,count,frequency,strength)
 		end
 		
 		--bg
@@ -543,16 +603,66 @@ function rd.load(filename)
 		self:addevent(beat,'CustomFlash', {rooms = self:roomtable(room), background = bg, duration = duration, startColor = startcolor, startOpacity = startopacity, endColor = endcolor, endOpacity = endopacity, ease = ease})
 	end
 	
-	function level:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
+	function level:ontopflash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
 		self:customflash(beat,4,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
 	end
+	
+	--screen tile
+	function level:screentile(beat,room,x,y)
+		local enable = true
+		if x == 1 and y == 1 then
+			enable = false
+		end
+		self:addevent(beat,'SetVFXPreset',{rooms = self:roomtable(room), preset = 'TileN', enable = enable, floatX = x, floatY = y})
+	end
+	
+	function level:ontopscreentile(beat,x,y)
+		self:screentile(beat,4,x,y)
+	end
+	
+	--screen scroll
+	function level:screenscroll(beat,room,x,y)
+		local enable = true
+		if x == 0 and y == 0 then
+			enable = false
+		end
+		self:addevent(beat,'SetVFXPreset',{rooms = self:roomtable(room), preset = 'CustomScreenScroll', enable = enable, floatX = x, floatY = y})
+	end
+	
+	function level:ontopscreenscroll(beat,x,y)
+		self:screenscroll(beat,4,x,y)
+	end
+	
+	--pulse camera
+	function level:pulsecamera(beat,room,count,frequency,strength)
+		frequency = frequency or 1
+		strength = strength or 1
+		self:addevent(beat,'PulseCamera',{rooms = self:roomtable(room), strength = strength, count = count, frequency = frequency})
+	end
+	
+	function level:ontoppulsecamera(beat,count,frequency,strength)
+		self:pulsecamera(beat,4,count,frequency,strength)
+	end
+	
+	
+	
+	
+	--end level
+	function level:finish(beat,delay)
+		delay = delay or 0
+		for i=0,2 do
+			self:addevent(beat+i*delay,'FinishLevel')
+		end
+	end
+	
+	
     -- add an arbitrary event
     function level:addevent(beat, event, params)
         local newevent = {}
 		beat = beat + self.eos
         newevent.bar, newevent.beat = self:getbm(beat)
         newevent.type = event
-
+		params = params or {}
         params.y = params.y or 0
         for k, v in pairs(params) do
             newevent[k] = v
@@ -560,147 +670,177 @@ function rd.load(filename)
 
         table.insert(self.data.events, newevent)
     end
+	
 
 
     -- save level to file, and resolve fake events
+	
+	function level:makereal(v)
+		if v.type == "updatetint" then
+			---------------row movement-----------------------
+			self:addevent(
+				v.beat,
+				"TintRows",
+				{
+					row = v.row,
+					border = getvalue(self.rows[v.row], "border", v.beat),
+					borderColor = getvalue(self.rows[v.row], "bordercolor", v.beat),
+					borderOpacity = getvalue(self.rows[v.row], "borderopacity", v.beat),
+					tint = getvalue(self.rows[v.row], "tint", v.beat),
+					tintColor = getvalue(self.rows[v.row], "tintcolor", v.beat),
+					tintOpacity = getvalue(self.rows[v.row], "tintopacity", v.beat),
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updaterowx" then
+			
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "WholeRow",
+					customPosition = true,
+					rowPosition = {
+						getvalue(self.rows[v.row], "x", v.beat) +
+							getvalue(self.rows[v.row], "room", v.beat) * 852.2727,
+						null
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updaterowy" then
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "WholeRow",
+					customPosition = true,
+					rowPosition = {
+						null,
+						getvalue(self.rows[v.row], "y", v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updaterowrot" then
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "WholeRow",
+					customPosition = true,
+					angle = getvalue(self.rows[v.row], "rot", v.beat),
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updaterowpivot" then
+			
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "WholeRow",
+					customPosition = true,
+					pivot = getvalue(self.rows[v.row], "pivot", v.beat),
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		----------------------room movement----------------
+		elseif v.type == "updateroomx" then
+			self:addevent(
+				v.beat,
+				"MoveRoom",
+				{
+					y = v.room,
+					roomPosition = {
+						getvalue(self.rooms[v.room], "x", v.beat),
+						null
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updateroomy" then
+			self:addevent(
+				v.beat,
+				"MoveRoom",
+				{
+					y = v.room,
+					roomPosition = {
+						null,
+						getvalue(self.rooms[v.room], "y", v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updateroomscale" then -- room scale doesnt support null notation for some reason????????
+			self:addevent(
+				v.beat,
+				"MoveRoom",
+				{
+					y = v.room,
+					scale = {
+						getvalue(self.rooms[v.room], "sx", v.beat),
+						getvalue(self.rooms[v.room], "sy", v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updateroompivot" then -- same with pivot
+			self:addevent(
+				v.beat,
+				"MoveRoom",
+				{
+					y = v.room,
+					pivot = {
+						getvalue(self.rooms[v.room], "px", v.beat),
+						getvalue(self.rooms[v.room], "py", v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updateroommode" then
+			local rmode = "Center"
+			if getvalue(self.rooms[v.room], "stretch", v.beat) then
+				rmode = "AspectFill"
+			end
+			self:addevent(
+				v.beat,
+				"SetRoomContentMode",
+				{
+					y = v.room,
+					mode = rmode
+				}
+			)
+		elseif v.type == "updateroomflip" then
+			self:addevent(
+				v.beat,
+				"FlipScreen",
+				{
+					rooms = self:roomtable(v.room),
+					flipX = getvalue(self.rooms[v.room], "xflip", v.beat),
+					flipY = getvalue(self.rooms[v.room], "yflip", v.beat)
+				}
+			)
+		end
+	end
+	
     function level:save(filename)
 		self.eos = 0
         for i, v in ipairs(self.fakeevents) do
-            if v.type == "updatetint" then
-                ---------------row movement-----------------------
-                self:addevent(
-                    v.beat,
-                    "TintRows",
-                    {
-                        row = v.row,
-                        border = getvalue(level.rows[v.row], "border", v.beat),
-                        borderColor = getvalue(level.rows[v.row], "bordercolor", v.beat),
-                        borderOpacity = getvalue(level.rows[v.row], "borderopacity", v.beat),
-                        tint = getvalue(level.rows[v.row], "tint", v.beat),
-                        tintColor = getvalue(level.rows[v.row], "tintcolor", v.beat),
-                        tintOpacity = getvalue(level.rows[v.row], "tintopacity", v.beat),
-                        duration = v.duration,
-                        ease = v.ease
-                    }
-                )
-            elseif v.type == "updaterowx" then
-                
-                self:addevent(
-                    v.beat,
-                    "MoveRow",
-                    {
-                        row = v.row,
-                        target = "WholeRow",
-                        customPosition = true,
-                        rowPosition = {
-                            getvalue(level.rows[v.row], "x", v.beat) +
-                                getvalue(level.rows[v.row], "room", v.beat) * 852.2727,
-                            null
-                        },
-                        duration = v.duration,
-                        ease = v.ease
-                    }
-                )
-            elseif v.type == "updaterowy" then
-                self:addevent(
-                    v.beat,
-                    "MoveRow",
-                    {
-                        row = v.row,
-                        target = "WholeRow",
-                        customPosition = true,
-                        rowPosition = {
-                            null,
-                            getvalue(level.rows[v.row], "y", v.beat)
-                        },
-                        duration = v.duration,
-                        ease = v.ease
-                    }
-                )
-			elseif v.type == "updaterowrot" then
-                self:addevent(
-                    v.beat,
-                    "MoveRow",
-                    {
-                        row = v.row,
-                        target = "WholeRow",
-                        customPosition = true,
-                        angle = getvalue(level.rows[v.row], "rot", v.beat),
-                        duration = v.duration,
-                        ease = v.ease
-                    }
-                )
-            elseif v.type == "updaterowpivot" then
-                
-                self:addevent(
-                    v.beat,
-                    "MoveRow",
-                    {
-                        row = v.row,
-                        target = "WholeRow",
-                        customPosition = true,
-                        pivot = getvalue(level.rows[v.row], "pivot", v.beat),
-                        duration = v.duration,
-                        ease = v.ease
-                    }
-                )
-			----------------------room movement----------------
-            elseif v.type == "updateroomx" then
-                self:addevent(
-                    v.beat,
-                    "MoveRoom",
-                    {
-                        y = v.room,
-                        roomPosition = {
-                            getvalue(level.rooms[v.room], "x", v.beat),
-                            null
-                        },
-                        duration = v.duration,
-                        ease = v.ease
-                    }
-                )
-            elseif v.type == "updateroomy" then
-                self:addevent(
-                    v.beat,
-                    "MoveRoom",
-                    {
-                        y = v.room,
-                        roomPosition = {
-                            null,
-                            getvalue(level.rooms[v.room], "y", v.beat)
-                        },
-                        duration = v.duration,
-                        ease = v.ease
-                    }
-                )
-            elseif v.type == "updateroomscale" then -- room scale doesnt support null notation for some reason????????
-                self:addevent(
-                    v.beat,
-                    "MoveRoom",
-                    {
-                        y = v.room,
-                        scale = {
-                            getvalue(level.rooms[v.room], "sx", v.beat),
-                            getvalue(level.rooms[v.room], "sy", v.beat)
-                        },
-                        duration = v.duration,
-                        ease = v.ease
-                    }
-                )
-            elseif v.type == "updateroommode" then
-                local rmode = "Center"
-                if getvalue(level.rooms[v.room], "stretch", v.beat) then
-                    rmode = "AspectFill"
-                end
-                self:addevent(
-                    v.beat,
-                    "SetRoomContentMode",
-                    {
-                        y = v.room,
-                        mode = rmode
-                    }
-                )
-            end
+            self:makereal(v)
         end
 
         for i, v in ipairs(self.decorations) do
