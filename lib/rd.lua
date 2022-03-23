@@ -43,6 +43,7 @@ function rd.load(filename)
         local newevent = {}
 
         newevent.beat = beat + self.eos
+		
         newevent.type = event
         for k, v in pairs(params) do
             newevent[k] = v
@@ -234,6 +235,7 @@ function rd.load(filename)
             ease = ease or "Linear"
             setvalue(self, "sy", beat, sy)
             self.level:addfakeevent(beat, "updateroomscale", {room = index, duration = duration, ease = ease})
+			
         end
 
         function room:move(beat, p, duration, ease)
@@ -305,7 +307,39 @@ function rd.load(filename)
         function room:vhs(beat, state)
             self:setpreset(beat, "VHS", state)
         end
-
+		
+		--flash shorthand
+		function room:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
+			self.level:customflash(beat,index,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
+		end
+		
+		--bg
+		
+		function room:setbg(beat,filename,mode,sx,sy,color)
+			if sx or sy then
+				mode = 'Tiled'
+			end
+			mode = mode or 'ScaleToFill'
+			sx = sx or 0
+			sy = sy or 0
+			color = color or 'ffffffff'
+			self.level:addevent(
+                beat,
+                "SetBackgroundColor",
+                {rooms = self.level:roomtable(index),
+				backgroundType = 'Image',
+				contentMode = mode,
+				color = color,
+				image = {filename},
+				fps = 30,
+				filter = 'NearestNeighbor',
+				scrollX = sx,
+				scrollY = sy
+				}
+            )
+		end
+		
+		
         -- new decoration
         function room:newdecoration(filename, depth)
             filename = filename or ""
@@ -500,10 +534,18 @@ function rd.load(filename)
 
 	-- add a custom flash event
 	
-	function level:customflash(beat,room)
-	
+	function level:customflash(beat,room,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
+		endcolor = endcolor or startcolor
+		endopacity = endopacity or startopacity
+		duration = duration or 0
+		bg = bg or false
+		ease = ease or 'Linear'
+		self:addevent(beat,'CustomFlash', {rooms = self:roomtable(room), background = bg, duration = duration, startColor = startcolor, startOpacity = startopacity, endColor = endcolor, endOpacity = endopacity, ease = ease})
 	end
-
+	
+	function level:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
+		self:customflash(beat,4,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
+	end
     -- add an arbitrary event
     function level:addevent(beat, event, params)
         local newevent = {}
@@ -542,8 +584,7 @@ function rd.load(filename)
                     }
                 )
             elseif v.type == "updaterowx" then
-                print("row: " .. v.row)
-                print("final value: " .. getvalue(level.rows[v.row], "room", v.beat))
+                
                 self:addevent(
                     v.beat,
                     "MoveRow",
@@ -560,7 +601,6 @@ function rd.load(filename)
                         ease = v.ease
                     }
                 )
-                print("next!")
             elseif v.type == "updaterowy" then
                 self:addevent(
                     v.beat,
@@ -577,7 +617,6 @@ function rd.load(filename)
                         ease = v.ease
                     }
                 )
-                print("next!")
 			elseif v.type == "updaterowrot" then
                 self:addevent(
                     v.beat,
@@ -591,7 +630,6 @@ function rd.load(filename)
                         ease = v.ease
                     }
                 )
-                print("next!")
             elseif v.type == "updaterowpivot" then
                 
                 self:addevent(
@@ -606,7 +644,6 @@ function rd.load(filename)
                         ease = v.ease
                     }
                 )
-                print("next!")
 			----------------------room movement----------------
             elseif v.type == "updateroomx" then
                 self:addevent(

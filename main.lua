@@ -20,6 +20,7 @@ function tset(t, f, val)
 end
 
 function setvalue(self, vname, beat, state)
+	beat = beat + level.eos
     self.values[vname] = self.values[vname] or {}
     for i, v in ipairs(self.values[vname]) do
         if v.beat == beat then
@@ -32,12 +33,9 @@ end
 null = "_DN_NULL"
 
 function getvalue(self, vname, beat)
-    print("vname: " .. vname)
     local matchbeat = 0
     local matchval = nil
     for i, v in ipairs(self.values[vname]) do
-        print("beat: " .. v.beat)
-        print("value: " .. tostring(v.state))
         if v.beat >= matchbeat and v.beat <= beat then
             matchbeat = v.beat
             matchval = v.state
