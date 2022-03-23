@@ -3,69 +3,71 @@
 
 -- helpful functions
 
-function tget(t,f)
-  for i,v in ipairs(t) do
-    if f(v) then return v end
-  end
+function tget(t, f)
+    for i, v in ipairs(t) do
+        if f(v) then
+            return v
+        end
+    end
 end
 
-function tset(t,f,val)
-  for i,v in ipairs(t) do
-    if f(v) then v = val end
-  end
+function tset(t, f, val)
+    for i, v in ipairs(t) do
+        if f(v) then
+            v = val
+        end
+    end
 end
 
 function setvalue(self, vname, beat, state)
-  self.values[vname] = self.values[vname] or {}
-  for i,v in ipairs(self.values[vname]) do
-    if v.beat == beat then
-      table.remove(self.values[vname],i)
+    self.values[vname] = self.values[vname] or {}
+    for i, v in ipairs(self.values[vname]) do
+        if v.beat == beat then
+            table.remove(self.values[vname], i)
+        end
     end
-  end
-  table.insert(self.values[vname], {beat = beat, state = state})
+    table.insert(self.values[vname], {beat = beat, state = state})
 end
 
 null = "_DN_NULL"
 
 function getvalue(self, vname, beat)
-  print('vname: '..vname)
-  local matchbeat = 0
-  local matchval = nil
-  for i,v in ipairs(self.values[vname]) do
-    print('beat: ' ..v.beat)
-    print('value: ' .. tostring(v.state))
-    if v.beat >= matchbeat and v.beat <= beat then
-      matchbeat = v.beat
-      matchval = v.state
+    print("vname: " .. vname)
+    local matchbeat = 0
+    local matchval = nil
+    for i, v in ipairs(self.values[vname]) do
+        print("beat: " .. v.beat)
+        print("value: " .. tostring(v.state))
+        if v.beat >= matchbeat and v.beat <= beat then
+            matchbeat = v.beat
+            matchval = v.state
+        end
     end
-  end
-  return matchval
+    return matchval
 end
 
 -- Load Libraries
-json = require 'lib/json'  -- json parser
+json = require "lib/json" -- json parser
 
-dpf = require 'lib/dpf'    -- functions for handling json files
+dpf = require "lib/dpf" -- functions for handling json files
 
-logger = require 'lib/log' -- logging
+logger = require "lib/log" -- logging
 log = logger.log
 
-rd = require 'lib/rd'      -- main doctor's notepad library  
+rd = require "lib/rd" -- main doctor's notepad library
 
-log('Doctor\'s Notepad')
-
-
+log("Doctor's Notepad")
 
 inlevel = arg[1]
 
 if not inlevel then
-  error('Usage: main.lua [level folder]')
+    error("Usage: main.lua [level folder]")
 end
 
-level = rd.load(inlevel .. '/level.rdlevel')
+level = rd.load(inlevel .. "/level.rdlevel")
 level:init()
-script = assert(loadfile(inlevel .. '/level.lua'))
+script = assert(loadfile(inlevel .. "/level.lua"))
 
 script()
 
-level:save(inlevel .. '/out.rdlevel')
+level:save(inlevel .. "/out.rdlevel")

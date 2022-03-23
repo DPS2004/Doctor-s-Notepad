@@ -23,7 +23,7 @@ level.rows[6]:setvisibleatstart(false)
 
 -- room 0
 mainroom = level.rooms[0]
-mainroom:settheme(0,'Space')
+mainroom:settheme(0,'Kaleidoscope')
 mainroom:move(0,{x=100,y=50,sx=0,sy=100})
 
 -- room 1
@@ -31,6 +31,7 @@ introroom = level.rooms[1]
 introroom:settheme(0,'InsomniacDay')
 introroom:sepia(0)
 introroom:vhs(0)
+introroom:abberation(0,true,25)
 
 introroom:move(0,{x=50,y=50,sx=100,sy=100})
 
