@@ -12,7 +12,7 @@ function rd.load(filename)
 
     level.fakeevents = {}
 
-    function level:init()
+    function level:init(beat)
         for i, v in ipairs(self.data.rows) do
             local oldroom = v.rooms[1]
 
@@ -20,16 +20,21 @@ function rd.load(filename)
             local newrow = self:getrow(v.row)
 
             setvalue(newrow, "room", 0, oldroom)
-            self:addfakeevent(0, "updaterowx", {row = v.row, duration = 0, ease = "Linear"})
-            self:addfakeevent(0, "updaterowy", {row = v.row, duration = 0, ease = "Linear"})
-            self:addfakeevent(0, "updaterowpivot", {row = v.row, duration = 0, ease = "Linear"})
+			if not beat then
+				self:addfakeevent(0, "updaterowx", {row = v.row, duration = 0, ease = "Linear"})
+				self:addfakeevent(0, "updaterowy", {row = v.row, duration = 0, ease = "Linear"})
+				self:addfakeevent(0, "updaterowpivot", {row = v.row, duration = 0, ease = "Linear"})
+			end
         end
-        for i = 0, 3 do
+        for i = 0, 4 do
             local newroom = self:getroom(i)
-            self:addfakeevent(0, "updateroomx", {room = i, duration = 0, ease = "Linear"})
-            self:addfakeevent(0, "updateroomy", {room = i, duration = 0, ease = "Linear"})
-            self:addfakeevent(0, "updateroomscale", {room = i, duration = 0, ease = "Linear"})
-            self:addfakeevent(0, "updateroommode", {room = i, duration = 0, ease = "Linear"})
+			if (not beat) and (i ~= 4) then
+			
+				self:addfakeevent(0, "updateroomx", {room = i, duration = 0, ease = "Linear"})
+				self:addfakeevent(0, "updateroomy", {room = i, duration = 0, ease = "Linear"})
+				self:addfakeevent(0, "updateroomscale", {room = i, duration = 0, ease = "Linear"})
+				self:addfakeevent(0, "updateroommode", {room = i, duration = 0, ease = "Linear"})
+			end
         end
     end
 
@@ -211,15 +216,21 @@ function rd.load(filename)
             stretch = {{beat = 0, state = true}},
 			xflip = {{beat = 0, state = false}},
 			yflip = {{beat = 0, state = false}},
-			
+			--camera
+			camx = {{beat = 0, state = 50}},
+			camy = {{beat = 0, state = 50}},
+			camzoom = {{beat = 0, state = 100}},
+			camrot = {{beat = 0, state = 0}},
             --boolean presets
             Sepia = {{beat = 0, state = false}},
             VHS = {{beat = 0, state = false}},
             --other presets
             abberation = {{beat = 0, state = false}},
-            abberationintensity = {{beat = 0, state = 0}}
+            abberationintensity = {{beat = 0, state = 0}},
+			grain = {{beat = 0, state = false}},
+            grainintensity = {{beat = 0, state = 0}}
         }
-
+		--move rooms
         function room:movex(beat, x, duration, ease)
             duration = duration or 0
             ease = ease or "Linear"
@@ -286,6 +297,51 @@ function rd.load(filename)
             end
         end
 		
+		--move cams
+		function room:camx(beat, x, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "camx", beat, x)
+            self.level:addfakeevent(beat, "updatecamx", {room = index, duration = duration, ease = ease})
+        end
+
+        function room:camy(beat, y, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "camy", beat, y)
+            self.level:addfakeevent(beat, "updatecamy", {room = index, duration = duration, ease = ease})
+        end
+
+        function room:camzoom(beat, z, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "camzoom", beat, z)
+            self.level:addfakeevent(beat, "updatecamzoom", {room = index, duration = duration, ease = ease})
+        end
+		function room:camrot(beat, z, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "camrot", beat, z)
+            self.level:addfakeevent(beat, "updatecamrot", {room = index, duration = duration, ease = ease})
+        end
+		
+		function room:cam(beat, p, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            for k, v in pairs(p) do
+                if k == "x" then
+                    self:camx(beat, v, duration, ease)
+                elseif k == "y" then
+                    self:camy(beat, v, duration, ease)
+                elseif k == "zoom" or k == "z" then
+                    self:camzoom(beat, v, duration, ease)
+                elseif k == "rot" or k == 'r' then
+                    self:camrot(beat, v, duration, ease)
+                end
+            end
+        end
+		
+		
 		--flip
 		function room:xflip(beat,state)
 			if state == nil then
@@ -331,6 +387,29 @@ function rd.load(filename)
                 {
                     rooms = self.level:roomtable(index),
                     preset = "Aberration",
+                    enable = state,
+                    intensity = intensity,
+                    duration = duration,
+                    ease = ease
+                }
+            )
+        end
+		-- grain
+		function room:grain(beat, state, intensity, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+
+            state = state or not getvalue(self, "grain", beat)
+            intensity = intensity or getvalue(self, "grainintensity", beat)
+
+            setvalue(self, "grain", beat, state)
+            setvalue(self, "grainintensity", beat, intensity)
+            self.level:addevent(
+                beat,
+                "SetVFXPreset",
+                {
+                    rooms = self.level:roomtable(index),
+                    preset = "Grain",
                     enable = state,
                     intensity = intensity,
                     duration = duration,
@@ -487,6 +566,16 @@ function rd.load(filename)
             }
         )
     end
+	
+	--reorder rooms (find a cleaner solution later)
+	function level:reorderrooms(beat,r1,r2,r3,r4)
+		beat = beat or 0
+		self:addevent(
+			beat,
+			'ReorderRooms',
+			{ order = {r1,r2,r3,r4}}
+		)
+	end
 
     -- clear or keep every event that has the same type as any event in eventtypes
     function level:clearevents(eventtypes, keeplisted)
@@ -834,14 +923,80 @@ function rd.load(filename)
 					flipY = getvalue(self.rooms[v.room], "yflip", v.beat)
 				}
 			)
+		------------------------cameras
+		elseif v.type == "updatecamx" then
+			self:addevent(
+				v.beat,
+				"MoveCamera",
+				{
+					rooms = self:roomtable(v.room),
+					cameraPosition = {
+						getvalue(self.rooms[v.room], "camx", v.beat),
+						null
+						
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updatecamy" then
+			self:addevent(
+				v.beat,
+				"MoveCamera",
+				{
+					rooms = self:roomtable(v.room),
+					cameraPosition = {
+						null,
+						getvalue(self.rooms[v.room], "camy", v.beat)
+						
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updatecamzoom" then
+			self:addevent(
+				v.beat,
+				"MoveCamera",
+				{
+					rooms = self:roomtable(v.room),
+					zoom = getvalue(self.rooms[v.room], "camzoom", v.beat),
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updatecamrot" then
+			self:addevent(
+				v.beat,
+				"MoveCamera",
+				{
+					rooms = self:roomtable(v.room),
+					angle = getvalue(self.rooms[v.room], "camrot", v.beat),
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		
 		end
 	end
 	
-    function level:save(filename)
+	function level:push(beat)
 		self.eos = 0
         for i, v in ipairs(self.fakeevents) do
             self:makereal(v)
         end
+		
+		if beat then
+			self.fakeevents = {}
+			self.rows = {}
+			self.rooms = {}
+			self:init(beat)
+		end
+	end
+	
+    function level:save(filename)
+		
+		self:push()
 
         for i, v in ipairs(self.decorations) do
             v:save()
