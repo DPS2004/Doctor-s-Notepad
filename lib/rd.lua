@@ -82,6 +82,8 @@ function rd.load(filename)
             room = {{beat = 0, state = 0}},
             x = {{beat = 0, state = 50}},
             y = {{beat = 0, state = 50}},
+            sx = {{beat = 0, state = 100}},
+            sy = {{beat = 0, state = 100}},
             pivot = {{beat = 0, state = 0.5}},
             rot = {{beat = 0, state = 0}},
             --tint row
@@ -113,6 +115,19 @@ function rd.load(filename)
             setvalue(self, "y", beat, y)
             self.level:addfakeevent(beat, "updaterowy", {row = index, duration = duration, ease = ease})
         end
+		function row:movesx(beat, x, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "sx", beat, x)
+            self.level:addfakeevent(beat, "updaterowsx", {row = index, duration = duration, ease = ease})
+        end
+
+        function row:movesy(beat, y, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "sy", beat, y)
+            self.level:addfakeevent(beat, "updaterowsy", {row = index, duration = duration, ease = ease})
+        end
 		function row:rotate(beat, rot, duration, ease)
             duration = duration or 0
             ease = ease or "Linear"
@@ -135,6 +150,10 @@ function rd.load(filename)
                     self:movex(beat, v, duration, ease)
                 elseif k == "y" then
                     self:movey(beat, v, duration, ease)
+				elseif k == "sx" then
+                    self:movesx(beat, v, duration, ease)
+				elseif k == "sy" then
+                    self:movesy(beat, v, duration, ease)
                 elseif k == "pivot" then
                     self:movepivot(beat, v, duration, ease)
 				elseif k == "rotate" or k == "rot" then
@@ -228,7 +247,7 @@ function rd.load(filename)
             abberation = {{beat = 0, state = false}},
             abberationintensity = {{beat = 0, state = 0}},
 			grain = {{beat = 0, state = false}},
-            grainintensity = {{beat = 0, state = 0}}
+            grainintensity = {{beat = 0, state = 100}}
         }
 		--move rooms
         function room:movex(beat, x, duration, ease)
@@ -531,8 +550,9 @@ function rd.load(filename)
 
     --custom methods
 
-    function level:rdcode(beat, code)
+    function level:rdcode(beat, code,extime)
         beat = beat or 0
+		extime = extime or "OnBar"
         self:addevent(beat, "CallCustomMethod", {methodName = code, executionTime = "OnBar", sortOffset = 0})
     end
 	
