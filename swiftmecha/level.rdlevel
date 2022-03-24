@@ -59,6 +59,7 @@
 		{ "bar": 1, "beat": 1, "y": 0, "type": "CallCustomMethod", "methodName": "", "executionTime": "OnPrebar", "sortOffset": 0 },
 		{ "bar": 8, "beat": 7, "y": 0, "type": "SayReadyGetSetGo", "phraseToSay": "SayGetSetGo", "voiceSource": "IanExcited", "tick": 1, "volume": 100 },
 		{ "bar": 9, "beat": 1, "y": 0, "type": "AddOneshotBeat", "row": 0, "pulseType": "Wave", "tick": 1 },
+		{ "bar": 9, "beat": 1, "y": 0, "type": "SetTheme", "rooms": [0, 1, 2], "preset": "NeonMuseum" },
 		{ "bar": 9, "beat": 1.75, "y": 0, "type": "AddOneshotBeat", "row": 0, "pulseType": "Wave", "tick": 0.25 },
 		{ "bar": 9, "beat": 2.5, "y": 1, "type": "AddOneshotBeat", "row": 1, "pulseType": "Wave", "tick": 1.5 },
 		{ "bar": 9, "beat": 3, "y": 1, "type": "AddOneshotBeat", "row": 1, "pulseType": "Wave", "tick": 1 },
