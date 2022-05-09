@@ -1,0 +1,63 @@
+﻿{
+	"settings":
+	{
+		"version": 49, 
+		"artist": "Various", 
+		"song": "Rand()wich", 
+		"specialArtistType": "None", 
+		"artistPermission": "", 
+		"artistLinks": "", 
+		"author": "DPS2004, sandwich", 
+		"difficulty": "Medium", 
+		"seizureWarning": false, 
+		"previewImage": "", 
+		"syringeIcon": "", 
+		"previewSong": "", 
+		"previewSongStartTime": 0, 
+		"previewSongDuration": 10, 
+		"songNameHue": 0.68, 
+		"description": "the world's worst community remix", 
+		"tags": "", 
+		"separate2PLevelFilename": "", 
+		"canBePlayedOn": "OnePlayerOnly", 
+		"firstBeatBehavior": "RunNormally", 
+		"multiplayerAppearance": "HorizontalStrips", 
+		"levelVolume": 1, 
+		"rankMaxMistakes": [20, 15, 10, 5], 
+
+		"rankDescription":
+		[
+			"Better call 911, now!",
+			"Ugh, you can do better",
+			"Not bad I guess...",
+			"We make a good team!",
+			"You are really good!",
+			"Wow! That's awesome!!"
+		]
+	},
+	"rows":
+	[
+		{ "character": "Samurai", "rowType": "Oneshot", "row": 0, "rooms": [0], "player": "P1", "hideAtStart": true, "pulseSound": "Kick", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+	],
+	"decorations":
+	[
+	],
+	"events":
+	[
+		{ "bar": 1, "beat": 1, "y": 2, "type": "SetBeatsPerMinute", "beatsPerMinute": 200 },
+		{ "bar": 1, "beat": 1, "y": 0, "type": "CallCustomMethod", "methodName": "i1 = Rand(3)", "executionTime": "OnBar", "sortOffset": 0 },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "CallCustomMethod", "methodName": "i1 = i1 * 2", "executionTime": "OnBar", "sortOffset": 0 },
+		{ "bar": 1, "beat": 1, "y": 2, "type": "CallCustomMethod", "methodName": "i1 = i1 - 1", "executionTime": "OnBar", "sortOffset": 0 },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "SetCrotchetsPerBar", "crotchetsPerBar": 4, "visualBeatMultiplier": 1 },
+		{ "bar": 1, "beat": 2, "y": 3, "type": "CallCustomMethod", "methodName": "SetNextBar(i1)", "executionTime": "OnBar", "sortOffset": 0 },
+		{ "bar": 1, "beat": 3, "y": 0, "type": "AddOneshotBeat", "row": 0, "pulseType": "Wave", "loops": 14, "interval": 2, "tick": 1 },
+		{ "bar": 2, "beat": 1, "y": 0, "type": "SetCrotchetsPerBar", "crotchetsPerBar": 8, "visualBeatMultiplier": 1 },
+		{ "bar": 2, "beat": 4, "y": 0, "type": "CustomFlash", "rooms": [4], "background": false, "duration": 2, "startColor": "ffffff", "startOpacity": 100, "endColor": "ffffff", "endOpacity": 0, "ease": "Linear" },
+		{ "bar": 2, "beat": 4, "y": 1, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
+		{ "bar": 4, "beat": 7.5, "y": 0, "type": "SayReadyGetSetGo", "phraseToSay": "JustSayAnd", "voiceSource": "Nurse", "tick": 1, "volume": 100 },
+		{ "bar": 4, "beat": 8, "y": 1, "type": "SayReadyGetSetGo", "phraseToSay": "JustSayStop", "voiceSource": "Nurse", "tick": 1, "volume": 100 },
+	],
+	"conditionals":
+	[
+	]
+}

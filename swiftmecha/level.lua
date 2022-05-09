@@ -109,9 +109,9 @@ end
 
 lastangle = {0,0,0,0,0,0,0,0,0,0,0,0}
 for beat = 64,128,1/framesperbeat do
-	r.x = r.x + 12/framesperbeat
+	--r.x = r.x + 12/framesperbeat
 	r.y = r.y + 12/framesperbeat
-	r.z = r.z + 12/framesperbeat
+	--r.z = r.z + 12/framesperbeat
 	
 	
 	if userooms then
@@ -136,11 +136,11 @@ for beat = 64,128,1/framesperbeat do
 				ease = 'Linear'
 			})
 		end
-		if r.x > 45 and (not reordered) then
+		if r.y > 45 and (not reordered) then
 			level:reorderrooms(beat,1,2,0,3)
 			reordered = true
 		end
-		if r.x < 45 and reordered then
+		if r.y < 45 and reordered then
 			level:reorderrooms(beat,0,1,2,3)
 			reordered = false
 		end

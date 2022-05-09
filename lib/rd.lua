@@ -9,6 +9,14 @@ function rd.load(filename)
     level.decorations = {}
     level.decoid = 0
     level.eos = 0
+	
+	level.eventy = {}
+	level.ceventy = -1
+	
+	level.eventyblacklist = {
+		MoveRoom=true, 
+		SetRoomContentMode=true
+	}
 
     level.fakeevents = {}
 
@@ -86,6 +94,11 @@ function rd.load(filename)
             sy = {{beat = 0, state = 100}},
             pivot = {{beat = 0, state = 0.5}},
             rot = {{beat = 0, state = 0}},
+			
+            cx = {{beat = 0, state = 0}},
+            cy = {{beat = 0, state = 0}},
+            cr = {{beat = 0, state = 0}},
+			
             --tint row
             border = {{beat = 0, state = "None"}},
             bordercolor = {{beat = 0, state = "000000"}},
@@ -115,6 +128,7 @@ function rd.load(filename)
             setvalue(self, "y", beat, y)
             self.level:addfakeevent(beat, "updaterowy", {row = index, duration = duration, ease = ease})
         end
+		
 		function row:movesx(beat, x, duration, ease)
             duration = duration or 0
             ease = ease or "Linear"
@@ -141,6 +155,28 @@ function rd.load(filename)
             setvalue(self, "pivot", beat, pivot)
             self.level:addfakeevent(beat, "updaterowpivot", {row = index, duration = duration, ease = ease})
         end
+		
+		
+		function row:movecx(beat, x, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "cx", beat, x)
+            self.level:addfakeevent(beat, "updaterowcx", {row = index, duration = duration, ease = ease})
+        end
+
+        function row:movecy(beat, y, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "cy", beat, y)
+            self.level:addfakeevent(beat, "updaterowcy", {row = index, duration = duration, ease = ease})
+        end
+		function row:crotate(beat, rot, duration, ease)
+            duration = duration or 0
+            ease = ease or "Linear"
+            setvalue(self, "crot", beat, rot)
+            self.level:addfakeevent(beat, "updaterowcrot", {row = index, duration = duration, ease = ease})
+        end
+		
 
         function row:move(beat, p, duration, ease)
             duration = duration or 0
@@ -158,9 +194,36 @@ function rd.load(filename)
                     self:movepivot(beat, v, duration, ease)
 				elseif k == "rotate" or k == "rot" then
                     self:rotate(beat, v, duration, ease)
+                elseif k == "cx" then
+                    self:movecx(beat, v, duration, ease)
+				elseif k == "cy" or k == "rot" then
+                    self:movecy(beat, v, duration, ease)
+				elseif k == "crotate" or k == "crot" then
+                    self:crotate(beat, v, duration, ease)
                 end
             end
         end
+		
+		
+		
+		
+		
+		
+		--expressions
+		
+		
+		function row:playexpression(beat,expression)
+			beat = beat or 0
+			expression = expression or 'neutral'
+			self.level:addevent(beat, "PlayExpression", {row = index, expression = expression, replace = false})
+		end
+		
+		function row:swapexpression(beat,target,expression)
+			beat = beat or 0
+			target = target or 'neutral'
+			expression = expression or 'neutral'
+			self.level:addevent(beat, "PlayExpression", {row = index, target = target, expression = expression, replace = true})
+		end
 
         -- set hideAtStart
         function row:setvisibleatstart(vis)
@@ -321,14 +384,14 @@ function rd.load(filename)
             duration = duration or 0
             ease = ease or "Linear"
             setvalue(self, "camx", beat, x)
-            self.level:addfakeevent(beat, "updatecamx", {room = index, duration = duration, ease = ease})
+            self.level:addfakeevent(beat, "updatecamxy", {room = index, duration = duration, ease = ease})
         end
 
         function room:camy(beat, y, duration, ease)
             duration = duration or 0
             ease = ease or "Linear"
             setvalue(self, "camy", beat, y)
-            self.level:addfakeevent(beat, "updatecamy", {room = index, duration = duration, ease = ease})
+            self.level:addfakeevent(beat, "updatecamxy", {room = index, duration = duration, ease = ease})
         end
 
         function room:camzoom(beat, z, duration, ease)
@@ -772,7 +835,17 @@ function rd.load(filename)
         newevent.bar, newevent.beat = self:getbm(beat)
         newevent.type = event
 		params = params or {}
-        params.y = params.y or 0
+        if not params.y then
+			if not self.eventyblacklist[event] then
+				if self.eventy[event] then
+					params.y = self.eventy[event]
+				else
+					self.ceventy = (self.ceventy + 1)%4
+					self.eventy[event] = self.ceventy
+					params.y = self.ceventy
+				end
+			end
+		end
         for k, v in pairs(params) do
             newevent[k] = v
         end
@@ -863,6 +936,54 @@ function rd.load(filename)
 					ease = v.ease
 				}
 			)
+		
+		elseif v.type == "updaterowcx" then
+			
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Character",
+					customPosition = true,
+					rowPosition = {
+						getvalue(self.rows[v.row], "cx", v.beat),
+						null
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updaterowcy" then
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Character",
+					customPosition = true,
+					rowPosition = {
+						null,
+						getvalue(self.rows[v.row], "cy", v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		elseif v.type == "updaterowcrot" then
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Character",
+					customPosition = true,
+					angle = getvalue(self.rows[v.row], "crot", v.beat),
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		
 		----------------------room movement----------------
 		elseif v.type == "updateroomx" then
 			self:addevent(
@@ -944,7 +1065,7 @@ function rd.load(filename)
 				}
 			)
 		------------------------cameras
-		elseif v.type == "updatecamx" then
+		elseif v.type == "updatecamxy" then
 			self:addevent(
 				v.beat,
 				"MoveCamera",
@@ -952,21 +1073,6 @@ function rd.load(filename)
 					rooms = self:roomtable(v.room),
 					cameraPosition = {
 						getvalue(self.rooms[v.room], "camx", v.beat),
-						null
-						
-					},
-					duration = v.duration,
-					ease = v.ease
-				}
-			)
-		elseif v.type == "updatecamy" then
-			self:addevent(
-				v.beat,
-				"MoveCamera",
-				{
-					rooms = self:roomtable(v.room),
-					cameraPosition = {
-						null,
 						getvalue(self.rooms[v.room], "camy", v.beat)
 						
 					},
