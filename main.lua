@@ -1,6 +1,15 @@
 -- Doctor's Notepad
 -- A project by DPS2004
 
+--extensions to load
+
+
+extensions = {
+	'core',
+	'row',
+	'room'
+}
+
 -- helpful functions
 
 function tget(t, f)
@@ -51,6 +60,9 @@ json = require "lib/json" -- json parser
 dpf = require "lib/dpf" -- functions for handling json files
 
 logger = require "lib/log" -- logging
+
+deeper = require "lib/deeper"
+
 log = logger.log
 
 rd = require "lib/rd" -- main doctor's notepad library
@@ -63,7 +75,7 @@ if not inlevel then
     error("Usage: main.lua [level folder]")
 end
 
-level = rd.load(inlevel .. "/level.rdlevel")
+level = rd.load(inlevel .. "/level.rdlevel",extensions)
 level:init()
 script = assert(loadfile(inlevel .. "/level.lua"))
 
