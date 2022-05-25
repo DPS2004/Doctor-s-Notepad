@@ -389,6 +389,26 @@ local extension = function(_level)
 			)
 		
 		end)
+		
+		
+		
+		--add event type condensers
+		
+		level:condenser('MoveRow',function(self,elist)
+			local condensed = {}
+			local groups = self:getcondensable(elist,{
+				'row',
+				'target',
+				'duration',
+				'ease'
+			})
+			for i,v in ipairs(groups) do
+				
+				table.insert(condensed,self:mergegroup(v))
+			end
+			print('condensed to '.. #condensed[1])
+			return condensed
+		end)
 	
 	end)
 end

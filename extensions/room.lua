@@ -566,7 +566,22 @@ local extension = function(_level)
 				}
 			)
 		end)
-	
+		
+		--add event type condensers
+		
+		level:condenser('MoveRoom',function(self,elist)
+			local condensed = {}
+			local groups = self:getcondensable(elist,{
+				'y',
+				'duration',
+				'ease'
+			})
+			for i,v in ipairs(groups) do
+				table.insert(condensed,self:mergegroup(v))
+			end
+			return condensed
+		end)
+		
 	end)
 end
 
