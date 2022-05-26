@@ -335,9 +335,10 @@ local extension = function(_level)
 		for i, v in ipairs(level.data.rows) do
             local oldroom = v.rooms[1]
 
-            v.rooms = level:roomtable(0)
+            --v.rooms = level:roomtable(0)
             local newrow = level:getrow(v.row)
-
+			newrow.nativeroom = oldroom
+			
             setvalue(newrow, "room", 0, oldroom)
 			if not beat then
 				level:addfakeevent(0, "updaterowx", {row = v.row, duration = 0, ease = "Linear"})
@@ -377,7 +378,7 @@ local extension = function(_level)
 					customPosition = true,
 					rowPosition = {
 						getvalue(self.rows[v.row], "x", v.beat) +
-							getvalue(self.rows[v.row], "room", v.beat) * 852.2727,
+							(getvalue(self.rows[v.row], "room", v.beat) - self.rows[v.row].nativeroom) * 852.2727,
 						null
 					},
 					duration = v.duration,

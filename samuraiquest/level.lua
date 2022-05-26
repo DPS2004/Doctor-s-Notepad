@@ -3,6 +3,8 @@
 
 level:setuprooms()
 
+level:reorderrooms(0,3,0,1,2)
+
 -- set row visibility
 level.rows[1]:setvisibleatstart(false)
 level.rows[2]:setvisibleatstart(false)
@@ -13,6 +15,7 @@ level.rows[0]:showchar(1)
 clschick = level.rows[4]
 
 clschick:setvisibleatstart(false)
+clschick:move(0,{x=199,y=90,pivot=0})
 
 ontop = level.rooms[4]
 
@@ -102,4 +105,6 @@ newroom(function(room,curbeat)
 end)
 newroom(function(room,curbeat)
 	room:settheme(curbeat,'Basement')
+	clschick:showchar(curbeat)
+	clschick:move(curbeat,{x=-101},48,'linear')
 end)
