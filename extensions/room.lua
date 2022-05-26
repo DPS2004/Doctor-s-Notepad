@@ -22,6 +22,9 @@ local extension = function(_level)
 				stretch = {{beat = 0, state = true}},
 				xflip = {{beat = 0, state = false}},
 				yflip = {{beat = 0, state = false}},
+				
+				
+				handvis = {{beat = 0, state = false}},
 				--camera
 				camx = {{beat = 0, state = 50}},
 				camy = {{beat = 0, state = 50}},
@@ -30,6 +33,7 @@ local extension = function(_level)
 				--boolean presets
 				Sepia = {{beat = 0, state = false}},
 				VHS = {{beat = 0, state = false}},
+				WavyRows = {{beat = 0, state = false}},
 				--other presets
 				abberation = {{beat = 0, state = false}},
 				abberationintensity = {{beat = 0, state = 0}},
@@ -242,6 +246,9 @@ local extension = function(_level)
 			function room:vhs(beat, state)
 				self:setpreset(beat, "VHS", state)
 			end
+			function room:wavyrows(beat, state)
+				self:setpreset(beat, "WavyRows", state)
+			end
 			
 			function room:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
 				self.level:customflash(beat,index,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
@@ -257,6 +264,39 @@ local extension = function(_level)
 			function room:pulsecamera(beat,count,frequency,strength)
 				self.level:pulsecamera(beat,index,count,frequency,strength)
 			end
+			
+			
+			--hands
+			function room:showhand(beat,hand,instant,align)
+				hand = hand or 'Right'
+				instant = instant or false
+				if align == nil then align = true end
+				
+				setvalue(self, "handvis", beat, true)
+				
+				self.level:addfakeevent(beat, 'updatehands', {room = index, action = 'Show',instant = instant, align = align, hand = hand})
+				
+			end
+			function room:hidehand(beat,hand,instant,align)
+				hand = hand or 'Right'
+				instant = instant or false
+				if align == nil then align = true end
+				
+				setvalue(self, "handvis", beat, false)
+				
+				self.level:addfakeevent(beat, 'updatehands', {room = index, action = 'hide',instant = instant, align = align, hand = hand})
+				
+			end
+			
+			function room:togglehand(beat,hand,instant,align)
+				if getvalue(self, "handvis", beat) then
+					self:hidehand(beat,hand,instant,align)
+				else
+					self:showhand(beat,hand,instant,align)
+				end
+				
+			end
+			
 			
 			--bg
 			
@@ -566,6 +606,23 @@ local extension = function(_level)
 				}
 			)
 		end)
+		
+		
+		--hand
+		level:fakehandler('updatehands',function(self,v)
+			self:addevent(
+				v.beat,
+				"ShowHands",
+				{
+					rooms = self:roomtable(v.room),
+					hand = v.hand,
+					action = v.action,
+					align = v.align,
+					instant = v.instant
+				}
+			)
+		end)
+		
 		
 		--add event type condensers
 		
