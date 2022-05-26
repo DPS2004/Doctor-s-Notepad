@@ -1,3 +1,12 @@
 
 extensions/decoration.lua
 main.lua
+decotest.bat
+decotest/level.lua
+decotest/backup.rdlevel
+decotest/out.rdlevel
+decotest/insom.json
+decotest/insom.png
+decotest/insom_glow.png
+decotest/insom_freeze.png
+decotest/insom_outline.png
