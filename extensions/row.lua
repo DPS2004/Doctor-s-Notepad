@@ -192,6 +192,97 @@ local extension = function(_level)
 
 				self.level:addfakeevent(beat, "updatetint", {duration = duration, ease = ease, row = index})
 			end
+			
+			function row:show(beat, smooth)
+				smooth = smooth or 0
+				local smoothn = smooth
+				if type(smooth) == 'boolean' then
+					if smooth then 
+						smoothn = 1
+					else
+						smoothn = 0
+					end
+				end
+				local transition = 'Instant'
+				if smoothn == 1 then
+					transition = 'Smooth'
+				elseif smoothn == 2 then 
+					transition = 'Full'
+				end
+				setvalue(self, "hidden", beat, false)
+
+				self.level:addfakeevent(beat, "updaterowshow", {transition = transition, show = 'Visible', row = index})
+			end
+			
+			function row:hide(beat, smooth)
+				smooth = smooth or 0
+				local smoothn = smooth
+				if type(smooth) == 'boolean' then
+					if smooth then 
+						smoothn = 1
+					else
+						smoothn = 0
+					end
+				end
+				local transition = 'Instant'
+				if smoothn ~= 0 then
+					transition = 'Smooth'
+				end
+				setvalue(self, "hidden", beat, true)
+
+				self.level:addfakeevent(beat, "updaterowshow", {transition = transition, show = 'Hidden', row = index})
+			end
+			
+			function row:showchar(beat, smooth)
+				smooth = smooth or 0
+				local smoothn = smooth
+				if type(smooth) == 'boolean' then
+					if smooth then 
+						smoothn = 1
+					else
+						smoothn = 0
+					end
+				end
+				local transition = 'Instant'
+				if smoothn == 1 then
+					transition = 'Smooth'
+				elseif smoothn == 2 then 
+					transition = 'Full'
+				end
+				setvalue(self, "hidden", beat, false)
+
+				self.level:addfakeevent(beat, "updaterowshow", {transition = transition, show = 'OnlyCharacter', row = index})
+			end
+			
+			function row:showrow(beat, smooth)
+				smooth = smooth or 0
+				local smoothn = smooth
+				if type(smooth) == 'boolean' then
+					if smooth then 
+						smoothn = 1
+					else
+						smoothn = 0
+					end
+				end
+				local transition = 'Instant'
+				if smoothn == 1 then
+					transition = 'Smooth'
+				elseif smoothn == 2 then 
+					transition = 'Full'
+				end
+				setvalue(self, "hidden", beat, false)
+
+				self.level:addfakeevent(beat, "updaterowshow", {transition = transition, show = 'OnlyRow', row = index})
+			end
+			
+			function row:togglevis(beat,smooth)
+				if getvalue(self, "hidden", beat) then
+					self:show(beat,smooth)
+				else
+					self:hide(beat,smooth)
+				end
+			end
+			
 
 			--save to level
 			function row:save()
@@ -390,6 +481,19 @@ local extension = function(_level)
 		
 		end)
 		
+		level:fakehandler('updaterowshow',function(self,v)
+			self:addevent(
+				v.beat,
+				"HideRow",
+				{
+					row = v.row,
+					show = v.show,
+					transition = v.transition
+				}
+			)
+		
+		end)
+		
 		
 		
 		--add event type condensers
@@ -406,7 +510,6 @@ local extension = function(_level)
 				
 				table.insert(condensed,self:mergegroup(v))
 			end
-			print('condensed to '.. #condensed[1])
 			return condensed
 		end)
 	
