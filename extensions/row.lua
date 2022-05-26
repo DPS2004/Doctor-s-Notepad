@@ -27,7 +27,15 @@ local extension = function(_level)
 				
 				cx = {{beat = 0, state = 0}},
 				cy = {{beat = 0, state = 0}},
-				cr = {{beat = 0, state = 0}},
+				crot = {{beat = 0, state = 0}},
+				csx = {{beat = 0, state = 100}},
+				csy = {{beat = 0, state = 100}},
+
+				hx = {{beat = 0, state = 0}},
+				hy = {{beat = 0, state = 0}},
+				hrot = {{beat = 0, state = 0}},
+				hsx = {{beat = 0, state = 100}},
+				hsy = {{beat = 0, state = 100}},
 				
 				--tint row
 				border = {{beat = 0, state = "None"}},
@@ -106,12 +114,77 @@ local extension = function(_level)
 				setvalue(self, "crot", beat, rot)
 				self.level:addfakeevent(beat, "updaterowcrot", {row = index, duration = duration, ease = ease})
 			end
+
+			function row:movecsx(beat, x, duration, ease)
+				duration = duration or 0
+				ease = ease or "Linear"
+				setvalue(self, "csx", beat, x)
+				self.level:addfakeevent(beat, "updaterowcsx", {row = index, duration = duration, ease = ease})
+			end
+
+			function row:movecsy(beat, y, duration, ease)
+				duration = duration or 0
+				ease = ease or "Linear"
+				setvalue(self, "csy", beat, y)
+				self.level:addfakeevent(beat, "updaterowcsy", {row = index, duration = duration, ease = ease})
+			end
+
+			function row:movehx(beat, x, duration, ease)
+				duration = duration or 0
+				ease = ease or "Linear"
+				setvalue(self, "hx", beat, x)
+				self.level:addfakeevent(beat, "updaterowhx", {row = index, duration = duration, ease = ease})
+			end
+
+			function row:movehy(beat, y, duration, ease)
+				duration = duration or 0
+				ease = ease or "Linear"
+				setvalue(self, "hy", beat, y)
+				self.level:addfakeevent(beat, "updaterowhy", {row = index, duration = duration, ease = ease})
+			end
+			function row:hrotate(beat, rot, duration, ease)
+				duration = duration or 0
+				ease = ease or "Linear"
+				setvalue(self, "hrot", beat, rot)
+				self.level:addfakeevent(beat, "updaterowhrot", {row = index, duration = duration, ease = ease})
+			end
+
+			function row:movehsx(beat, x, duration, ease)
+				duration = duration or 0
+				ease = ease or "Linear"
+				setvalue(self, "hsx", beat, x)
+				self.level:addfakeevent(beat, "updaterowhsx", {row = index, duration = duration, ease = ease})
+			end
+
+			function row:movehsy(beat, y, duration, ease)
+				duration = duration or 0
+				ease = ease or "Linear"
+				setvalue(self, "hsy", beat, y)
+				self.level:addfakeevent(beat, "updaterowhsy", {row = index, duration = duration, ease = ease})
+			end
 			
 
 			function row:move(beat, p, duration, ease)
 				duration = duration or 0
 				ease = ease or "Linear"
 				for k, v in pairs(p) do
+
+					if k ==  'rotate' or k ==  'rot' then
+						self:rotate(beat, v, duration, ease)  -- special handling for rotate, rot
+					elseif k == 'crotate' or k == 'crot' then
+						self:crotate(beat, v, duration, ease) -- special handling for crotate, crot
+					elseif k == 'hrotate' or k == 'hrot' then
+						self:hrotate(beat, v, duration, ease) -- special handling for hrotate, hrot
+					else
+						-- kinda modular way of calling functions such as movex or movecsy without having a long-ass if-else statement
+						-- should work just fine i think, though the old if-else statement is still there, just commented out, just in case
+						local func = 'move'..k
+						if self[func] then
+							self[func](self, beat, v, duration, ease) -- dont think you can use : with this method though so gotta pass in self for the first variable
+						end
+					end
+
+					--[[
 					if k == "x" then
 						self:movex(beat, v, duration, ease)
 					elseif k == "y" then
@@ -126,11 +199,16 @@ local extension = function(_level)
 						self:rotate(beat, v, duration, ease)
 					elseif k == "cx" then
 						self:movecx(beat, v, duration, ease)
-					elseif k == "cy" or k == "rot" then
+					elseif k == "cy" then
 						self:movecy(beat, v, duration, ease)
+					elseif k == "csx" then
+						self:movecsx(beat, v, duration, ease)
+					elseif k == "csy" then
+						self:movecsy(beat, v, duration, ease)
 					elseif k == "crotate" or k == "crot" then
 						self:crotate(beat, v, duration, ease)
 					end
+					]]
 				end
 			end
 			
@@ -402,6 +480,40 @@ local extension = function(_level)
 				}
 			)
 		end)
+		level:fakehandler('updaterowsx',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "WholeRow",
+					customPosition = true,
+					scale = {
+						getvalue(self.rows[v.row], "sx", v.beat),
+						null
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		end)
+		level:fakehandler('updaterowsy',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "WholeRow",
+					customPosition = true,
+					scale = {
+						null,
+						getvalue(self.rows[v.row], "sy", v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		end)
 		level:fakehandler('updaterowrot',function(self,v)
 			self:addevent(
 				v.beat,
@@ -479,6 +591,126 @@ local extension = function(_level)
 				}
 			)
 		
+		end)
+
+		level:fakehandler('updaterowcsx',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Character",
+					customPosition = true,
+					scale = {
+						getvalue(self.rows[v.row], "csx", v.beat),
+						null
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		end)
+		level:fakehandler('updaterowcsy',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Character",
+					customPosition = true,
+					scale = {
+						null,
+						getvalue(self.rows[v.row], "csy", v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		end)
+		level:fakehandler('updaterowhx',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Heart",
+					customPosition = true,
+					rowPosition = {
+						getvalue(self.rows[v.row], "hx", v.beat),
+						null
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		end)
+		level:fakehandler('updaterowhy',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Heart",
+					customPosition = true,
+					rowPosition = {
+						null,
+						getvalue(self.rows[v.row], "hy", v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		
+		end)
+		level:fakehandler('updaterowhrot',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Heart",
+					customPosition = true,
+					angle = getvalue(self.rows[v.row], "hrot", v.beat),
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		
+		end)
+
+		level:fakehandler('updaterowhsx',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Heart",
+					customPosition = true,
+					scale = {
+						getvalue(self.rows[v.row], "hsx", v.beat),
+						null
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		end)
+		level:fakehandler('updaterowhsy',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveRow",
+				{
+					row = v.row,
+					target = "Heart",
+					customPosition = true,
+					scale = {
+						null,
+						getvalue(self.rows[v.row], "hsy", v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
 		end)
 		
 		level:fakehandler('updaterowshow',function(self,v)
