@@ -18,6 +18,8 @@ local extension = function(_level)
 			-- set up persistent value timelines that can be accessed by other commands
 			row.values = {
 				room = {{beat = 0, state = 0}},
+
+				-- whole row
 				x = {{beat = 0, state = 50}},
 				y = {{beat = 0, state = 50}},
 				sx = {{beat = 0, state = 100}},
@@ -25,17 +27,19 @@ local extension = function(_level)
 				pivot = {{beat = 0, state = 0.5}},
 				rot = {{beat = 0, state = 0}},
 				
+				-- character
 				cx = {{beat = 0, state = 0}},
 				cy = {{beat = 0, state = 0}},
-				crot = {{beat = 0, state = 0}},
 				csx = {{beat = 0, state = 100}},
 				csy = {{beat = 0, state = 100}},
+				crot = {{beat = 0, state = 0}},
 
+				-- heart
 				hx = {{beat = 0, state = 0}},
 				hy = {{beat = 0, state = 0}},
-				hrot = {{beat = 0, state = 0}},
 				hsx = {{beat = 0, state = 100}},
 				hsy = {{beat = 0, state = 100}},
+				hrot = {{beat = 0, state = 0}},
 				
 				--tint row
 				border = {{beat = 0, state = "None"}},

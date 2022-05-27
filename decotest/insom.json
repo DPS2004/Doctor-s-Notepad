@@ -1,0 +1,156 @@
+{
+    "size": [
+        42,
+        42
+    ],
+    "rowPreviewFrame": 0,
+    "rowPreviewOffset": [
+        0,
+        0
+    ],
+    "clips": [
+        {
+            "name": "neutral",
+            "frames": [
+                1,
+                0,
+                0,
+                0
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                0,
+                0
+            ],
+            "portraitSize": [
+                25,
+                25
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "happy",
+            "frames": [
+                3,
+                3,
+                3,
+                4,
+                4,
+                5,
+                5,
+                6,
+                6,
+                6,
+                6,
+                6
+            ],
+            "loop": "no",
+            "fps": 11,
+            "loopStart": 0,
+            "portraitOffset": [
+                0,
+                0
+            ],
+            "portraitSize": [
+                25,
+                25
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "happyFreeze",
+            "frames": [
+                3,
+                3,
+                3,
+                4,
+                4,
+                5,
+                5,
+                6,
+                6,
+                6,
+                6,
+                6
+            ],
+            "loop": "yes",
+            "fps": 11,
+            "loopStart": 12,
+            "portraitOffset": [
+                0,
+                0
+            ],
+            "portraitSize": [
+                25,
+                25
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "barely",
+            "frames": [
+                8,
+                9,
+                10
+            ],
+            "loop": "no",
+            "fps": 2,
+            "loopStart": 0,
+            "portraitOffset": [
+                0,
+                0
+            ],
+            "portraitSize": [
+                25,
+                25
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "missed",
+            "frames": [
+                12,
+                13,
+                14,
+                15,
+                16
+            ],
+            "loop": "no",
+            "fps": 4,
+            "loopStart": 0,
+            "portraitOffset": [
+                0,
+                0
+            ],
+            "portraitSize": [
+                25,
+                25
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "aaaaaaaaaa",
+            "frames": [
+                29,
+                30,
+                31,
+                32,
+                33
+            ],
+            "loop": "yes",
+            "fps": 24,
+            "loopStart": 0,
+            "portraitOffset": [
+                0,
+                0
+            ],
+            "portraitSize": [
+                25,
+                25
+            ],
+            "portraitScale": 2
+        }
+    ]
+}
