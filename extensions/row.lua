@@ -49,7 +49,8 @@ local extension = function(_level)
 				tintcolor = {{beat = 0, state = "FFFFFF"}},
 				tintopacity = {{beat = 0, state = 100}},
 				hidden = {{beat = 0, state = false}},
-				electric = {{beat = 0, state = false}}
+				electric = {{beat = 0, state = false}},
+				opacity = {{beat = 0, state = 100}}
 			}
 
 			function row:setroom(beat, room)
@@ -260,7 +261,7 @@ local extension = function(_level)
 				setvalue(self, "bordercolor", beat, color)
 				setvalue(self, "borderopacity", beat, opacity)
 
-				self.level:addfakeevent(beat, "updatetint", {duration = duration, ease = ease, row = index})
+				self.level:addfakeevent(beat, "updaterowtint", {duration = duration, ease = ease, row = index})
 			end
 
 			function row:settint(beat, showtint, color, opacity, duration, ease)
@@ -272,7 +273,14 @@ local extension = function(_level)
 				setvalue(self, "tintcolor", beat, color)
 				setvalue(self, "tintopacity", beat, opacity)
 
-				self.level:addfakeevent(beat, "updatetint", {duration = duration, ease = ease, row = index})
+				self.level:addfakeevent(beat, "updaterowtint", {duration = duration, ease = ease, row = index})
+			end
+
+			function row:setopacity(beat, opacity, duration, ease)
+
+				setvalue(self, "opacity", beat, opacity)
+				self.level:addfakeevent(beat, "updaterowtint", {duration = duration, ease = ease, row = index})
+
 			end
 			
 			function row:show(beat, smooth)
@@ -433,7 +441,7 @@ local extension = function(_level)
 		
 		-- fake event handlers
 		
-		level:fakehandler('updatetint',function(self,v)
+		level:fakehandler('updaterowtint',function(self,v)
 			self:addevent(
 				v.beat,
 				"TintRows",
@@ -445,6 +453,7 @@ local extension = function(_level)
 					tint = getvalue(self.rows[v.row], "tint", v.beat),
 					tintColor = getvalue(self.rows[v.row], "tintcolor", v.beat),
 					tintOpacity = getvalue(self.rows[v.row], "tintopacity", v.beat),
+					opacity = getvalue(self.rows[v.row], "opacity", v.beat),
 					duration = v.duration,
 					ease = v.ease
 				}

@@ -78,5 +78,7 @@ row0:move(4, {
 	hrot = 90,
 	hsx = 2,
 	hsy = 4,
-	yourmom = 5
+	yourmom = 5 -- this doesnt do anything! was just testing out row:move and if it calls any functions that dont exist
 }, 1, 'OutElastic')
+
+row0:setopacity(2, 50, 1, 'InExpo')

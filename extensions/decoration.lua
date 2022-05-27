@@ -213,7 +213,6 @@ local extension = function(_level)
 			function deco:setopacity(beat, opacity, duration, ease)
 
 				setvalue(self, "opacity", beat, opacity)
-
 				self.level:addfakeevent(beat, "updatedecotint", {idx = self.idx, target = self.id, duration = duration, ease = ease})
 
 			end
