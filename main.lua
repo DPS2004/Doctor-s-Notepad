@@ -7,7 +7,8 @@
 extensions = {
 	'core',
 	'row',
-	'room'
+	'room',
+    'decoration'
 }
 
 -- helpful functions

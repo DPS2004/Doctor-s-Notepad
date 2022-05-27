@@ -323,40 +323,6 @@ local extension = function(_level)
 					}
 				)
 			end
-			
-			
-			-- new decoration
-			function room:newdecoration(filename, depth)
-				filename = filename or ""
-				depth = depth or ""
-				self.level.data.decorations = self.level.data.decorations or {}
-
-				local deco = {}
-				deco.id = "deco_" .. self.level.decoid
-				deco.row = self.level.decoid
-				deco.room = self
-				deco.filename = filename
-				deco.depth = depth
-				self.level.decoid = self.level.decoid + 1
-
-				function deco:save()
-					table.insert(
-						self.room.level.data.decorations,
-						{
-							id = self.id,
-							row = self.row,
-							rooms = self.room.level:roomtable(self.index),
-							filename = self.filename,
-							depth = self.depth,
-							visible = false
-						}
-					)
-				end
-
-				table.insert(self.level.decorations, deco)
-
-				return deco
-			end
 
 			--save to level
 			function room:save()

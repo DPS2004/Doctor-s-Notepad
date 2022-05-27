@@ -1,0 +1,55 @@
+﻿{
+	"settings":
+	{
+		"version": 50, 
+		"artist": "", 
+		"song": "", 
+		"specialArtistType": "None", 
+		"artistPermission": "", 
+		"artistLinks": "", 
+		"author": "", 
+		"difficulty": "Medium", 
+		"seizureWarning": false, 
+		"previewImage": "", 
+		"syringeIcon": "", 
+		"previewSong": "", 
+		"previewSongStartTime": 0, 
+		"previewSongDuration": 10, 
+		"songNameHue": 0.4074649, 
+		"description": "", 
+		"tags": "", 
+		"separate2PLevelFilename": "", 
+		"canBePlayedOn": "OnePlayerOnly", 
+		"firstBeatBehavior": "RunNormally", 
+		"multiplayerAppearance": "HorizontalStrips", 
+		"levelVolume": 1, 
+		"rankMaxMistakes": [20, 15, 10, 5], 
+		"mods": "classicHitParticles", 
+		"rankDescription":
+		[
+			"Better call 911, now!",
+			"Ugh, you can do better",
+			"Not bad I guess...",
+			"We make a good team!",
+			"You are really good!",
+			"Wow! That's awesome!!"
+		]
+	},
+	"rows":
+	[
+		{ "character": "Clef", "rowType": "Classic", "row": 0, "rooms": [0], "player": "P1", "pulseSound": "Shaker", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+	],
+	"decorations":
+	[
+	],
+	"events":
+	[
+		{ "bar": 1, "beat": 7, "y": 1, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
+		{ "bar": 2, "beat": 3, "y": 0, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
+		{ "bar": 4, "beat": 1, "y": 0, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
+		{ "bar": 4, "beat": 2, "y": 0, "type": "ReorderRooms", "order": [0, 1, 2, 3] },
+	],
+	"conditionals":
+	[
+	]
+}
