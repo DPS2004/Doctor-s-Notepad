@@ -38,9 +38,9 @@
 	"rows":
 	[
 		{ "character": "Samurai", "rowType": "Oneshot", "row": 0, "rooms": [0], "player": "P1", "pulseSound": "Kick", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
-		{ "character": "Samurai", "rowType": "Classic", "row": 1, "rooms": [0], "player": "P1", "pulseSound": "Shaker", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
-		{ "character": "Samurai", "rowType": "Classic", "row": 2, "rooms": [0], "player": "P1", "pulseSound": "Stick", "pulseSoundVolume": 120, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
-		{ "character": "Samurai", "rowType": "Classic", "row": 3, "rooms": [0], "player": "P1", "pulseSound": "Chuck", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+		{ "character": "SamuraiBlue", "rowType": "Classic", "row": 1, "rooms": [0], "player": "P1", "pulseSound": "Shaker", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+		{ "character": "SamuraiYellow", "rowType": "Classic", "row": 2, "rooms": [0], "player": "P1", "pulseSound": "Stick", "pulseSoundVolume": 120, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+		{ "character": "SamuraiGreen", "rowType": "Classic", "row": 3, "rooms": [0], "player": "P1", "pulseSound": "Chuck", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
 		{ "character": "custom:clschick", "rowType": "Classic", "row": 4, "rooms": [3], "player": "P1", "pulseSound": "ClavesLow", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
 	],
 	"decorations":
