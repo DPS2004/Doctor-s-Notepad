@@ -8,8 +8,6 @@ function rd.load(filename,extensions)
     local level = {}
     level.data = dpf.loadjson(filename, {}, true)
 	
-    level.decorations = {}
-    level.decoid = 0
     level.eos = 0
 	
 	level.eventy = {}
@@ -250,7 +248,7 @@ function rd.load(filename,extensions)
 		
 		self:push()
 
-        for i, v in ipairs(self.decorations) do
+        for k,v in pairs(self.decorations) do
             v:save()
         end
 		

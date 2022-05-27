@@ -1,6 +1,9 @@
 
 level:setuprooms()
 
+local deco = level:getdecoration(0)
+deco:movex(2, 0, 1, 'OutExpo')
+
 insom1 = level:newdecoration('insom', 0, 1)
 
 insom1:movex(2, 75, 0.5, 'Linear')
