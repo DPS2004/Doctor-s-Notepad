@@ -15,7 +15,7 @@ level.rows[0]:showchar(1)
 clschick = level.rows[4]
 
 clschick:setvisibleatstart(false)
-clschick:move(0,{x=199,y=90,pivot=0})
+clschick:move(0,{x=199,y=85,pivot=0})
 
 ontop = level.rooms[4]
 
@@ -55,11 +55,12 @@ level.rows[0]:show(11,true)
 
 bg1:move(12,{x=-50,y=50},16)
 
-function brodywalk(beat,rowid,y)
+function brodywalk(beat,rowid,y,scale)
 	y = y or 30
-	level.rows[rowid]:move(beat,{crot=-15,cx=1,y=y-2},0.25,'linear')
+	scale = scale or 1
+	level.rows[rowid]:move(beat,{crot=-15*scale,cx=1*scale,y=y-2},0.25,'linear')
 	level.rows[rowid]:move(beat+1,{crot=0,cx=0,y=y},0.25,'linear')
-	level.rows[rowid]:move(beat+2,{crot=15,cx=-1,y=y-2},0.25,'linear')
+	level.rows[rowid]:move(beat+2,{crot=15*scale,cx=-1*scale,y=y-2},0.25,'linear')
 	level.rows[rowid]:move(beat+3,{crot=0,cx=0,y=y},0.25,'linear')
 end
 
@@ -81,7 +82,7 @@ end
 
 
 
-for i=12,128,4 do
+for i=12,256,4 do
 	brodywalk(i,0,30)
 end
 
@@ -107,4 +108,53 @@ newroom(function(room,curbeat)
 	room:settheme(curbeat,'Basement')
 	clschick:showchar(curbeat)
 	clschick:move(curbeat,{x=-101},48,'linear')
+	level.rooms[3]:wavyrows(curbeat)
+	clschick:playexpression(curbeat+30,'happy')
+end)
+newroom(function(room,curbeat)
+	level:comment(curbeat+12,'Peaceful Seabed\nsoggoru waffle')
+
+	level.rows[1]:move(curbeat-1,{x=112,y=20,crot=-600,pivot=0})
+	level.rows[1]:show(curbeat)
+	
+	level.rows[1]:move(curbeat+12,{x=12,crot=0},4,'inSine')
+	
+	room:settheme(curbeat,'None')
+	room:setbg(curbeat,'pressspace.png')
+	
+	room:showhand(curbeat,'Right',true)
+	room:hidehand(curbeat + 11)
+	
+	
+	room:flash(curbeat+12,'000000',100,'000000',0,2,'linear')
+	for i=12,15,2 do
+		room:setbg(curbeat + i,'seabed_0.png')
+		room:setbg(curbeat + i+1,'seabed_1.png')
+	end
+	for i=16,31,4 do
+		room:setbg(curbeat + i,'seabed_2.png')
+		room:setbg(curbeat + i+1,'seabed_3.png')
+		room:setbg(curbeat + i+2,'seabed_4.png')
+		room:setbg(curbeat + i+3,'seabed_5.png')
+	end
+	
+	for i=16,256,4 do
+		brodywalk(curbeat+i,1,20,-1)
+	end
+	
+end)
+newroom(function(room,curbeat)
+	level:comment(curbeat+8,'Cloissonné (Night Shift)\nCyus & Xeno')
+	
+	room:settheme(curbeat,'none')
+	room:setbg(curbeat,'Vase Bg2.png','Tiled',4,3,'D0F7B9FF')
+	
+	-- -0.25 b
+	--  0    e
+	--  0.25 d
+	--  0.5  c
+	--  0.75 b
+	--  1    a
+	
+	
 end)

@@ -30,6 +30,16 @@ local extension = function(_level)
 			soundtype = soundtype or "MusicSound"
 			self:addevent(beat, "PlaySound", {filename = sound, volume = 100, pitch = 100, pan = 0, offset = offset, isCustom = true, customSoundType = soundtype })
 		end
+		
+		--comments
+		
+		function level:showcomments()
+			self.doshowcomments = true
+		end
+		
+		function level:comment(beat, text)
+			self:addevent(beat, "Comment", {show = self.doshowcomments, text=text})
+		end
 
 		
 
@@ -70,7 +80,7 @@ local extension = function(_level)
 	
 		--if you need to initialize anything, do it here.
 
-		
+		level.doshowcomments = false
 		
 		
 		-- fake event handlers
