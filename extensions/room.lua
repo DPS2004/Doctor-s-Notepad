@@ -21,24 +21,13 @@ local extension = function(_level)
 				py = {{beat = 0, state = 50}},
 				stretch = {{beat = 0, state = true}},
 				xflip = {{beat = 0, state = false}},
-				yflip = {{beat = 0, state = false}},
-				
-				
+				yflip = {{beat = 0, state = false}},				
 				handvis = {{beat = 0, state = false}},
 				--camera
 				camx = {{beat = 0, state = 50}},
 				camy = {{beat = 0, state = 50}},
 				camzoom = {{beat = 0, state = 100}},
 				camrot = {{beat = 0, state = 0}},
-				--boolean presets
-				Sepia = {{beat = 0, state = false}},
-				VHS = {{beat = 0, state = false}},
-				WavyRows = {{beat = 0, state = false}},
-				--other presets
-				abberation = {{beat = 0, state = false}},
-				abberationintensity = {{beat = 0, state = 0}},
-				grain = {{beat = 0, state = false}},
-				grainintensity = {{beat = 0, state = 100}}
 			}
 			--move rooms
 			function room:movex(beat, x, duration, ease)
@@ -181,51 +170,142 @@ local extension = function(_level)
 				self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = theme})
 			end
 
-			--abberation
-			function room:abberation(beat, state, intensity, duration, ease)
-				duration = duration or 0
-				ease = ease or "Linear"
+			-- haha        lmao
+			-- generate all the preset values    haha            lmao
 
-				state = state or not getvalue(self, "abberation", beat)
-				intensity = intensity or getvalue(self, "abberationintensity", beat)
+			-- the only reason this is in a do-end block is so that its easier to tell where it starts and ends.        yeah
+			do
 
-				setvalue(self, "abberation", beat, state)
-				setvalue(self, "abberationintensity", beat, intensity)
-				self.level:addevent(
-					beat,
-					"SetVFXPreset",
-					{
-						rooms = self.level:roomtable(index),
-						preset = "Aberration",
-						enable = state,
-						intensity = intensity,
-						duration = duration,
-						ease = ease
-					}
-				)
-			end
-			-- grain
-			function room:grain(beat, state, intensity, duration, ease)
-				duration = duration or 0
-				ease = ease or "Linear"
+				-- key in the table = actual name written in the rdlevel
+				-- each preset has a table with additional properties like intensity
+				-- along the elements in the table a true/false value will be automatically created for each preset
+				-- properties with the _ prefix are not counted as actual properties!
+				-- properties may, additionally, be a table:
+					-- the first element of the table is the actual value
+					-- the second is the order of the property in the function
+				-- the order is used because pairs() is random :( so you never know in what order the parameters will be. the order fixes this by ordering the table using it
+				local roomPresets = {
+					Sepia = {},
+					VHS = {},
+					Aberration = {intensity = 100},
+					Blizzard = {intensity = 100},
+					WavyRows = {amplitude = {nil, 0}, frequency = {nil, 1}, _customFunc = function(room, createdfunction)
+						createdfunction = createdfunction .. 'if amplitude then level:comment(beat, "()=>wavyRowsAmplitude(" .. index .. ", " .. amplitude .. ", " .. duration .. ")") end\n'
+						createdfunction = createdfunction .. 'if frequency then level:rdcode(beat, "room[" .. index .. "].wavyRowsFrequency = " .. frequency , "OnBar") end\n'
+						return createdfunction
+					end}
+				}
 
-				state = state or not getvalue(self, "grain", beat)
-				intensity = intensity or getvalue(self, "grainintensity", beat)
+				local dbg = '' -- variable used for debugging, dont worry about it
 
-				setvalue(self, "grain", beat, state)
-				setvalue(self, "grainintensity", beat, intensity)
-				self.level:addevent(
-					beat,
-					"SetVFXPreset",
-					{
-						rooms = self.level:roomtable(index),
-						preset = "Grain",
-						enable = state,
-						intensity = intensity,
-						duration = duration,
-						ease = ease
-					}
-				)
+				for k,v in pairs(roomPresets) do
+
+					local lowercase = k:lower()
+
+					local additionalProperties = {} -- store stuff such as intensity as a string here for simpler later use
+
+					-- add everything to the values table
+
+					room.values[lowercase] = {{beat = 0, state = false}}
+
+					dbg = dbg .. lowercase .. '\n'
+
+					for k2,v2 in pairs(v) do
+
+						if k2:sub(1,1) ~= '_' then -- exclude properties that have the _ prefix
+
+							local lowercase2 = lowercase .. k2:lower()
+
+							if type(v2) ~= 'table' then v2 = {v2, 9999} end
+
+							room.values[lowercase2] = {{beat = 0, state = v2[1]}}
+
+							additionalProperties[#additionalProperties+1] = {k2, v2[2]}
+
+							v[k2] = v2
+
+							dbg = dbg .. lowercase2 .. ': ' .. tostring(v2[1]) .. '\n'
+
+						end
+
+					end
+
+					table.sort(additionalProperties, function(a,b)
+						return a[2] < b[2]
+					end) -- sort by order
+
+					for i,_ in ipairs(additionalProperties) do
+						additionalProperties[i] = additionalProperties[i][1]
+					end
+
+					----------------------------------
+
+					-- create the function
+
+					-- the additionalProperties will be empty when we have a preset with only true/false (e.g. sepia) and not empty when we have a preset with more values (e.g. aberration)
+					if #additionalProperties > 0 then -- for now, let's cover presets with more values
+
+						-- we'll make the function out of a string as it's complex!
+
+						-- create the first line
+						local createdfunction = 'function room:' .. lowercase .. '(beat, state, '
+						
+						-- add every additional to the function argument, if any
+						for _,property in ipairs(additionalProperties) do
+							property:lower()
+							createdfunction = createdfunction .. property .. ', '
+						end
+
+						createdfunction = createdfunction .. 'duration, ease)\nduration = duration or 0\nease = ease or "Linear"\n'
+
+						createdfunction = createdfunction .. 'state = state or not getvalue(self, "' .. lowercase .. '", beat)\n'
+
+						for _,property in ipairs(additionalProperties) do
+							property:lower()
+							local valuename = lowercase .. property -- aberration + intensity -> aberrationintensity
+							createdfunction = createdfunction .. property .. ' = ' .. property .. ' or getvalue(self, "' .. valuename .. '", beat)\n'
+						end
+
+						if v._customFunc then -- if the property has a function we run that too
+							createdfunction = v._customFunc(room, createdfunction)
+						end
+
+						createdfunction = createdfunction .. '\nself.level:addevent(\nbeat,\n"SetVFXPreset",\n{\nrooms = self.level:roomtable(index),\n'
+						createdfunction = createdfunction .. 'preset = "'..k..'",\nenable = state,\n'
+
+						for _,property in ipairs(additionalProperties) do
+							createdfunction = createdfunction .. property .. ' = ' .. property:lower() .. ',\n'
+						end
+
+						createdfunction = createdfunction .. 'duration = duration,\nease = ease\n}\n)\n'
+
+						createdfunction = createdfunction .. 'end'
+
+						f = loadstring(createdfunction) -- haha lmao
+						local env = {level = level, room = room, index = index, getvalue = getvalue, setvalue = setvalue}
+
+						setfenv(f, env) --   haha      lmao
+						f() --                                haha                                         lmao
+
+						dbg = dbg .. createdfunction .. '\n\n\n'
+
+					else -- now let's cover presets with just true/false!
+
+						-- this is simple enough, we just make a shorthand
+						-- don't even need to construct the function out of a string for this one!
+
+						room[lowercase] = function(room, beat, state)
+							room:setpreset(beat, lowercase, state) -- :samuraisword:
+						end
+
+					end
+
+				end
+
+				if index == 0 then
+					print(dbg)
+				end
+
 			end
 
 			-- set or toggle a boolean vfx preset
@@ -240,15 +320,11 @@ local extension = function(_level)
 			end
 
 			--preset shorthands
+			--[[
 			function room:sepia(beat, state)
 				self:setpreset(beat, "Sepia", state)
 			end
-			function room:vhs(beat, state)
-				self:setpreset(beat, "VHS", state)
-			end
-			function room:wavyrows(beat, state)
-				self:setpreset(beat, "WavyRows", state)
-			end
+			]]
 			
 			function room:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
 				self.level:customflash(beat,index,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
