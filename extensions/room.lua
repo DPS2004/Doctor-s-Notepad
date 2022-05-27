@@ -300,26 +300,60 @@ local extension = function(_level)
 			
 			--bg
 			
-			function room:setbg(beat,filename,mode,sx,sy,color)
-				if sx or sy then
-					mode = 'Tiled'
-				end
+			function room:setbg(beat,filenames,bgtype,fps,mode,sx,sy,color,filter)
+
 				mode = mode or 'ScaleToFill'
 				sx = sx or 0
 				sy = sy or 0
 				color = color or 'ffffffff'
+				fps = fps or 30
+				bgtype = bgtype or 'color'
+				filter = filter or 'NearestNeighbor'
+
+				if type(filenames) ~= 'table' then
+					filenames = {tostring(filenames)}
+				end
+
 				self.level:addevent(
 					beat,
-					"SetBackgroundColor",
-					{rooms = self.level:roomtable(index),
-					backgroundType = 'Image',
-					contentMode = mode,
-					color = color,
-					image = {filename},
-					fps = 30,
-					filter = 'NearestNeighbor',
-					scrollX = sx,
-					scrollY = sy
+					"SetBackgroundColor", -- why the fuck is it called background color if it also sets the image 🤨
+					{
+						rooms = self.level:roomtable(index),
+						backgroundType = bgtype,
+						contentMode = mode,
+						color = color,
+						image = filenames,
+						fps = fps,
+						filter = filter,
+						scrollX = sx,
+						scrollY = sy
+					}
+				)
+			end
+
+			function room:setfg(beat,filenames,fps,mode,sx,sy,color)
+
+				mode = mode or 'ScaleToFill'
+				sx = sx or 0
+				sy = sy or 0
+				color = color or 'ffffffff'
+				fps = fps or 30
+
+				if type(filenames) ~= 'table' then
+					filenames = {tostring(filenames)}
+				end
+
+				self.level:addevent(
+					beat,
+					"SetForeground",
+					{
+						rooms = self.level:roomtable(index),
+						contentMode = mode,
+						color = color,
+						image = filenames,
+						fps = fps,
+						scrollX = sx,
+						scrollY = sy
 					}
 				)
 			end

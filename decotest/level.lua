@@ -43,7 +43,7 @@ insom1:movesy(12, 35, 0.5, 'OutQuad')
 room0 = level.rooms[0]
 room1 = level.rooms[1]
 
-room0:settheme(0, 'InsomniacDay')
+room0:settheme(0, 'IntimateSimple')
 room1:settheme(0, 'BoyWard')
 
 room0:move(0, {
@@ -82,3 +82,12 @@ row0:move(4, {
 }, 1, 'OutElastic')
 
 row0:setopacity(2, 50, 1, 'InExpo')
+
+room0:setfg(3, 'fg.png', 30, 'ScaleToFill', 0, 0, 'ff0000ff')
+room0:setfg(5, {'fg.png', 'fg2.png'}, 3.25, 'ScaleToFill')
+room0:setfg(7, '', 30)
+
+room0:setbg(8, 'bg.png', 'color', 30, 'ScaleToFill', 0, 0, '00ff00ff')
+
+room0:setbg(9, 'bg.png', 'color', 30, 'ScaleToFill', 0, 0, '00ff0000')
+room0:setbg(9, 'bg.png', 'image', 30, 'ScaleToFill', 0, 0, '00ff00ff', 'Bilinear')
