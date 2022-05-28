@@ -143,7 +143,7 @@ local extension = function(_level)
 			
 			--flip
 			function room:xflip(beat,state)
-				if state == nil then
+				if type(state) ~= 'boolean' then
 					state = not getvalue(self, "xflip", beat)
 				end
 				setvalue(self,'xflip',beat,state)
@@ -151,7 +151,7 @@ local extension = function(_level)
 			end
 			
 			function room:yflip(beat,state)
-				if state == nil then
+				if type(state) ~= 'boolean' then
 					state = not getvalue(self, "yflip", beat)
 				end
 				setvalue(self,'yflip',beat,state)
@@ -160,7 +160,9 @@ local extension = function(_level)
 
 			-- change content mode
 			function room:stretchmode(beat, state)
-				state = state or not getvalue(self, "stretch", beat)
+				if type(state) ~= 'boolean' then
+					state = not getvalue(self, "stretch", beat)
+				end
 				setvalue(self,'stretch',beat,stretch)
 				self.level:addfakeevent(beat, "updateroommode", {room = index})
 			end
@@ -173,23 +175,66 @@ local extension = function(_level)
 			-- haha        lmao
 			-- generate all the preset values    haha            lmao
 
+			-- lookup table automatically filled with the aliases as keys and actual preset names as values
+			local aliasToPreset = {}
+
 			-- the only reason this is in a do-end block is so that its easier to tell where it starts and ends.        yeah
 			do
 
 				-- key in the table = actual name written in the rdlevel
 				-- each preset has a table with additional properties like intensity
 				-- along the elements in the table a true/false value will be automatically created for each preset
-				-- properties with the _ prefix are not counted as actual properties!
+				-- properties with the _ prefix are not counted as actual properties of the event!
 				-- properties may, additionally, be a table:
 					-- the first element of the table is the actual value
 					-- the second is the order of the property in the function
 				-- the order is used because pairs() is random :( so you never know in what order the parameters will be. the order fixes this by ordering the table using it
 				local roomPresets = {
-					Sepia = {},
+					Sepia = {_onTop = true},
 					VHS = {},
+					SilhouettesOnHBeat = {},
+					Vignette = {},
+					VignetteFlicker = {},
+					ColourfulShockwaves = {},
+					BassDropOnHit = {},
+					ShakeOnHeartBeat = {},
+					ShakeOnHit = {},
+					Tile2 = {_onTop = true},
+					Tile3 = {_onTop = true},
+					Tile4 = {_onTop = true},
+					LightStripVert = {},
+					ScreenScrollX = {},
+					ScreenScroll = {_alias = 'screenscrolly'},
+					ScreenScrollXSansVHS = {},
+					ScreenScrollSansVHS = {_alias = 'screenscrollysansvhs'},
+					CutsceneMode = {_alias = 'cutscene'},
+					Blackout = {},
+					Noise = {_onTop = true},
+					GlitchObstruction = {_onTop = true},
+					Matrix = {},
+					Confetti = {},
+					FallingPetals = {},
+					FallingPetalsInstant = {},
+					FallingPetalsSnow = {},
+					Snow = {},
+					OrangeBloom = {},
+					BlueBloom = {},
+					HallOfMirrors = {_alias = {'hom', 'hallofmirrors'}, _onTop = true},
+					BlackAndWhite = {_alias = {'grayscale', 'blackandwhite'}, _onTop = true},
+					NumbersAbovePulses = {},
+					Funk = {},
+					Rain = {intensity = 100},
+					Grain = {intensity = 100},
+					Mosaic = {intensity = 100},
+					Bloom = {threshold = {0.3, 0}, intensity = {2, 1}, color = {'000000', 2}},
+					ScreenWaves = {intensity = 100},
+					Drawing = {intensity = 100},
+					JPEG = {intensity = 100},
+					TileN = {floatX = {1, 0}, floatY = {1, 1}, _alias = {'tilen', 'screentile'}, _onTop = true},
+					CustomScreenScroll = {floatX = {1, 0}, floatY = {1, 1}, _alias = {'screenscroll', 'customscreenscroll'}, _onTop = true},
 					Aberration = {intensity = 100},
 					Blizzard = {intensity = 100},
-					WavyRows = {amplitude = {nil, 0}, frequency = {nil, 1}, _customFunc = function(room, createdfunction)
+					WavyRows = {amplitude = {15, 0}, frequency = {2, 1}, _customFunc = function(room, createdfunction)
 						createdfunction = createdfunction .. 'if amplitude then level:comment(beat, "()=>wavyRowsAmplitude(" .. index .. ", " .. amplitude .. ", " .. duration .. ")") end\n'
 						createdfunction = createdfunction .. 'if frequency then level:rdcode(beat, "room[" .. index .. "].wavyRowsFrequency = " .. frequency , "OnBar") end\n'
 						return createdfunction
@@ -200,102 +245,211 @@ local extension = function(_level)
 
 				for k,v in pairs(roomPresets) do
 
-					local lowercase = k:lower()
+					local cancontinue = false -- can we actually use this preset?
 
-					local additionalProperties = {} -- store stuff such as intensity as a string here for simpler later use
-
-					-- add everything to the values table
-
-					room.values[lowercase] = {{beat = 0, state = false}}
-
-					dbg = dbg .. lowercase .. '\n'
-
-					for k2,v2 in pairs(v) do
-
-						if k2:sub(1,1) ~= '_' then -- exclude properties that have the _ prefix
-
-							local lowercase2 = lowercase .. k2:lower()
-
-							if type(v2) ~= 'table' then v2 = {v2, 9999} end
-
-							room.values[lowercase2] = {{beat = 0, state = v2[1]}}
-
-							additionalProperties[#additionalProperties+1] = {k2, v2[2]}
-
-							v[k2] = v2
-
-							dbg = dbg .. lowercase2 .. ': ' .. tostring(v2[1]) .. '\n'
-
-						end
-
+					if index ~= 4 then
+						cancontinue = true -- if we aren't on the ontop camera, go ahead
+					else -- we are on the ontop camera
+						cancontinue = v._onTop -- if we have a _onTop value for this property, go ahead. if not, this is not a preset for the ontop camera so we dont do anything with it
 					end
+					
+					if cancontinue then
 
-					table.sort(additionalProperties, function(a,b)
-						return a[2] < b[2]
-					end) -- sort by order
+						local lowercasekey = k:lower()
 
-					for i,_ in ipairs(additionalProperties) do
-						additionalProperties[i] = additionalProperties[i][1]
-					end
-
-					----------------------------------
-
-					-- create the function
-
-					-- the additionalProperties will be empty when we have a preset with only true/false (e.g. sepia) and not empty when we have a preset with more values (e.g. aberration)
-					if #additionalProperties > 0 then -- for now, let's cover presets with more values
-
-						-- we'll make the function out of a string as it's complex!
-
-						-- create the first line
-						local createdfunction = 'function room:' .. lowercase .. '(beat, state, '
-						
-						-- add every additional to the function argument, if any
-						for _,property in ipairs(additionalProperties) do
-							property:lower()
-							createdfunction = createdfunction .. property .. ', '
+						-- make _alias into table
+						if type(v._alias) ~= 'table' then
+							v._alias = {v._alias}
 						end
 
-						createdfunction = createdfunction .. 'duration, ease)\nduration = duration or 0\nease = ease or "Linear"\n'
+						-- if we dont have any aliases, we just add the current name to the table
+						if #v._alias < 1 then v._alias[1] = lowercasekey end
 
-						createdfunction = createdfunction .. 'state = state or not getvalue(self, "' .. lowercase .. '", beat)\n'
+						local additionalProperties = {} -- store stuff such as intensity as a string here for simpler later use
 
-						for _,property in ipairs(additionalProperties) do
-							property:lower()
-							local valuename = lowercase .. property -- aberration + intensity -> aberrationintensity
-							createdfunction = createdfunction .. property .. ' = ' .. property .. ' or getvalue(self, "' .. valuename .. '", beat)\n'
+						-- add everything to the values table
+
+						room.values[lowercasekey] = {{beat = 0, state = false}}
+
+						for k2,v2 in pairs(v) do
+
+							if k2:sub(1,1) ~= '_' then -- exclude properties that have the _ prefix
+
+								local lowercase2 = lowercasekey .. k2:lower()
+
+								if type(v2) ~= 'table' then v2 = {v2, 9999} end
+
+								room.values[lowercase2] = {{beat = 0, state = v2[1]}}
+
+								additionalProperties[#additionalProperties+1] = {k2, v2[2]}
+
+								v[k2] = v2
+
+							end
+
 						end
 
-						if v._customFunc then -- if the property has a function we run that too
-							createdfunction = v._customFunc(room, createdfunction)
+						table.sort(additionalProperties, function(a,b)
+							return a[2] < b[2]
+						end) -- sort by order
+
+						for i,_ in ipairs(additionalProperties) do
+							additionalProperties[i] = additionalProperties[i][1]
 						end
 
-						createdfunction = createdfunction .. '\nself.level:addevent(\nbeat,\n"SetVFXPreset",\n{\nrooms = self.level:roomtable(index),\n'
-						createdfunction = createdfunction .. 'preset = "'..k..'",\nenable = state,\n'
+						----------------------------------
 
-						for _,property in ipairs(additionalProperties) do
-							createdfunction = createdfunction .. property .. ' = ' .. property:lower() .. ',\n'
+						-- save each alias and preset in the aliasToPreset table
+						for _,name in ipairs(v._alias) do
+
+							local lowercase = name:lower()
+
+							if lowercase ~= lowercasekey then -- dont save aliases that have the same name as the real preset
+								aliasToPreset[lowercase] = lowercasekey
+							end
+
 						end
 
-						createdfunction = createdfunction .. 'duration = duration,\nease = ease\n}\n)\n'
+						----------------------------------
 
-						createdfunction = createdfunction .. 'end'
+						-- create the function
 
-						f = loadstring(createdfunction) -- haha lmao
-						local env = {level = level, room = room, index = index, getvalue = getvalue, setvalue = setvalue}
+						-- go through every alias and make a function for each
+						for _,name in ipairs(v._alias) do
 
-						setfenv(f, env) --   haha      lmao
-						f() --                                haha                                         lmao
+							local lowercase = name:lower()
 
-						dbg = dbg .. createdfunction .. '\n\n\n'
+							-- the additionalProperties will be empty when we have a preset with only true/false (e.g. sepia) and not empty when we have a preset with more values (e.g. aberration)
+							if #additionalProperties > 0 then -- for now, let's cover presets with more values
 
-					else -- now let's cover presets with just true/false!
+								-- we'll make the function out of a string as it's complex!
 
-						-- this is simple enough, we just make a shorthand
-						-- don't even need to construct the function out of a string for this one!
+								local final = '' -- ill make three functions in this so have one final string
+								local createdfunction = ''
+								local firstline = '' -- gonna use this for the other functions too
 
-						room[lowercase] = function(room, beat, state)
-							room:setpreset(beat, lowercase, state) -- :samuraisword:
+								-----------------------------------
+								-- FIRST FUNCTION: room:method() --
+								-----------------------------------
+
+								-- create the first line
+								firstline = 'function room:' .. lowercase .. '(beat, state, '
+								
+								-- add every additional to the function argument, if any
+								for _,property in ipairs(additionalProperties) do
+									property = property:lower()
+									firstline = firstline .. property .. ', '
+								end
+
+								-- add the rest of the args
+								firstline = firstline .. 'duration, ease)\n'
+
+								createdfunction = firstline .. 'duration = duration or 0\nease = ease or "Linear"\n'
+
+								-- actual code
+								-- initialize stuff
+								createdfunction = createdfunction .. 'if type(state) ~= "boolean" then state = getvalue(self, "' .. lowercasekey .. '", beat) end\n'
+
+								if v._customFunc then -- if the property has a function we run that too
+									createdfunction = v._customFunc(room, createdfunction)
+								end
+
+								for _,property in ipairs(additionalProperties) do
+									property = property:lower()
+									local valuename = lowercasekey .. property -- aberration + intensity -> aberrationintensity
+									createdfunction = createdfunction .. property .. ' = ' .. property .. ' or getvalue(self, "' .. valuename .. '", beat)\n'
+								end
+
+								createdfunction = createdfunction .. '\nsetvalue(self, "' .. lowercasekey .. '", beat, state)\n'
+
+								for _,property in ipairs(additionalProperties) do
+									property = property:lower()
+									local valuename = lowercasekey .. property -- aberration + intensity -> aberrationintensity
+									createdfunction = createdfunction .. 'setvalue(self, "' .. valuename .. '", beat, ' .. property .. ')\n'
+								end
+
+								createdfunction = createdfunction .. '\nself.level:addevent(\nbeat,\n"SetVFXPreset",\n{\nrooms = {index},\n'
+								createdfunction = createdfunction .. 'preset = "' .. k .. '",\nenable = state,\n'
+
+								for _,property in ipairs(additionalProperties) do
+									createdfunction = createdfunction .. property .. ' = ' .. property:lower() .. ',\n'
+								end
+
+								createdfunction = createdfunction .. 'duration = duration,\nease = ease\n}\n)\n'
+
+								createdfunction = createdfunction .. 'end'
+
+								final = final .. createdfunction .. '\n\n'
+
+								-------------------------------------
+								-- SECOND FUNCTION: level:method() --
+								-------------------------------------
+
+								-- this one's simpler
+
+								-- transform from room:method(beat, arg, duration, beat) to level:method(beat, room, arg, duration, beat)
+
+								local firstlinegsub = firstline:gsub('room', 'level')
+								local beatlocation = firstlinegsub:find('beat, ')
+								local firstlinefinal = firstlinegsub:sub(1,beatlocation+5) .. 'room, ' .. firstlinegsub:sub(beatlocation+6,-1)
+
+								local parenthesis_start = firstline:find('%(')
+								local parenthesis_end = firstline:find(')')
+								local betweenparenthesis = firstline:sub(parenthesis_start, parenthesis_end)
+
+								createdfunction = firstlinefinal .. 'return level:getroom(room):' .. lowercase .. betweenparenthesis .. '\nend\n'
+
+								final = final .. createdfunction
+
+								-----------------------------------------
+								-- THIRD FUNCTION: level:ontopmethod() -- (where applicable)
+								-----------------------------------------
+
+								if v._onTop then
+
+									-- level:method(beat, room, arg, duration, beat) -> level:ontopmethod(beat, arg, duration, beat)
+
+									firstlinefinal = firstlinegsub:gsub(lowercase, 'ontop'..lowercase)
+
+									createdfunction = firstlinefinal .. 'return level:getroom(4):' .. lowercase .. betweenparenthesis .. '\nend\n'
+
+									final = final .. createdfunction
+
+								end
+
+								-- actually make the functions (thank you lua for such a function)
+								f = loadstring(final) -- haha lmao
+
+								local env = {level = level, room = room, index = index, getvalue = getvalue, setvalue = setvalue, type = type}
+								setfenv(f, env)   --   haha      lmao
+								
+								f()                 --                                haha                                         lmao
+
+								dbg = dbg .. final .. '\n\n'
+
+							else -- now let's cover presets with just true/false!
+
+								-- this is simple enough, we just make a shorthand
+								-- don't even need to construct the function out of a string for this one!
+
+								dbg = dbg .. 'small function: ' .. lowercase .. '\n\n'
+
+								room[lowercase] = function(room, beat, state)
+									room:setpreset(beat, k, state)
+								end
+
+								level[lowercase] = function(level, beat, room, state)
+									level:getroom(room):setpreset(beat, k, state)
+								end
+
+								if v._onTop then
+									level['ontop'..lowercase] = function(level, beat, state)
+										level:getroom(4):setpreset(beat, k, state)
+									end
+								end
+
+							end
+
 						end
 
 					end
@@ -310,8 +464,12 @@ local extension = function(_level)
 
 			-- set or toggle a boolean vfx preset
 			function room:setpreset(beat, preset, state)
-				state = state or not getvalue(self, preset, beat)
-				setvalue(self, preset, beat, state)
+				if type(state) ~= 'boolean' then
+					state = not getvalue(self, preset:lower(), beat)
+				end
+
+				setvalue(self, preset:lower(), beat, state)
+
 				self.level:addevent(
 					beat,
 					"SetVFXPreset",
@@ -319,28 +477,28 @@ local extension = function(_level)
 				)
 			end
 
-			--preset shorthands
-			--[[
-			function room:sepia(beat, state)
-				self:setpreset(beat, "Sepia", state)
+			-- get the state of a preset or of a preset's property
+			function room:getpreset(beat, preset, property)
+				preset = tostring(preset):lower()
+				preset = aliasToPreset[preset] or preset -- allow for stuff like room:getpreset(beat, 'screentile') even though the preset is actually 'tilen'
+				-- :)
+
+				local name = preset
+
+				if property then
+					name = name .. property
+				end
+
+				return getvalue(self, name, beat)
 			end
-			]]
 			
 			function room:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
 				self.level:customflash(beat,index,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
 			end
-			
-			function room:screentile(beat,x,y)
-				self.level:screentile(beat,index,x,y)
-			end
-			
-			function room:screenscroll(beat,x,y)
-				self.level:screenscroll(beat,index,x,y)
-			end
+
 			function room:pulsecamera(beat,count,frequency,strength)
 				self.level:pulsecamera(beat,index,count,frequency,strength)
 			end
-			
 			
 			--hands
 			function room:showhand(beat,hand,instant,align)
@@ -495,32 +653,6 @@ local extension = function(_level)
 			self:customflash(beat,4,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
 		end
 		
-		--screen tile
-		function level:screentile(beat,room,x,y)
-			local enable = true
-			if x == 1 and y == 1 then
-				enable = false
-			end
-			self:addevent(beat,'SetVFXPreset',{rooms = self:roomtable(room), preset = 'TileN', enable = enable, floatX = x, floatY = y})
-		end
-		
-		function level:ontopscreentile(beat,x,y)
-			self:screentile(beat,4,x,y)
-		end
-		
-		--screen scroll
-		function level:screenscroll(beat,room,x,y)
-			local enable = true
-			if x == 0 and y == 0 then
-				enable = false
-			end
-			self:addevent(beat,'SetVFXPreset',{rooms = self:roomtable(room), preset = 'CustomScreenScroll', enable = enable, floatX = x, floatY = y})
-		end
-		
-		function level:ontopscreenscroll(beat,x,y)
-			self:screenscroll(beat,4,x,y)
-		end
-		
 		--pulse camera
 		function level:pulsecamera(beat,room,count,frequency,strength)
 			frequency = frequency or 1
@@ -531,7 +663,6 @@ local extension = function(_level)
 		function level:ontoppulsecamera(beat,count,frequency,strength)
 			self:pulsecamera(beat,4,count,frequency,strength)
 		end
-
 
 	
 		--if you need to initialize anything, do it here.

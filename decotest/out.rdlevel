@@ -1,1 +1,89 @@
-{"events":[{"beat":2,"y":0,"order":[0,1,2,3],"bar":4,"type":"ReorderRooms"},{"beat":7,"y":1,"duration":1,"bar":1,"roomPosition":[50,50],"type":"MoveRoom","ease":"Linear"},{"beat":3,"y":0,"duration":1,"bar":2,"roomPosition":[50,50],"type":"MoveRoom","ease":"Linear"},{"beat":1,"y":0,"duration":1,"bar":4,"roomPosition":[50,50],"type":"MoveRoom","ease":"Linear"},{"beat":1,"y":0,"bar":1,"mode":"AspectFill","type":"SetRoomContentMode"},{"beat":1,"y":1,"bar":1,"mode":"AspectFill","type":"SetRoomContentMode"},{"beat":1,"y":2,"bar":1,"mode":"AspectFill","type":"SetRoomContentMode"},{"beat":1,"y":3,"bar":1,"mode":"AspectFill","type":"SetRoomContentMode"},{"beat":2,"frequency":5,"rooms":[0],"type":"SetVFXPreset","y":1,"preset":"WavyRows","duration":2,"bar":1,"enable":true,"ease":"InOutQuad"},{"beat":2,"y":0,"methodName":"room[0].wavyRowsFrequency = 5","bar":1,"sortOffset":0,"type":"CallCustomMethod","executionTime":"OnBar"},{"beat":1,"rowPosition":[50,50],"row":0,"type":"MoveRow","y":2,"customPosition":true,"duration":0,"bar":1,"ease":"Linear","pivot":0.5,"target":"WholeRow"},{"beat":1,"y":0,"scale":[100,100],"duration":0,"bar":1,"type":"MoveRoom","roomPosition":[50,50],"ease":"Linear"},{"beat":1,"y":1,"scale":[100,100],"duration":0,"bar":1,"type":"MoveRoom","roomPosition":[50,50],"ease":"Linear"},{"beat":1,"y":2,"scale":[100,100],"duration":0,"bar":1,"type":"MoveRoom","roomPosition":[50,50],"ease":"Linear"},{"beat":1,"y":3,"scale":[100,100],"duration":0,"bar":1,"type":"MoveRoom","roomPosition":[50,50],"ease":"Linear"}],"conditionals":[],"rows":[{"pulseSound":"Shaker","pulseSoundVolume":100,"row":0,"pulseSoundPitch":100,"rooms":[0],"pulseSoundOffset":0,"character":"Clef","rowType":"Classic","player":"P1","pulseSoundPan":0}],"settings":{"tags":"","separate2PLevelFilename":"","canBePlayedOn":"OnePlayerOnly","rankDescription":["Better call 911, now!","Ugh, you can do better","Not bad I guess...","We make a good team!","You are really good!","Wow! That's awesome!!"],"firstBeatBehavior":"RunNormally","multiplayerAppearance":"HorizontalStrips","artist":"","song":"","specialArtistType":"None","artistPermission":"","artistLinks":"","author":"","difficulty":"Medium","seizureWarning":false,"version":50,"previewImage":"","syringeIcon":"","previewSong":"","previewSongStartTime":0,"previewSongDuration":10,"mods":"classicHitParticles","songNameHue":0.4074649,"levelVolume":1,"rankMaxMistakes":[20,15,10,5],"description":""},"decorations":[{"filename":"insom","depth":0,"row":0,"rooms":[0],"visible":true,"id":"8emuye4"},{"filename":"insom","depth":0,"row":1,"rooms":[0],"visible":false,"id":"llmj9aj"},{"filename":"insom","depth":0,"row":2,"rooms":[1],"visible":false,"id":"qtwpss1"}]}
+﻿{
+	"settings":
+	{
+		"version": 51, 
+		"artist": "", 
+		"song": "", 
+		"specialArtistType": "None", 
+		"artistPermission": "", 
+		"artistLinks": "", 
+		"author": "", 
+		"difficulty": "Medium", 
+		"seizureWarning": false, 
+		"previewImage": "", 
+		"syringeIcon": "", 
+		"previewSong": "", 
+		"previewSongStartTime": 0, 
+		"previewSongDuration": 10, 
+		"songNameHue": 0.4074649, 
+		"description": "", 
+		"tags": "", 
+		"separate2PLevelFilename": "", 
+		"canBePlayedOn": "OnePlayerOnly", 
+		"firstBeatBehavior": "RunNormally", 
+		"multiplayerAppearance": "HorizontalStrips", 
+		"levelVolume": 1, 
+		"rankMaxMistakes": [20, 15, 10, 5], 
+		"mods": "classicHitParticles", 
+		"rankDescription":
+		[
+			"Better call 911, now!",
+			"Ugh, you can do better",
+			"Not bad I guess...",
+			"We make a good team!",
+			"You are really good!",
+			"Wow! That's awesome!!"
+		]
+	},
+	"rows":
+	[
+		{ "character": "Clef", "rowType": "Classic", "row": 0, "rooms": [0], "player": "P1", "pulseSound": "Shaker", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+	],
+	"decorations":
+	[
+		{ "id": "8emuye4", "row": 0, "rooms": [0], "filename": "insom", "depth": 0, "visible": true },
+		{ "id": "llmj9aj", "row": 1, "rooms": [0], "filename": "insom", "depth": 0, "visible": false },
+		{ "id": "qtwpss1", "row": 2, "rooms": [1], "filename": "insom", "depth": 0, "visible": false },
+	],
+	"events":
+	[
+		{ "bar": 1, "beat": 1, "y": 2, "type": "MoveRow", "row": 0, "target": "WholeRow", "customPosition": true, "rowPosition": [50, 50], "pivot": 0.5, "duration": 0, "ease": "Linear" },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "Comment", "show": false, "text": "false" },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "Comment", "show": false, "text": "1" },
+		{ "bar": 1, "beat": 1, "y": 0, "type": "MoveRoom", "roomPosition": [50, 50], "scale": [100, 100], "duration": 0, "ease": "Linear" },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "MoveRoom", "roomPosition": [50, 50], "scale": [100, 100], "duration": 0, "ease": "Linear" },
+		{ "bar": 1, "beat": 1, "y": 2, "type": "MoveRoom", "roomPosition": [50, 50], "scale": [100, 100], "duration": 0, "ease": "Linear" },
+		{ "bar": 1, "beat": 1, "y": 3, "type": "MoveRoom", "roomPosition": [50, 50], "scale": [100, 100], "duration": 0, "ease": "Linear" },
+		{ "bar": 1, "beat": 1, "y": 0, "type": "SetRoomContentMode", "mode": "AspectFill" },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "SetRoomContentMode", "mode": "AspectFill" },
+		{ "bar": 1, "beat": 1, "y": 2, "type": "SetRoomContentMode", "mode": "AspectFill" },
+		{ "bar": 1, "beat": 1, "y": 3, "type": "SetRoomContentMode", "mode": "AspectFill" },
+		{ "bar": 1, "beat": 2, "y": 1, "type": "Comment", "show": false, "text": "false" },
+		{ "bar": 1, "beat": 2, "y": 1, "type": "Comment", "show": false, "text": "1" },
+		{ "bar": 1, "beat": 3, "y": 0, "type": "SetVFXPreset", "rooms": [0], "preset": "TileN", "floatX": 2, "floatY": 1, "enable": true },
+		{ "bar": 1, "beat": 3, "y": 1, "type": "Comment", "show": false, "text": "true" },
+		{ "bar": 1, "beat": 3, "y": 1, "type": "Comment", "show": false, "text": "2" },
+		{ "bar": 1, "beat": 4, "y": 1, "type": "Comment", "show": false, "text": "true" },
+		{ "bar": 1, "beat": 4, "y": 1, "type": "Comment", "show": false, "text": "2" },
+		{ "bar": 1, "beat": 5, "y": 0, "type": "SetVFXPreset", "rooms": [4], "preset": "CustomScreenScroll", "floatX": 0, "floatY": 5.5, "enable": true },
+		{ "bar": 1, "beat": 5, "y": 1, "type": "Comment", "show": false, "text": "true" },
+		{ "bar": 1, "beat": 5, "y": 1, "type": "Comment", "show": false, "text": "2" },
+		{ "bar": 1, "beat": 6, "y": 1, "type": "Comment", "show": false, "text": "true" },
+		{ "bar": 1, "beat": 6, "y": 1, "type": "Comment", "show": false, "text": "2" },
+		{ "bar": 1, "beat": 7, "y": 0, "type": "SetVFXPreset", "rooms": [0], "preset": "Sepia", "enable": true },
+		{ "bar": 1, "beat": 7, "y": 1, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
+		{ "bar": 1, "beat": 7, "y": 1, "type": "Comment", "show": false, "text": "true" },
+		{ "bar": 1, "beat": 7, "y": 1, "type": "Comment", "show": false, "text": "2" },
+		{ "bar": 1, "beat": 8, "y": 1, "type": "Comment", "show": false, "text": "true" },
+		{ "bar": 1, "beat": 8, "y": 1, "type": "Comment", "show": false, "text": "2" },
+		{ "bar": 2, "beat": 1, "y": 0, "type": "SetVFXPreset", "rooms": [0], "preset": "Sepia", "enable": false },
+		{ "bar": 2, "beat": 3, "y": 0, "type": "SetVFXPreset", "rooms": [4], "preset": "Sepia", "enable": true },
+		{ "bar": 2, "beat": 3, "y": 0, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
+		{ "bar": 2, "beat": 5, "y": 0, "type": "SetVFXPreset", "rooms": [4], "preset": "Sepia", "enable": false },
+		{ "bar": 4, "beat": 1, "y": 0, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
+		{ "bar": 4, "beat": 2, "y": 0, "type": "ReorderRooms", "order": [0, 1, 2, 3] },
+	],
+	"conditionals":
+	[
+	]
+}
