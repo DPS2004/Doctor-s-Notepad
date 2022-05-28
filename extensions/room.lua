@@ -368,7 +368,7 @@ local extension = function(_level)
 									createdfunction = createdfunction .. 'setvalue(self, "' .. valuename .. '", beat, ' .. property .. ')\n'
 								end
 
-								createdfunction = createdfunction .. '\nself.level:addevent(\nbeat,\n"SetVFXPreset",\n{\nrooms = {index},\n'
+								createdfunction = createdfunction .. '\nself.level:addevent(\nbeat,\n"SetVFXPreset",\n{\nrooms = level:roomtable(index),\n'
 								createdfunction = createdfunction .. 'preset = "' .. k .. '",\nenable = state,\n'
 
 								for _,property in ipairs(additionalProperties) do
