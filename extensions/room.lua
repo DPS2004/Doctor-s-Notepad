@@ -216,6 +216,54 @@ local extension = function(_level)
 
 			end
 
+			-- text
+			-- the times here is just a table with offsets from the base 'beat' variable for each AdvanceText event
+			-- i.e. if beat is 3 and times is {1} then there will be the floating text event at beat 3 and an Advance Text event at beat 4 (3+1)
+			-- (notes for when docs get written)
+			function room:floatingtext(beat, text, times, x, y, size, angle, mode, showChildren, color, outlineColor, anchor, fadeOutRate)
+				x = x or 50
+				y = y or 50
+				text = text or ''
+				times = times or {}
+				size = size or 8
+				angle = angle or 0
+				mode = mode or 'FadeOut'
+				if showChildren == nil then showChildren = true end -- 'showChildren = showChildren or true' will NOT work for this because if showChildren is false then it will just be set to true!
+				color = color or 'ffffffff'
+				outlineColor = outlineColor or '000000ff'
+				anchor = anchor or 'MiddleCenter'
+				fadeOutRate = fadeOutRate or 3
+
+				self.level:addevent(beat, "FloatingText",{ -- the floating text has so many options :notlikeshift:
+					rooms = self.level:roomtable(index),
+					id = level.floatingtextid,
+					text = text,
+					times = '',
+					textPosition = {x, y},
+					size = size,
+					angle = angle,
+					mode = mode,
+					showChildren = showChildren,
+					color = color,
+					outlineColor = outlineColor,
+					anchor = anchor,
+					fadeOutRate = fadeOutRate
+				})
+
+				for _,t in ipairs(times) do
+
+					t = tonumber(t)
+
+					if t then
+						self.level:addevent(beat + t, 'AdvanceText', {id = level.floatingtextid})
+					end
+
+				end
+
+				level.floatingtextid = level.floatingtextid + 1
+
+			end
+
 			-- set theme
 			function room:settheme(beat, theme)
 				self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = theme})
@@ -734,6 +782,19 @@ local extension = function(_level)
 				level:addfakeevent(0, "updateroomscale", {room = i, duration = 0, ease = "Linear"})
 				level:addfakeevent(0, "updateroommode", {room = i, duration = 0, ease = "Linear"})
 			end
+        end
+
+
+        local foundtext = false
+        level.floatingtextid = 0
+        for _,event in ipairs(level.data.events) do
+        	if event.type == 'FloatingText' then
+        		foundtext = true
+        		level.floatingtextid = math.max(level.floatingtextid, event.id)
+        	end
+        end
+        if foundtext then
+        	level.floatingtextid = level.floatingtextid + 1
         end
 		
 		

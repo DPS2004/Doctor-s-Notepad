@@ -36,24 +36,4 @@ level:vignette(16, 0)
 
 level:ontopscreenscroll(16, true, 0, 0)
 
-level:getroom(0):setperspective(18, {
-	{100, 0}, {100, 100}, {0, 0}, {0, 100}
-}, 2, 'OutElastic')
-
-local corners = getvalue(level:getroom(0), 'corners', 20)
-local str = ''
-
-for _,c in ipairs(corners) do
-	str = str .. '{' .. c[1] .. ', ' .. c[2] .. '}, '
-end
-
-level:comment(20, str:sub(1,-3))
-
-local corners = getvalue(level:getroom(0), 'corners', 1)
-local str = ''
-
-for _,c in ipairs(corners) do
-	str = str .. '{' .. c[1] .. ', ' .. c[2] .. '}, '
-end
-
-level:comment(21, str:sub(1,-3))
+level:getroom(4):floatingtext(3.5, 'Yo!\nYo, again!', {1}, 50, 50, 16)
