@@ -20,9 +20,13 @@ local extension = function(_level)
 				px = {{beat = 0, state = 50}},
 				py = {{beat = 0, state = 50}},
 				stretch = {{beat = 0, state = true}},
+				mask = {{beat = 0, state = {''}}},
+				bg = {{beat = 0, state = {''}}},
+				fg = {{beat = 0, state = {''}}},
 				xflip = {{beat = 0, state = false}},
 				yflip = {{beat = 0, state = false}},				
 				handvis = {{beat = 0, state = false}},
+				corners = {{beat = 0, state = { {0, 0}, {100, 0}, {0, 100}, {100, 100} } }},
 				--camera
 				camx = {{beat = 0, state = 50}},
 				camy = {{beat = 0, state = 50}},
@@ -167,6 +171,51 @@ local extension = function(_level)
 				self.level:addfakeevent(beat, "updateroommode", {room = index})
 			end
 
+			-- mask
+			function room:mask(beat, filenames, fps, mode)
+				filenames = filenames or ''
+				fps = fps or 30
+				mode = mode or 'ScaleToFill'
+
+				if type(filenames) ~= 'table' then
+					filenames = {tostring(filenames)}
+				end
+
+				setvalue(self, 'mask', beat, filenames)
+
+				self.level:addevent(beat, "MaskRoom", {image = filenames, fps = fps, y = index, contentMode = mode})
+
+			end
+
+			-- perspective
+			function room:setperspective(beat, pos, duration, ease)
+
+				local newcorners = {}
+
+				duration = duration or 0
+				ease = ease or 'Linear'
+
+				if type(pos) ~= 'table' then
+					pos = {}
+				end
+
+				for i=1,4 do
+
+					pos[i] = pos[i] or {}
+
+					newcorners[#newcorners+1] = {pos[i][1], pos[i][2]}
+
+					pos[i][1] = pos[i][1] or null
+					pos[i][2] = pos[i][2] or null
+
+				end
+
+				setvalue(self, 'corners', beat, newcorners)
+
+				self.level:addfakeevent(beat, 'updateroomperspective', {room = index, corners = pos, duration = duration, ease = ease})
+
+			end
+
 			-- set theme
 			function room:settheme(beat, theme)
 				self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = theme})
@@ -179,6 +228,7 @@ local extension = function(_level)
 			local aliasToPreset = {}
 
 			-- the only reason this is in a do-end block is so that its easier to tell where it starts and ends.        yeah
+			-- well also it makes it easier to collapse the whole thing haha
 			do
 
 				-- key in the table = actual name written in the rdlevel
@@ -457,7 +507,7 @@ local extension = function(_level)
 				end
 
 				if index == 0 then
-					print(dbg)
+					-- print(dbg)
 				end
 
 			end
@@ -532,8 +582,7 @@ local extension = function(_level)
 			end
 			
 			
-			--bg
-			
+			-- background
 			function room:setbg(beat,filenames,bgtype,fps,mode,sx,sy,color,filter)
 
 				mode = mode or 'ScaleToFill'
@@ -547,6 +596,8 @@ local extension = function(_level)
 				if type(filenames) ~= 'table' then
 					filenames = {tostring(filenames)}
 				end
+
+				setvalue(self, 'bg', beat, filenames)
 
 				self.level:addevent(
 					beat,
@@ -565,6 +616,7 @@ local extension = function(_level)
 				)
 			end
 
+			-- foreground
 			function room:setfg(beat,filenames,fps,mode,sx,sy,color)
 
 				mode = mode or 'ScaleToFill'
@@ -576,6 +628,8 @@ local extension = function(_level)
 				if type(filenames) ~= 'table' then
 					filenames = {tostring(filenames)}
 				end
+
+				setvalue(self, 'fg', beat, filenames)
 
 				self.level:addevent(
 					beat,
@@ -591,6 +645,7 @@ local extension = function(_level)
 					}
 				)
 			end
+
 
 			--save to level
 			function room:save()
@@ -826,6 +881,20 @@ local extension = function(_level)
 					action = v.action,
 					align = v.align,
 					instant = v.instant
+				}
+			)
+		end)
+
+		--perspective
+		level:fakehandler('updateroomperspective',function(self,v)
+			self:addevent(
+				v.beat,
+				"SetRoomPerspective",
+				{
+					y = v.room,
+					cornerPositions = v.corners,
+					duration = v.duration,
+					ease = v.ease
 				}
 			)
 		end)
