@@ -37,3 +37,22 @@ level:vignette(16, 0)
 level:ontopscreenscroll(16, true, 0, 0)
 
 level:getroom(4):floatingtext(3.5, 'Yo!\nYo, again!', {1}, 50, 50, 16)
+
+level:setbg(18, 0, 'fg.png', 'image')
+level:setbg(19, 0, '', 'image')
+
+level:getroom(1):fade(19, 0, 1, 'OutExpo')
+
+level:ontopsetbg(20, '', 'color', nil, nil, nil, nil, 'FFFFFFFF')
+level:ontopsetbg(21, '', 'color', nil, nil, nil, nil, '000000FF')
+
+level:ontopsetfg(22, 'fg.png', nil, nil, nil, nil, 'FFFFFFFF')
+level:ontopsetfg(23, '', nil, nil, nil, nil, '000000FF')
+
+level:pulsecamera(24, 0, 1, 2, 4)
+
+level:ontopscreenscroll(26, true, 8, -2)
+
+level:ontopflash(28, nil, nil, nil, 0, 1)
+
+level:stutter(2, 0, nil, 1, 2, 3)

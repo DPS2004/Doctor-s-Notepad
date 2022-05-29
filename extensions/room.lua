@@ -27,6 +27,8 @@ local extension = function(_level)
 				yflip = {{beat = 0, state = false}},				
 				handvis = {{beat = 0, state = false}},
 				corners = {{beat = 0, state = { {0, 0}, {100, 0}, {0, 100}, {100, 100} } }},
+				opacity = {{beat = 0, state = 100}},
+				invert = {{beat = 0, state = false}},
 				--camera
 				camx = {{beat = 0, state = 50}},
 				camy = {{beat = 0, state = 50}},
@@ -597,11 +599,25 @@ local extension = function(_level)
 			end
 			
 			function room:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
-				self.level:customflash(beat,index,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
+
+				startcolor = startcolor or 'ffffff'
+				startopacity = startopacity or 100
+				endcolor = endcolor or startcolor
+				endopacity = endopacity or startopacity
+				duration = duration or 0
+				bg = bg or false
+				ease = ease or 'Linear'
+
+				self.level:addevent(beat,'CustomFlash', {rooms = self.level:roomtable(room), background = bg, duration = duration, startColor = startcolor, startOpacity = startopacity, endColor = endcolor, endOpacity = endopacity, ease = ease})
 			end
 
-			function room:pulsecamera(beat,count,frequency,strength)
-				self.level:pulsecamera(beat,index,count,frequency,strength)
+			function room:pulsecamera(beat, count, frequency, strength)
+
+				count = count or 1
+				frequency = frequency or 1
+				strength = strength or 1
+
+				self.level:addevent(beat, 'PulseCamera', {rooms = self.level:roomtable(index), strength = strength, count = count, frequency = frequency})
 			end
 			
 			--hands
@@ -655,7 +671,7 @@ local extension = function(_level)
 
 				self.level:addevent(
 					beat,
-					"SetBackgroundColor", -- why the fuck is it called background color if it also sets the image 🤨
+					"SetBackgroundColor", -- why the :politician: is it called background color if it also sets the image 🤨
 					{
 						rooms = self.level:roomtable(index),
 						backgroundType = bgtype,
@@ -700,6 +716,114 @@ local extension = function(_level)
 				)
 			end
 
+			-- fade (this is the last function im commenting)
+			function room:fade(beat,opacity,duration,ease)
+
+				opacity = opacity or 100
+				duration = duration or 0
+				ease = ease or 'Linear'
+
+				setvalue(self, 'opacity', beat, opacity)
+
+				self.level:addevent(
+					beat,
+					'FadeRoom',
+					{
+						y = index,
+						opacity = opacity,
+						duration = duration,
+						ease = ease
+					}
+				)
+
+			end
+			function room:bassdrop(beat, strength)
+
+				strength = strength or 'Low'
+
+				self.level:addevent(
+					beat,
+					'BassDrop',
+					{
+						rooms = self.level:roomtable(index),
+						strength = strength
+					}
+				)
+
+			end
+
+			function room:shake(beat, shakelevel)
+				shakelevel = shakelevel or 'Low'
+
+				self.level:addevent(
+					beat,
+					'ShakeScreen',
+					{
+						rooms = self.level:roomtable(index),
+						shakeLevel = shakelevel
+					}
+				)
+
+			end
+
+			function room:invertcolors(beat, state)
+				if state == nil then
+					state = not getvalue(self, 'invert', beat)
+				end
+
+				setvalue(self, 'invert', beat, state)
+
+				self.level:addevent(
+					beat,
+					'InvertColors',
+					{
+						rooms = self.level:roomtable(index),
+						enable = state
+					}
+				)
+
+			end
+
+			function room:textexplosion(beat, text, color, mode, direction)
+				text = text or ''
+				color = color or '000000'
+				mode = mode or 'OneColor'
+				direction = direction or 'Left'
+
+				self.level:addevent(
+					beat,
+					'TextExplosion',
+					{
+						rooms = self.level:roomtable(index),
+						text = text,
+						color = color,
+						mode = mode,
+						direction = direction
+					}
+				)
+
+			end
+
+			function room:stutter(beat, action, sourcebeat, length, loops)
+				action = action or 'Add'
+				sourcebeat = sourcebeat or 0
+				length = length or 0
+				loops = loops or 1
+
+				self.level:addevent(
+					beat,
+					'Stutter',
+					{
+						rooms = self.level:roomtable(index),
+						action = action,
+						sourceBeat = sourcebeat,
+						length = length,
+						loops = loops
+					}
+				)
+
+			end
+
 
 			--save to level
 			function room:save()
@@ -739,40 +863,58 @@ local extension = function(_level)
 				{ order = {r1,r2,r3,r4}}
 			)
 		end
-		
-		
-		-- set a theme
-		function level:settheme(beat, room, theme)
-			self.rooms[room]:settheme(beat, theme)
-			--self:addevent(beat,'SetTheme',{preset = theme, rooms = self:roomtable(rooms)})
-		end
 
-		-- add a custom flash event
-		
-		function level:customflash(beat,room,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
-			endcolor = endcolor or startcolor
-			endopacity = endopacity or startopacity
-			duration = duration or 0
-			bg = bg or false
-			ease = ease or 'Linear'
-			self:addevent(beat,'CustomFlash', {rooms = self:roomtable(room), background = bg, duration = duration, startColor = startcolor, startOpacity = startopacity, endColor = endcolor, endOpacity = endopacity, ease = ease})
-		end
-		
-		function level:ontopflash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
-			self:customflash(beat,4,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
-		end
-		
-		--pulse camera
-		function level:pulsecamera(beat,room,count,frequency,strength)
-			frequency = frequency or 1
-			strength = strength or 1
-			self:addevent(beat,'PulseCamera',{rooms = self:roomtable(room), strength = strength, count = count, frequency = frequency})
-		end
-		
-		function level:ontoppulsecamera(beat,count,frequency,strength)
-			self:pulsecamera(beat,4,count,frequency,strength)
-		end
+		local function createlevelmethods()
+			-- autogenerate all the level: functions using the room: functions if they dont already exist
+			-- yes i am doing it like this who needs readability am i right
 
+			local ontopfunctions = { -- list of what functions can be ontop and make another function for that
+				setbg = true,
+				setfg = true,
+				flash = true,
+				bassdrop = true,
+				shake = true,
+				xflip = true,
+				yflip = true
+			}
+
+			local functionblacklist = { -- add functions from room has that the level shouldn't have here
+				save = true, -- we Absolutely Do Not want to be able to call this from level
+				movex = true, movey = true, movesx = true, movesy = true, movepx = true, movepy = true, move = true, -- no moving the room from level (may remove later for consistency? dunno)
+				camx = true, camy = true, camrot = true, camzoom = true, cam = true -- same deal as above but for the camera
+			}
+
+			local room = level:getroom(0) -- the only reason i use this is to get all the functions of the rooms
+
+			for k,v in pairs(room) do
+				local cancontinue = false -- at first assume we can't continue at all
+				if type(v) == 'function' then cancontinue = true end -- if we found a function, we can continue
+				if level[k] then cancontinue = false end -- don't make the function if we already have it
+				if functionblacklist[k] then cancontinue = false end -- if the function is in the blacklist don't continue
+
+				if cancontinue then
+
+					level[k] = function(self, beat, room, ...) -- vararg my beloved
+						print(beat, room)
+						local thisroom = self:getroom(room)
+						local func = thisroom[k]
+						print(thisroom, beat, room, ...)
+						func(thisroom, beat, ...)
+					end
+
+					if ontopfunctions[k] then
+						level['ontop'..k] = function(self, beat, ...) -- vararg my beloved
+							local thisroom = self:getroom(4)
+							local func = thisroom[k]
+							print(thisroom, beat, ...)
+							func(thisroom, beat, ...)
+						end
+					end
+
+				end
+			end
+
+		end
 	
 		--if you need to initialize anything, do it here.
 
@@ -790,6 +932,9 @@ local extension = function(_level)
 			end
         end
 
+        -- calling this here since the first room gotta be initialized first
+        createlevelmethods()
+
 
         local foundtext = false
         level.floatingtextid = 0
@@ -802,7 +947,6 @@ local extension = function(_level)
         if foundtext then
         	level.floatingtextid = level.floatingtextid + 1
         end
-		
 		
 		-- fake event handlers
 		
