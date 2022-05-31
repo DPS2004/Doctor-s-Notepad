@@ -107,14 +107,14 @@ local extension = function(_level)
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "camx", beat, x)
-				self.level:addfakeevent(beat, "updatecamxy", {room = index, duration = duration, ease = ease})
+				self.level:addfakeevent(beat, "updatecamx", {room = index, duration = duration, ease = ease})
 			end
 
 			function room:camy(beat, y, duration, ease)
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "camy", beat, y)
-				self.level:addfakeevent(beat, "updatecamxy", {room = index, duration = duration, ease = ease})
+				self.level:addfakeevent(beat, "updatecamy", {room = index, duration = duration, ease = ease})
 			end
 
 			function room:camzoom(beat, z, duration, ease)
@@ -875,13 +875,13 @@ local extension = function(_level)
 				bassdrop = true,
 				shake = true,
 				xflip = true,
-				yflip = true
+				yflip = true,
+				floatingtext = true,
+				camx = true, camy = true, camzoom = true, camrot = true
 			}
 
 			local functionblacklist = { -- add functions from room has that the level shouldn't have here
-				save = true, -- we Absolutely Do Not want to be able to call this from level
-				movex = true, movey = true, movesx = true, movesy = true, movepx = true, movepy = true, move = true, -- no moving the room from level (may remove later for consistency? dunno)
-				camx = true, camy = true, camrot = true, camzoom = true, cam = true -- same deal as above but for the camera
+				save = true -- we Absolutely Do Not want to be able to call this from level
 			}
 
 			local room = level:getroom(0) -- the only reason i use this is to get all the functions of the rooms
@@ -889,7 +889,7 @@ local extension = function(_level)
 			for k,v in pairs(room) do
 				local cancontinue = false -- at first assume we can't continue at all
 				if type(v) == 'function' then cancontinue = true end -- if we found a function, we can continue
-				if level[k] then cancontinue = false end -- don't make the function if we already have it
+				if level[k] then cancontinue = false end -- don't make the function if we already have it somehow
 				if functionblacklist[k] then cancontinue = false end -- if the function is in the blacklist don't continue
 
 				if cancontinue then
@@ -1039,7 +1039,7 @@ local extension = function(_level)
 		
 		------------------------cameras
 		
-		level:fakehandler('updatecamxy',function(self,v)
+		level:fakehandler('updatecamx',function(self,v)
 			self:addevent(
 				v.beat,
 				"MoveCamera",
@@ -1047,6 +1047,22 @@ local extension = function(_level)
 					rooms = self:roomtable(v.room),
 					cameraPosition = {
 						getvalue(self.rooms[v.room], "camx", v.beat),
+						null
+						
+					},
+					duration = v.duration,
+					ease = v.ease
+				}
+			)
+		end)
+		level:fakehandler('updatecamy',function(self,v)
+			self:addevent(
+				v.beat,
+				"MoveCamera",
+				{
+					rooms = self:roomtable(v.room),
+					cameraPosition = {
+						null,
 						getvalue(self.rooms[v.room], "camy", v.beat)
 						
 					},
@@ -1117,6 +1133,19 @@ local extension = function(_level)
 			local condensed = {}
 			local groups = self:getcondensable(elist,{
 				'y',
+				'duration',
+				'ease'
+			})
+			for i,v in ipairs(groups) do
+				table.insert(condensed,self:mergegroup(v))
+			end
+			return condensed
+		end)
+
+		level:condenser('MoveCamera',function(self,elist)
+			local condensed = {}
+			local groups = self:getcondensable(elist,{
+				'rooms',
 				'duration',
 				'ease'
 			})

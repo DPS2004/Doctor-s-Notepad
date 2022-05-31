@@ -55,4 +55,7 @@ level:ontopscreenscroll(26, true, 8, -2)
 
 level:ontopflash(28, nil, nil, nil, 0, 1)
 
-level:stutter(2, 0, nil, 1, 2, 3)
+level:camx(1, 0, 25, 2, 'OutExpo')
+
+level:movex(3, 0, 45, 2, 'OutExpo')
+level:movey(3, 0, 55, 2, 'OutExpo')

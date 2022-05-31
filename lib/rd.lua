@@ -2,8 +2,6 @@ local rd = {}
 
 
 
-
-
 function rd.load(filename,extensions)
     local level = {}
     level.data = dpf.loadjson(filename, {}, true)
@@ -149,6 +147,20 @@ function rd.load(filename,extensions)
     end
 	
 	
+	-- quick function made for level:getcondensable to check whether two tables are equal, useful for stuff like the 'rooms' property some events have
+	local function tablesequal(t1, t2)
+		for k,v in pairs(t1) do
+			if v ~= t2[k] then
+				if type(v) == 'table' and t2[k] == 'table' then
+					local eq=tablesequal(v,t2[k])
+					if not eq then return false end
+				else
+					return false
+				end
+			end
+		end
+		return true
+	end	
 
     -- save level to file, and resolve fake events
 	
@@ -163,7 +175,14 @@ function rd.load(filename,extensions)
 					local thismatches = true
 					for __i,q in ipairs(equalchecks) do
 						if group[1][q] ~= v[q] then
-							thismatches = false
+							if(type(group[1][q]) == 'table' and type(v[q]) == 'table') then
+								local equals = tablesequal(group[1][q], v[q])
+								if not equals then
+									thismatches = false
+								end
+							else
+								thismatches = false
+							end
 						end
 					end
 					if thismatches then
