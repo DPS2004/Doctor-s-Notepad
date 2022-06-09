@@ -221,8 +221,8 @@ function rd.load(filename,extensions)
 	function level:condenser(etype,func)
 		self.condensers[etype] = func
 	end
-	function level:fakehandler(etype,efunc)
-		self.fakehandlers[etype] = efunc
+	function level:fakehandler(etype,func)
+		self.fakehandlers[etype] = func
 	end
 	
 	function level:makereal(v)

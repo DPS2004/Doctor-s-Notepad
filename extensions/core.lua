@@ -33,14 +33,14 @@ local extension = function(_level)
 		
 		--comments
 		
-		function level:showcomments()
-			self.doshowcomments = true
-		end
 		
 		function level:comment(beat, text)
 			self:addevent(beat, "Comment", {show = self.doshowcomments, text=text})
 		end
-
+	
+		function level:showcomments()
+			self.doshowcomments = true
+		end
 		
 
 		-- clear or keep every event that has the same type as any event in eventtypes
