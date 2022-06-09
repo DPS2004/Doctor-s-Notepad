@@ -1,84 +1,61 @@
-
 level:setuprooms()
 
-insom1 = level:newdecoration('insom', 0, 1)
+level:getroom(1):settheme(0, 'BoyWard')
+level:getroom(1):mask(0, 'fg.png')
+level:getroom(1):mask(2, {'fg.png', 'fg2.png'}, 4)
+level:getroom(1):mask(4, '')
 
-insom1:movex(2, 75, 0.5, 'Linear')
-insom1:movey(2.5, 30, 1, 'OutExpo')
+-- same thing as level:getroom(0):screentile(2, true, 2, nil) (actually literally just that haha)
+level:screentile(2, 0, true, 2, nil)
 
-insom1:movesx(3, 2, 1, 'InSine')
-insom1:movesy(3.25, 1.5, 1, 'OutElastic')
+level:getroom(0):screentile(4, true, 1, 1)
 
-insom1:setroom(4, 0)
+-- same thing as level:getroom(4):screenscroll(4, true, -2, 5) (actually literally just that haha)
+level:ontopscreenscroll(6, true, 0, 2)
 
-insom1:movepx(1, 100, 1, 'OutBounce')
+-- same thing as level:getroom(0):sepia(6, true)
+level:sepia(8, 0, true)
 
-insom1:rotate(5, 360, 2, 'InBack')
-insom1:rotate(7, 720, 2, 'OutExpo')
+-- same thing as level:getroom(0):sepia(8), this should toggle sepia to be false
+level:sepia(10, 0)
 
-insom1:hide(10)
-insom1:show(10.5)
+-- same thing as level:getroom(4):sepia(9) and level:sepia(9, 4), this should toggle on-top sepia to be true
+level:ontopsepia(12)
 
-insom1:playexpression(12, 'happy')
+-- set on-top sepia to false
+level:ontopsepia(14, false)
 
-insom1:setborder(16, 'Outline', '000000', 100, 0, 'Linear')
-insom1:setborder(16.5, 'Glow', 'FF0000', 100, 0, 'Linear')
-insom1:setborder(17, 'Outline', '0000FF', 50, 0, 'Linear')
-insom1:setborder(17.5, 'Glow', '00FF00', 50, 0, 'Linear')
+for i=0,7 do
 
-insom1:settint(19, true, 'FFFF00', 100, 0.5, 'Linear')
-insom1:settint(19.5, true, '0000FF', 0, 0.5, 'Linear')
+	local str = tostring(level:getroom(0):getpreset(i, 'screentile')) .. ', ' .. tostring(level:getroom(0):getpreset(i, 'screentile', 'floatx'))
 
-insom1:setopacity(21, 50, 1, 'Linear')
+	level:comment(i, str)
+end
 
-insom1:move(13, {
-	x = 50,
-	y = 75,
-	sx = 1
-}, 2, 'InOutQuad')
+level:vignette(16, 0)
 
-insom1:movex(12, 65, 0.5, 'OutQuad')
-insom1:movesy(12, 35, 0.5, 'OutQuad')
+level:ontopscreenscroll(16, true, 0, 0)
 
-room0 = level.rooms[0]
-room1 = level.rooms[1]
+level:getroom(4):floatingtext(3.5, 'Yo!\nYo, again!', {1}, 50, 50, 16)
 
-room0:settheme(0, 'InsomniacDay')
-room1:settheme(0, 'BoyWard')
+level:setbg(18, 0, 'fg.png', 'image')
+level:setbg(19, 0, '', 'image')
 
-room0:move(0, {
-	sx = 50,
-	x = 25
-}, 0, 'Linear')
+level:getroom(1):fade(19, 0, 1, 'OutExpo')
 
-room1:move(0, {
-	sx = 50,
-	x = 75
-}, 0, 'Linear')
+level:ontopsetbg(20, '', 'color', nil, nil, nil, nil, 'FFFFFFFF')
+level:ontopsetbg(21, '', 'color', nil, nil, nil, nil, '000000FF')
 
-room0:move(15, {
-	sx = 100,
-	x = 50
-}, 1, 'OutExpo')
+level:ontopsetfg(22, 'fg.png', nil, nil, nil, nil, 'FFFFFFFF')
+level:ontopsetfg(23, '', nil, nil, nil, nil, '000000FF')
 
-row0 = level.rows[0]
+level:pulsecamera(24, 0, 1, 2, 4)
 
-row0:movesy(1, 2, 2, 'OutElastic')
-row0:move(1.5, {
-	csx = 0.5,
-	csy = -1
-}, 1, 'OutSine')
-row0:move(3, {
-	y = 75,
-	x = 25
-}, 1, 'OutQuad')
-row0:move(4, {
-	hx = -15,
-	hy = -15,
-	hrot = 90,
-	hsx = 2,
-	hsy = 4,
-	yourmom = 5 -- this doesnt do anything! was just testing out row:move and if it calls any functions that dont exist
-}, 1, 'OutElastic')
+level:ontopscreenscroll(26, true, 8, -2)
 
-row0:setopacity(2, 50, 1, 'InExpo')
+level:ontopflash(28, nil, nil, nil, 0, 1)
+
+level:camx(1, 0, 25, 2, 'OutExpo')
+
+level:movex(3, 0, 45, 2, 'OutExpo')
+level:movey(3, 0, 55, 2, 'OutExpo')

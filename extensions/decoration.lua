@@ -4,17 +4,18 @@ local extension = function(_level)
 		--all of the functions you are adding to the level table go up here
 	
 		--create new decoration
-		function level:newdecoration(filename, depth, roomidx)
+		function level:newdecoration(filename, depth, roomidx, customname)
 
 			filename = filename or ''
 			depth = depth or 0
 			roomidx = math.min(math.max((roomidx or 0), 0), 3) -- clamp between 0 and 3
+			customname = customname or ('deco_' .. self.decoid)
 
 			local deco = {}
 
 			deco.level = self
-			deco.id = 'deco_' .. self.decoid
-			deco.idx = self.decoid + 1 -- so idx accurately reflects the index in the table
+			deco.id = customname
+			deco.idx = self.decoid -- keep actual index in the table in this variable
 			deco.room = level:getroom(roomidx)
 			deco.filename = filename
 			deco.depth = depth
@@ -47,7 +48,7 @@ local extension = function(_level)
 					self.level.data.decorations,
 					{
 						id = self.id,
-						row = self.idx - 1,
+						row = self.idx,
 						rooms = self.level:roomtable(self.room.index),
 						filename = self.filename,
 						depth = self.depth,
@@ -218,16 +219,35 @@ local extension = function(_level)
 			end
 
 
-			table.insert(self.decorations, deco)
+			self.decorations[deco.idx] = deco
 
 			return deco
 			
 		end
 
+		function level:getdecoration(idx)
+
+			return level.decorations[idx]
+
+		end
+
 	
 		--if you need to initialize anything, do it here.
 
-		
+		level.decoid = 0
+
+		-- make already-existing decos into deco objects
+		level.decorations = {}
+
+		for i, v in ipairs(level.data.decorations) do
+
+            local newdeco = level:newdecoration(v.filename, v.depth, v.rooms[1], v.id)
+            newdeco:setvisibleatstart(v.visible)
+
+        end
+
+        -- make sure they arent duplicated when saving by removing them from the original file completely
+        level.data.decorations = {}
 		
 		
 		-- fake event handlers

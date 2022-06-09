@@ -1,7 +1,7 @@
 ﻿{
 	"settings":
 	{
-		"version": 50, 
+		"version": 51, 
 		"artist": "", 
 		"song": "", 
 		"specialArtistType": "None", 
@@ -41,6 +41,9 @@
 	],
 	"decorations":
 	[
+		{ "id": "8emuye4", "row": 0, "rooms": [0], "filename": "insom", "depth": 0, "visible": true },
+		{ "id": "llmj9aj", "row": 1, "rooms": [0], "filename": "insom", "depth": 0, "visible": false },
+		{ "id": "qtwpss1", "row": 2, "rooms": [1], "filename": "insom", "depth": 0, "visible": false },
 	],
 	"events":
 	[
