@@ -660,7 +660,7 @@ local extension = function(_level)
 				sy = sy or 0
 				color = color or 'ffffffff'
 				fps = fps or 30
-				bgtype = bgtype or 'color'
+				bgtype = bgtype or 'Image'
 				filter = filter or 'NearestNeighbor'
 
 				if type(filenames) ~= 'table' then
