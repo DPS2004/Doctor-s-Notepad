@@ -22,6 +22,13 @@ function rd.load(filename,extensions)
 	
 	level.condensers = {}
 	
+	level.conditionals = {}
+	
+	level.autotag = nil
+	
+	level.autocond = nil
+	
+	level.dmult = 1
 	
 	level.initqueue = deeper.init()
 
@@ -86,13 +93,17 @@ function rd.load(filename,extensions)
     end
 	
 	-- add an arbitrary event
-    function level:addevent(beat, event, params)
+    function level:addevent(beat, event, params,tag,cond)
         local newevent = {}
 		beat = beat + self.eos
         newevent.bar, newevent.beat = self:getbm(beat)
 		newevent.truebeat = beat
         newevent.type = event
 		params = params or {}
+		
+		tag = tag or self.autotag
+		cond = cond or self.autocond
+		
         if not params.y then
 			if not self.eventyblacklist[event] then
 				if self.eventy[event] then
@@ -105,21 +116,37 @@ function rd.load(filename,extensions)
 			end
 		end
         for k, v in pairs(params) do
+			if k == 'duration' then
+				v = v * self.dmult
+			end
             newevent[k] = v
         end
+		
+		newevent.tag = tag
+		newevent['if'] = cond
 
         table.insert(self.data.events, newevent)
     end
 
     -- add fake event, to be turned into a real event upon saving
-    function level:addfakeevent(beat, event, params)
+    function level:addfakeevent(beat, event, params,tag,cond)
         params = params or {}
+		
+		tag = tag or self.autotag
+		cond = cond or self.autocond
+		
         local newevent = {}		
 		
 		newevent.beat = beat
         newevent.type = event
 		
+		newevent._tag = tag
+		newevent._cond = cond
+		
         for k, v in pairs(params) do
+			if k == 'duration' then
+				v = v * self.dmult
+			end
             newevent[k] = v
         end
 		if newevent.duration == 0 and newevent.beat + self.eos ~= 0 then
@@ -131,6 +158,68 @@ function rd.load(filename,extensions)
         
     end
     
+	
+	function level:tag(autotag,func)
+		self.autotag = autotag
+		if func then
+			func()
+			self:endtag()
+		end
+	end
+	
+	
+	function level:endtag()
+		self.autotag = nil
+	end
+	
+	function level:newconditional(name,t,func) --TODO: move rdcode stuff to an extension?
+		local cond = {}
+		cond.id = #self.conditionals + 1
+		cond.name = name
+		cond.level = self
+		if false then -- eventually non rdcode conditionals go here
+		
+		else
+			func = func or t
+			cond.type = 'Custom'
+			cond.expression = func
+		end
+		
+		function cond:getid()
+			return self.id .. 'd0'
+		end
+		
+		function cond:save()
+			table.insert(self.level.data.conditionals,
+				{
+					id = self.id,
+					name = self.name,
+					type = self.type,
+					expression = self.expression
+				}
+			)
+		end
+		
+		table.insert(self.conditionals,cond)
+		return cond
+	end
+	
+	function level:conditional(autocond,func)
+		self.autocond = autocond:getid()
+		if func then
+			func()
+			self:endconditional()
+		end
+	end
+	
+	
+	function level:endconditional()
+		self.autocond = nil
+	end
+	
+	function level:durationmult(dmult)
+		self.dmult = dmult or 1
+	end
 
 
     -- wrap single room number in a table
@@ -250,6 +339,7 @@ function rd.load(filename,extensions)
 	
 	
 	function level:push(beat)
+		self.dmult = 1
 		self.eos = 0
         for i, v in ipairs(self.fakeevents) do
             self:makereal(v)
@@ -268,6 +358,10 @@ function rd.load(filename,extensions)
 		self:push()
 
         for k,v in pairs(self.decorations) do
+            v:save()
+        end
+		
+		for k,v in pairs(self.conditionals) do
             v:save()
         end
 		

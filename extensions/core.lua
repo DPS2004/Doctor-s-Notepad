@@ -16,7 +16,12 @@ local extension = function(_level)
 		function level:rdcode(beat, code,extime)
 			beat = beat or 0
 			extime = extime or "OnBar"
-			self:addevent(beat, "CallCustomMethod", {methodName = code, executionTime = "OnBar", sortOffset = 0})
+			self:addevent(beat, "CallCustomMethod", {methodName = code, executionTime = extime, sortOffset = 0})
+		end
+		
+		function level:runtag(beat, tag)
+			beat = beat or 0
+			self:addevent(beat, "TagAction", {Action = 'Run', Tag = tag})
 		end
 		
 		--bpm
@@ -31,12 +36,37 @@ local extension = function(_level)
 			self:addevent(beat, "PlaySound", {filename = sound, volume = 100, pitch = 100, pan = 0, offset = offset, isCustom = true, customSoundType = soundtype })
 		end
 		
+		--dialog
+		function level:dialog(beat,text,sounds,panel,portrait,speed)
+			speed = speed or 1 --speed currently has no effect :(
+			if sounds == nil then sounds = true end
+			panel = panel or 'Bottom'
+			portrait = portrait or 'Left'
+			self:addevent(beat, "ShowDialogue", {text = text, panelSide = panel, portraitSide = portrait, speed = speed, playTextSounds = sounds})
+		end
+		
+		function level:hidedialog(beat)
+			level:dialog(beat,'',false)
+		end
+		
+		--bruh
+		level.dialogue = level.dialog
+		level.hidedialogue = level.hidedialog
 		--comments
 		
 		
 		function level:comment(beat, text)
 			self:addevent(beat, "Comment", {show = self.doshowcomments, text=text})
 		end
+		
+		
+		function level:speed(beat, speed, dmult)
+			self:addevent(beat, "SetSpeed", {speed = speed})
+			if dmult then
+				self:durationmult(speed)
+			end
+		end
+		
 	
 		function level:showcomments()
 			self.doshowcomments = true

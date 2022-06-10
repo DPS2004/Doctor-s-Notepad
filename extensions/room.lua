@@ -963,7 +963,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updateroomy',function(self,v)
@@ -978,7 +978,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updateroomscale',function(self,v) -- room scale doesnt support null notation for some reason????????
@@ -993,7 +993,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updateroompivot',function(self,v) -- same with pivot
@@ -1008,7 +1008,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updateroommode',function(self,v)
@@ -1022,7 +1022,7 @@ local extension = function(_level)
 				{
 					y = v.room,
 					mode = rmode
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updateroomflip',function(self,v)
@@ -1033,7 +1033,7 @@ local extension = function(_level)
 					rooms = self:roomtable(v.room),
 					flipX = getvalue(self.rooms[v.room], "xflip", v.beat),
 					flipY = getvalue(self.rooms[v.room], "yflip", v.beat)
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		
@@ -1052,7 +1052,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updatecamy',function(self,v)
@@ -1068,7 +1068,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updatecamzoom',function(self,v)
@@ -1080,7 +1080,7 @@ local extension = function(_level)
 					zoom = getvalue(self.rooms[v.room], "camzoom", v.beat),
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updatecamrot',function(self,v)
@@ -1092,7 +1092,7 @@ local extension = function(_level)
 					angle = getvalue(self.rooms[v.room], "camrot", v.beat),
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		
@@ -1108,7 +1108,7 @@ local extension = function(_level)
 					action = v.action,
 					align = v.align,
 					instant = v.instant
-				}
+				}, v._tag,v._cond
 			)
 		end)
 
@@ -1122,7 +1122,7 @@ local extension = function(_level)
 					cornerPositions = v.corners,
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		

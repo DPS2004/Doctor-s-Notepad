@@ -393,14 +393,14 @@ local extension = function(_level)
 		
 		-- border every row
 		function level:allborder(beat, bordertype, color, opacity, duration, ease)
-			for i, v in ipairs(self.rows) do
+			for k, v in pairs(self.rows) do
 				v:setborder(beat, bordertype, color, opacity, duration, ease)
 			end
 		end
 
 		-- tint every row
 		function level:alltint(beat, showtint, color, opacity, duration, ease)
-			for i, v in ipairs(self.rows) do
+			for k, v in pairs(self.rows) do
 				v:settint(beat, showtint, color, opacity, duration, ease)
 			end
 		end
@@ -456,7 +456,7 @@ local extension = function(_level)
 					opacity = getvalue(self.rows[v.row], "opacity", v.beat),
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowx',function(self,v)
@@ -474,7 +474,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowy',function(self,v)
@@ -491,7 +491,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowsx',function(self,v)
@@ -508,7 +508,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowsy',function(self,v)
@@ -525,7 +525,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowrot',function(self,v)
@@ -539,7 +539,7 @@ local extension = function(_level)
 					angle = getvalue(self.rows[v.row], "rot", v.beat),
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowpivot',function(self,v)
@@ -553,7 +553,7 @@ local extension = function(_level)
 					pivot = getvalue(self.rows[v.row], "pivot", v.beat),
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowcx',function(self,v)
@@ -570,7 +570,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowcy',function(self,v)
@@ -587,7 +587,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		
 		end)
@@ -602,7 +602,7 @@ local extension = function(_level)
 					angle = getvalue(self.rows[v.row], "crot", v.beat),
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		
 		end)
@@ -621,7 +621,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowcsy',function(self,v)
@@ -638,7 +638,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowhx',function(self,v)
@@ -655,7 +655,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowhy',function(self,v)
@@ -672,7 +672,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		
 		end)
@@ -687,7 +687,7 @@ local extension = function(_level)
 					angle = getvalue(self.rows[v.row], "hrot", v.beat),
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		
 		end)
@@ -706,7 +706,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		level:fakehandler('updaterowhsy',function(self,v)
@@ -723,7 +723,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		
@@ -735,7 +735,7 @@ local extension = function(_level)
 					row = v.row,
 					show = v.show,
 					transition = v.transition
-				}
+				}, v._tag,v._cond
 			)
 		
 		end)
