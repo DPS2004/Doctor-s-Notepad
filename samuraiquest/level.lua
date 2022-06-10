@@ -12,10 +12,24 @@ level.rows[3]:setvisibleatstart(false)
 
 level.rows[0]:showchar(1)
 
-clschick = level.rows[4]
+
+
+
+----decos
+clschick = level:newdecoration('clschick',0,3,'clschick')
 
 clschick:setvisibleatstart(false)
 clschick:move(0,{x=199,y=85,pivot=0})
+
+chirpbg = level:newdecoration('chirp.png',0,3,'chirpbg')
+
+chirpbg:setvisibleatstart(false)
+chirpbg:move(0,{x=150,y=50,pivot=0})
+
+
+
+
+
 
 ontop = level.rooms[4]
 
@@ -106,10 +120,11 @@ newroom(function(room,curbeat)
 end)
 newroom(function(room,curbeat)
 	room:settheme(curbeat,'Basement')
-	clschick:showchar(curbeat)
+	clschick:show(curbeat)
 	clschick:move(curbeat,{x=-101},48,'linear')
 	level.rooms[3]:wavyrows(curbeat)
 	clschick:playexpression(curbeat+30,'happy')
+	clschick:hide(curbeat+48)
 end)
 newroom(function(room,curbeat)
 	level:comment(curbeat+12,'Peaceful Seabed\nsoggoru waffle')
@@ -144,17 +159,17 @@ newroom(function(room,curbeat)
 	
 end)
 newroom(function(room,curbeat)
-	level:comment(curbeat+8,'Cloissonné (Night Shift)\nCyus & Xeno')
+	level:reorderrooms(curbeat,0,3,1,2)
+	level:comment(curbeat+8,'Chirp\nNocallia & Xeno')
 	
-	room:settheme(curbeat,'none')
-	room:setbg(curbeat,'Vase Bg2.png','Tiled',4,3,'D0F7B9FF')
+	level:finalize()
+		room:settheme(curbeat,'none')
+		room:rain(curbeat,true)
+	level:endfinalize()
 	
-	-- -0.25 b
-	--  0    e
-	--  0.25 d
-	--  0.5  c
-	--  0.75 b
-	--  1    a
+	chirpbg:show(curbeat)
+	chirpbg:move(curbeat,{x=-50},32)
+	chirpbg:hide(curbeat+32)
 	
 	
 end)

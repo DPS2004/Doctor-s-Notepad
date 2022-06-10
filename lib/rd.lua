@@ -30,6 +30,10 @@ function rd.load(filename,extensions)
 	
 	level.dmult = 1
 	
+	level.dofinalize = false
+	
+	level.finalizedevents = {}
+	
 	level.initqueue = deeper.init()
 
 	for i,v in ipairs(extensions) do
@@ -51,6 +55,19 @@ function rd.load(filename,extensions)
         self.eos = eos
     end
 	
+	
+	
+	function level:finalize(func)
+		level.dofinalize = true
+		if func then
+			func()
+			self:endfinalize()
+		end
+	end
+	
+	function level:endfinalize()
+		level.dofinalize = false
+	end
 	
     -- convert beatnumber (0 indexed) to bar measure pair (1 indexed)
     function level:getbm(inbeat)
@@ -124,8 +141,13 @@ function rd.load(filename,extensions)
 		
 		newevent.tag = tag
 		newevent['if'] = cond
-
-        table.insert(self.data.events, newevent)
+		
+		if not self.dofinalize then
+			table.insert(self.data.events, newevent)
+		else
+			table.insert(self.finalizedevents, newevent)
+		end
+		
     end
 
     -- add fake event, to be turned into a real event upon saving
@@ -149,7 +171,7 @@ function rd.load(filename,extensions)
 			end
             newevent[k] = v
         end
-		if newevent.duration == 0 and newevent.beat + self.eos ~= 0 then
+		if (newevent.duration == 0 and newevent.beat + self.eos ~= 0) or self.dofinalize then
 			self:makereal(newevent)
 		else
 			newevent.beat = newevent.beat + self.eos
@@ -416,6 +438,10 @@ function rd.load(filename,extensions)
 					end
 				end
 			end
+		end
+		
+		for i,v in ipairs(self.finalizedevents) do
+			table.insert(condensedevents,v)
 		end
 		
 		self.data.events = condensedevents
