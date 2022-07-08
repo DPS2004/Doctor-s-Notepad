@@ -1,0 +1,10 @@
+{
+"name": "Doctah",
+"size": [46, 48],
+"clips": [
+	{ "name": "neutral", "frames": [3, 0, 1, 2], "loop": "onBeat", "fps": 0 },
+	{ "name": "happy", "frames": [4, 4, 5, 5], "loop": "no", "fps": 4 },
+	{ "name": "barely", "frames": [6, 7, 6, 7, 6, 7], "loop": "no", "fps": 4 },
+	{ "name": "missed", "frames": [8, 9, 10, 11, 8, 9, 10, 11, 12, 12, 12, 12,], "loop": "no", "fps": 9 }
+]
+}
