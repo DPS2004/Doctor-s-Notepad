@@ -1,0 +1,329 @@
+{
+    "name": "Samurai",
+    "size": [
+        40,
+        40
+    ],
+    "clips": [
+        {
+            "name": "neutral",
+            "frames": [
+                1,
+                0
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "happy",
+            "frames": [
+                4,
+                5,
+                6,
+                7,
+                7,
+                7
+            ],
+            "loop": "no",
+            "fps": 10,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "barely",
+            "frames": [
+                3,
+                2
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "missed",
+            "frames": [
+                14,
+                15
+            ],
+            "loop": "no",
+            "fps": 2,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "neutral_Alt",
+            "frames": [
+                13,
+                12
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "happy_Alt",
+            "frames": [
+                8,
+                9,
+                10,
+                11,
+                11,
+                11
+            ],
+            "loop": "no",
+            "fps": 10,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "barely_alt",
+            "frames": [
+                35,
+                2
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "missed_Alt",
+            "frames": [
+                16,
+                16,
+                16,
+                16,
+                17,
+                19,
+                18,
+                18,
+                18,
+                18
+            ],
+            "loop": "no",
+            "fps": 8,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "shock",
+            "frames": [
+                16,
+                17,
+                19,
+                18
+            ],
+            "loop": "yes",
+            "fps": 10,
+            "loopStart": 3,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "spirited",
+            "frames": [
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                28,
+                28,
+                28,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34
+            ],
+            "loop": "yes",
+            "fps": 15,
+            "loopStart": 18,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "exorcised",
+            "frames": [
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                28,
+                28,
+                28,
+                28,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34
+            ],
+            "loop": "yes",
+            "fps": 15,
+            "loopStart": 18,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "manifest",
+            "frames": [
+                33,
+                32,
+                31,
+                30,
+                30,
+                29,
+                29,
+                28,
+                28,
+                29,
+                28,
+                28,
+                28,
+                27,
+                26,
+                25,
+                24,
+                23,
+                22,
+                21,
+                20,
+                12,
+                12,
+                12
+            ],
+            "loop": "no",
+            "fps": 15,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "armor",
+            "frames": [
+                34
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                12,
+                10
+            ],
+            "portraitSize": [
+                25,
+                26
+            ],
+            "portraitScale": 2
+        }
+    ]
+}
