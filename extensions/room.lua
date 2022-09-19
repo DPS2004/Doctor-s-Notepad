@@ -102,8 +102,6 @@ local extension = function(_level)
 
 						if self[func] then
 							self[func](self, beat, v, duration, ease) -- dont think you can use : with this method though so gotta pass in self for the first variable
-						elseif self[k] then -- for camx and stuff
-							self[k](self, beat, v, duration, ease) 
 						end
 					end
 
