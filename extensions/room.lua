@@ -19,6 +19,7 @@ local extension = function(_level)
 				sy = {{beat = 0, state = 100}},
 				px = {{beat = 0, state = 50}},
 				py = {{beat = 0, state = 50}},
+				angle = {{beat = 0, state = 0}},
 				stretch = {{beat = 0, state = true}},
 				mask = {{beat = 0, state = {''}}},
 				bg = {{beat = 0, state = {''}}},
@@ -79,6 +80,13 @@ local extension = function(_level)
 				self.level:addfakeevent(beat, "updateroompivot", {room = index, duration = duration, ease = ease})
 				
 			end
+
+			function room:rot(beat, rot, duration, ease)
+				duration = duration or 0
+				ease = ease or "Linear"
+				setvalue(self, "angle", beat, rot)
+				self.level:addfakeevent(beat, "updateroomangle", {room = index, duration = duration, ease = ease})
+			end
 			
 			
 
@@ -98,6 +106,8 @@ local extension = function(_level)
 						self:movepx(beat, v, duration, ease)
 					elseif k == "py" then
 						self:movepy(beat, v, duration, ease)
+					elseif k == "rotate" or k == "rot" then
+						self:rotate(beat, v, duration, ease)
 					end
 				end
 			end
@@ -1006,6 +1016,18 @@ local extension = function(_level)
 						getvalue(self.rooms[v.room], "px", v.beat),
 						getvalue(self.rooms[v.room], "py", v.beat)
 					},
+					duration = v.duration,
+					ease = v.ease
+				}, v._tag,v._cond
+			)
+		end)
+		level:fakehandler('updateroomangle',function(self,v) -- angle
+			self:addevent(
+				v.beat,
+				"MoveRoom",
+				{
+					y = v.room,
+					angle = getvalue(self.rooms[v.room], "angle", v.beat),
 					duration = v.duration,
 					ease = v.ease
 				}, v._tag,v._cond
