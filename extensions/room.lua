@@ -369,8 +369,6 @@ local extension = function(_level)
 					end}
 				}
 
-				local dbg = '' -- variable used for debugging, dont worry about it
-
 				for k,v in pairs(roomPresets) do
 
 					local cancontinue = false -- can we actually use this preset?
@@ -397,7 +395,7 @@ local extension = function(_level)
 
 						-- add everything to the values table
 
-						room.values[lowercasekey] = {{beat = 0, state = false}}
+						room.values[lowercasekey] = {{beat = 0, state = {enable = false}}}
 
 						for k2,v2 in pairs(v) do
 
@@ -407,7 +405,7 @@ local extension = function(_level)
 
 								if type(v2) ~= 'table' then v2 = {v2, 9999} end
 
-								room.values[lowercase2] = {{beat = 0, state = v2[1]}}
+								room.values[lowercasekey][1].state[k2] = v2[1]
 
 								additionalProperties[#additionalProperties+1] = {k2, v2[2]}
 
@@ -553,14 +551,10 @@ local extension = function(_level)
 								
 								f()                 --                                haha                                         lmao
 
-								dbg = dbg .. final .. '\n\n'
-
 							else -- now let's cover presets with just true/false!
 
 								-- this is simple enough, we just make a shorthand
 								-- don't even need to construct the function out of a string for this one!
-
-								dbg = dbg .. 'small function: ' .. lowercase .. '\n\n'
 
 								room[lowercase] = function(room, beat, state)
 									room:setpreset(beat, k, state)
@@ -584,24 +578,26 @@ local extension = function(_level)
 
 				end
 
-				if index == 0 then
-					-- print(dbg)
-				end
-
 			end
 
 			-- set or toggle a boolean vfx preset
 			function room:setpreset(beat, preset, state)
+				preset = tostring(preset):lower()
+				preset = aliasToPreset[preset] or preset -- allow for stuff like room:setpreset(beat, 'screentile', true) even though the preset is actually 'tilen'
+
 				if type(state) ~= 'boolean' then
-					state = not getvalue(self, preset:lower(), beat)
+					state = not getvalue(self, preset, beat).enable
 				end
 
-				setvalue(self, preset:lower(), beat, state)
+				local t = getvalue(self, preset, beat)
+				t.enable = state
+				t.preset = preset
+				t.rooms = level:roomtable(room.index)
 
 				self.level:addevent(
 					beat,
 					"SetVFXPreset",
-					{rooms = self.level:roomtable(index), preset = preset, enable = state}
+					t
 				)
 			end
 
@@ -611,13 +607,16 @@ local extension = function(_level)
 				preset = aliasToPreset[preset] or preset -- allow for stuff like room:getpreset(beat, 'screentile') even though the preset is actually 'tilen'
 				-- :)
 
-				local name = preset
+				local t = getvalue(self, preset, beat)
 
-				if property then
-					name = name .. property
+				if t then
+					if not property then
+						return t.enable
+					else
+						return t[property:lower()]
+					end
 				end
 
-				return getvalue(self, name, beat)
 			end
 			
 			function room:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
@@ -920,7 +919,6 @@ local extension = function(_level)
 						print(beat, room)
 						local thisroom = self:getroom(room)
 						local func = thisroom[k]
-						print(thisroom, beat, room, ...)
 						func(thisroom, beat, ...)
 					end
 
@@ -928,7 +926,6 @@ local extension = function(_level)
 						level['ontop'..k] = function(self, beat, ...) -- vararg my beloved
 							local thisroom = self:getroom(4)
 							local func = thisroom[k]
-							print(thisroom, beat, ...)
 							func(thisroom, beat, ...)
 						end
 					end
