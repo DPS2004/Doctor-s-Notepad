@@ -94,6 +94,20 @@ local extension = function(_level)
 				duration = duration or 0
 				ease = ease or "Linear"
 				for k, v in pairs(p) do
+					if k == "rotate" or k == "rot" then
+						self:rotate(beat, v, duration, ease)
+					else
+						-- copied this from row.lua lmao but should still work
+						local func = 'move'..k
+
+						if self[func] then
+							self[func](self, beat, v, duration, ease) -- dont think you can use : with this method though so gotta pass in self for the first variable
+						elseif self[k] then -- for camx and stuff
+							self[k](self, beat, v, duration, ease) 
+						end
+					end
+
+					--[[
 					if k == "x" then
 						self:movex(beat, v, duration, ease)
 					elseif k == "y" then
@@ -109,6 +123,7 @@ local extension = function(_level)
 					elseif k == "rotate" or k == "rot" then
 						self:rotate(beat, v, duration, ease)
 					end
+					]]
 				end
 			end
 			
