@@ -197,10 +197,9 @@ local extension = function(_level)
 			end
 
 			-- mask
-			function room:mask(beat, filenames, fps, mode)
+			function room:mask(beat, filenames, fps)
 				filenames = filenames or ''
 				fps = fps or 30
-				mode = mode or 'ScaleToFill'
 
 				if type(filenames) ~= 'table' then
 					filenames = {tostring(filenames)}
@@ -208,7 +207,7 @@ local extension = function(_level)
 
 				setvalue(self, 'mask', beat, filenames)
 
-				self.level:addevent(beat, "MaskRoom", {image = filenames, fps = fps, y = index, contentMode = mode})
+				self.level:addevent(beat, "MaskRoom", {image = filenames, fps = fps, y = index, contentMode = 'ScaleToFill'})
 
 			end
 
