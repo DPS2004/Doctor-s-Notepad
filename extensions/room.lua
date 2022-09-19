@@ -81,7 +81,7 @@ local extension = function(_level)
 				
 			end
 
-			function room:rot(beat, rot, duration, ease)
+			function room:rotate(beat, rot, duration, ease)
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "angle", beat, rot)
