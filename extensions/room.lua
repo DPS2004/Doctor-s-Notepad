@@ -192,7 +192,7 @@ local extension = function(_level)
 				if type(state) ~= 'boolean' then
 					state = not getvalue(self, "stretch", beat)
 				end
-				setvalue(self,'stretch',beat,stretch)
+				setvalue(self,'stretch',beat, state)
 				self.level:addfakeevent(beat, "updateroommode", {room = index})
 			end
 
