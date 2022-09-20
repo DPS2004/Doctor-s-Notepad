@@ -507,6 +507,7 @@ end]]
 								local paramt = {}
 								for _, param in ipairs(additionalProperties) do
 									paramt[#paramt+1] = string.format('faket.%s = %s or %s', param, param, v[param][1])
+									paramt[#paramt+1] = string.format('newt.%s = %s or %s', param, param, v[param][1])
 								end
 
 								final = final:gsub('PARAMETERS', table.concat(paramt, '\n\t'))
@@ -525,7 +526,7 @@ end]]
 
 								f = loadstring(final) -- haha lmao
 
-								local env = {level = level, room = room, index = index, getvalue = getvalue, setvalue = setvalue, type = type, aliasToPreset = aliasToPreset, pairs = pairs}
+								local env = {level = level, room = room, index = index, getvalue = getvalue, setvalue = setvalue, type = type, print = print, aliasToPreset = aliasToPreset, pairs = pairs}
 								setfenv(f, env)   --   haha      lmao
 								
 								f()                 --                                haha                                         lmao
