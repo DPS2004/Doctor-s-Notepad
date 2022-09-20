@@ -362,10 +362,10 @@ local extension = function(_level)
 					CustomScreenScroll = {floatX = {1, 0}, floatY = {1, 1}, _alias = {'screenscroll', 'customscreenscroll'}, _onTop = true},
 					Aberration = {intensity = 100},
 					Blizzard = {intensity = 100},
-					WavyRows = {amplitude = {15, 0}, frequency = {2, 1}, _customFunc = function(room, createdfunction)
-						createdfunction = createdfunction .. 'if amplitude then level:comment(beat, "()=>wavyRowsAmplitude(" .. index .. ", " .. amplitude .. ", " .. duration .. ")") end\n'
-						createdfunction = createdfunction .. 'if frequency then level:rdcode(beat, "room[" .. index .. "].wavyRowsFrequency = " .. frequency , "OnBar") end\n'
-						return createdfunction
+					WavyRows = {amplitude = {15, 0}, frequency = {2, 1}, _customFunc = function()
+						local s = 'if amplitude then level:comment(beat, "()=>wavyRowsAmplitude(" .. index .. ", " .. amplitude .. ", " .. duration .. ")") end\n'
+						s = s .. 'if frequency then level:rdcode(beat, "room[" .. index .. "].wavyRowsFrequency = " .. frequency, "OnBar") end\n'
+						return s
 					end}
 				}
 
@@ -403,7 +403,7 @@ local extension = function(_level)
 
 								local lowercase2 = lowercasekey .. k2:lower()
 
-								if type(v2) ~= 'table' then v2 = {v2, 9999} end
+								if type(v2) ~= 'table' then v2 = {v2, #additionalProperties} end
 
 								room.values[lowercasekey][1].state[k2] = v2[1]
 
@@ -438,9 +438,122 @@ local extension = function(_level)
 
 						----------------------------------
 
+						-- now that im recoding this with more lua knowledge lets be smarter
+
+						-- and make a base function in string form
+						local functionBase = [[
+function room:ALIAS(beat, state, ..., duration, ease)
+
+	-- get real name of preset from alias
+	local preset = aliasToPreset['ALIAS'] or 'ALIAS'
+
+	-- get current values
+	local t = getvalue(self, preset, beat)
+
+	-- if not specified or not a boolean, toggle instead of setting
+	if type(state) ~= type(true) then
+		state = not t.enable
+	end
+
+	-- copy t into new table
+	local faket = {}
+	local newt = {}
+	for k,v in pairs(t) do
+		faket[k] = v
+		newt[k] = v
+	end
+
+	newt.enable = state
+	faket.enable = state
+
+	faket.duration = duration
+	faket.ease = ease
+	faket.preset = preset
+	faket.rooms = level:roomtable(index)
+
+	-- handle parameters: ...
+	PARAMETERS
+
+	-- customfunc, where applicable
+	CUSTOMFUNC
+
+	-- create actual event
+	level:addevent(
+		beat,
+		"SetVFXPreset",
+		faket
+	)
+
+	setvalue(self, preset, beat, newt)
+
+end]]
+
 						-- create the function
 
 						-- go through every alias and make a function for each
+
+						for _,name in ipairs(v._alias) do
+
+							if #additionalProperties > 0 then -- presets with multiple parameters (more than whether it's enabled)
+
+								local final = functionBase
+
+								final = final:gsub('ALIAS', name)
+
+								-- replace the '...' in the base
+								final = final:gsub('%.%.%.', table.concat(additionalProperties, ', '))
+
+								-- generate 'PARAM = PARAM or DEFAULT' text
+								local paramt = {}
+								for _, param in ipairs(additionalProperties) do
+									paramt[#paramt+1] = string.format('faket.%s = %s or %s', param, param, v[param][1])
+								end
+
+								final = final:gsub('PARAMETERS', table.concat(paramt, '\n\t'))
+
+								-- _customFunc support
+								if v._customFunc then
+
+									local s = v._customFunc()
+									final = final:gsub('CUSTOMFUNC', s)
+
+								else
+
+									final = final:gsub('CUSTOMFUNC', '')
+
+								end
+
+								f = loadstring(final) -- haha lmao
+
+								local env = {level = level, room = room, index = index, getvalue = getvalue, setvalue = setvalue, type = type, aliasToPreset = aliasToPreset, pairs = pairs}
+								setfenv(f, env)   --   haha      lmao
+								
+								f()                 --                                haha                                         lmao
+
+								-- level:ontop, where applicable
+								if v._onTop then
+									level['ontop' .. name] = function(level, ...)
+										level:getroom(4)[name](level:getroom(4), ...)
+									end
+								end
+
+							else -- one parameter, objectively easier
+
+								room[name] = function(room, beat, state)
+									room:setpreset(beat, aliasToPreset[name] or name, state)
+								end
+
+								if v._onTop then
+									level['ontop' .. name] = function(level, beat, state)
+										level:getroom(4):setpreset(beat, aliasToPreset[name] or name, state)
+									end
+								end
+
+							end
+
+						end
+
+						--[[
 						for _,name in ipairs(v._alias) do
 
 							local lowercase = name:lower()
@@ -573,6 +686,7 @@ local extension = function(_level)
 							end
 
 						end
+						]]
 
 					end
 
@@ -585,19 +699,32 @@ local extension = function(_level)
 				preset = tostring(preset):lower()
 				preset = aliasToPreset[preset] or preset -- allow for stuff like room:setpreset(beat, 'screentile', true) even though the preset is actually 'tilen'
 
-				if type(state) ~= 'boolean' then
-					state = not getvalue(self, preset, beat).enable
+				local t = getvalue(self, preset, beat)
+
+				if type(state) ~= type(true) then
+					state = not t.enable
 				end
 
-				local t = getvalue(self, preset, beat)
-				t.enable = state
-				t.preset = preset
-				t.rooms = level:roomtable(room.index)
+				local newt = {}
+				local faket = {}
+
+				for k,v in pairs(t) do
+					newt[k] = v
+					faket[k] = v
+				end
+
+				newt.enable = state
+				faket.enable = state
+
+				setvalue(self, preset, beat, newt)
+
+				faket.preset = preset
+				faket.rooms = level:roomtable(room.index)
 
 				self.level:addevent(
 					beat,
 					"SetVFXPreset",
-					t
+					faket
 				)
 			end
 
@@ -610,11 +737,19 @@ local extension = function(_level)
 				local t = getvalue(self, preset, beat)
 
 				if t then
-					if not property then
-						return t.enable
-					else
-						return t[property:lower()]
+
+					local faket = {}
+
+					for k,v in pairs(t) do
+						faket[k:lower()] = v
 					end
+
+					if not property then
+						return faket.enable
+					else
+						return faket[property:lower()]
+					end
+
 				end
 
 			end
@@ -916,7 +1051,6 @@ local extension = function(_level)
 				if cancontinue then
 
 					level[k] = function(self, beat, room, ...) -- vararg my beloved
-						print(beat, room)
 						local thisroom = self:getroom(room)
 						local func = thisroom[k]
 						func(thisroom, beat, ...)
