@@ -239,6 +239,7 @@ local extension = function(_level)
 		-- make already-existing decos into deco objects
 		level.decorations = {}
 
+		level.data.decorations = level.data.decorations or {}
 		for i, v in ipairs(level.data.decorations) do
 
             local newdeco = level:newdecoration(v.filename, v.depth, v.rooms[1], v.id)
