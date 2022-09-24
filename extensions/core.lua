@@ -2,21 +2,14 @@ local extension = function(_level)
 	_level.initqueue.queue(0,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
 		
 		--all of the functions you are adding to the level table go up here
-	
-		-- cues
-
-		function level:cue(beat, ctype, tick)
-			ctype = ctype or "SayGetSetGo"
-			tick = tick or 1
-			self:addevent(beat, "SayReadyGetSetGo", {phraseToSay = ctype, tick = tick, voiceSource = "Nurse", volume = 100})
-		end
 
 		--custom methods
 
-		function level:rdcode(beat, code,extime)
+		function level:rdcode(beat, code, extime, sortoffset)
 			beat = beat or 0
 			extime = extime or "OnBar"
-			self:addevent(beat, "CallCustomMethod", {methodName = code, executionTime = extime, sortOffset = 0})
+			sortoffset = sortoffset or 0
+			self:addevent(beat, "CallCustomMethod", {methodName = code, executionTime = extime, sortOffset = sortoffset})
 		end
 		
 		function level:runtag(beat, tag)
@@ -47,6 +40,11 @@ local extension = function(_level)
 		
 		function level:hidedialog(beat)
 			level:dialog(beat,'',false)
+		end
+		
+		--comments
+		function level:showcomments()
+			self.doshowcomments = true
 		end
 		
 		--bruh
