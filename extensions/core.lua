@@ -57,6 +57,9 @@ local extension = function(_level)
 			self:addevent(beat, "Comment", {show = self.doshowcomments, text=text})
 		end
 		
+		function level:ccode(beat,text)
+			self:addevent(beat, "Comment", {show = false, text="()=>"..text})
+		end
 		
 		function level:speed(beat, speed, dmult)
 			self:addevent(beat, "SetSpeed", {speed = speed})

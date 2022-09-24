@@ -284,6 +284,7 @@ local extension = function(_level)
 			end
 			
 			function row:show(beat, smooth)
+				beat = beat or 0
 				smooth = smooth or 0
 				local smoothn = smooth
 				if type(smooth) == 'boolean' then
@@ -413,6 +414,12 @@ local extension = function(_level)
 		function level:alloutline(beat, color, opacity, duration, ease)
 			beat = beat or 0
 			self:allborder(beat, "Outline", color, opacity, duration, ease)
+		end
+		
+		function level:hideallatstart()
+			for k,v in pairs(self.rows) do
+				v:setvisibleatstart(false)
+			end
 		end
 		
 		
