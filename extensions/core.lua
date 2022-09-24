@@ -17,18 +17,6 @@ local extension = function(_level)
 			self:addevent(beat, "TagAction", {Action = 'Run', Tag = tag})
 		end
 		
-		--bpm
-		function level:setbpm(beat, bpm)
-			self:addevent(beat, "SetBeatsPerMinute", {beatsPerMinute = bpm})
-		end
-		
-		--sound + songs
-		function level:playsound(beat, sound,offset,soundtype)
-			offset = offset or 0
-			soundtype = soundtype or "MusicSound"
-			self:addevent(beat, "PlaySound", {filename = sound, volume = 100, pitch = 100, pan = 0, offset = offset, isCustom = true, customSoundType = soundtype })
-		end
-		
 		--dialog
 		function level:dialog(beat,text,sounds,panel,portrait,speed)
 			speed = speed or 1 --speed currently has no effect :(
@@ -66,11 +54,6 @@ local extension = function(_level)
 			if dmult then
 				self:durationmult(speed)
 			end
-		end
-		
-	
-		function level:showcomments()
-			self.doshowcomments = true
 		end
 		
 
