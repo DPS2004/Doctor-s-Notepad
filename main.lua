@@ -8,7 +8,8 @@ extensions = {
 	'core',
 	'row',
 	'room',
-    'decoration'
+    'decoration',
+    'sound'
 }
 
 -- helpful functions
