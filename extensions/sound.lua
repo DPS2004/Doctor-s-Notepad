@@ -40,6 +40,8 @@ local extension = function(_level)
 		
 		function level:playsound(beat, sound, volume, pitch, pan, offset, soundtype)
 
+			beat = beat or 0
+
 			volume = volume or 100
 			pitch = pitch or 100
 			pan = pan or 0
