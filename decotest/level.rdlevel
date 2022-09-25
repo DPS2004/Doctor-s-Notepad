@@ -47,8 +47,6 @@
 	],
 	"events":
 	[
-		{ "bar": 1, "beat": 7, "y": 1, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
-		{ "bar": 2, "beat": 3, "y": 0, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
 		{ "bar": 4, "beat": 1, "y": 0, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
 		{ "bar": 4, "beat": 2, "y": 0, "type": "ReorderRooms", "order": [0, 1, 2, 3] },
 	],
