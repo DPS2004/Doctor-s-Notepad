@@ -8,7 +8,7 @@ level:setclapsounds(1, 'Classic', 'ClapHitP2', 70, 90, -10, 10, 'ClapHitCPU', 81
 
 level:setgamesound(3, 'BigMistake', 'sndShaker', 99, 98, 1)
 
-level:setbeatsound(5, 0, 'Kick', 99, 98, 1)
+level:setbeatsound(5, 0, 'Kick', 50, 98, 1)
 
 level:playsound(7, 'sndKickTight', 99, 98, 1, 0, 'CueSound')
 

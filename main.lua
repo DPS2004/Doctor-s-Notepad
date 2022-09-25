@@ -9,8 +9,8 @@ extensions = {
 	'row',
 	'room',
     'decoration',
-    'sound',
-	'color'
+	'color', 
+    'sound'
 }
 
 -- helpful functions

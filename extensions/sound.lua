@@ -1,5 +1,5 @@
 local extension = function(_level)
-	_level.initqueue.queue(4,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
+	_level.initqueue.queue(5, function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
 		
 		--all of the functions you are adding to the level table go up here
 		
@@ -153,7 +153,7 @@ local extension = function(_level)
 			pan = pan or 0
 
 			-- volume doesn't seem to be set correctly when loading in RD (set to 100%) even though it's set in the rdlevel file?
-			self:addevent(beat, 'SetBeatSound', {row = row, filename = filename, volume = volume, pitch = pitch, pan = pan})
+			self:addevent(beat, 'SetBeatSound', {row = row, filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0})
 
 		end
 
