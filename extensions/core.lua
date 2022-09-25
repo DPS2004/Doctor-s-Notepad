@@ -2,38 +2,19 @@ local extension = function(_level)
 	_level.initqueue.queue(0,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
 		
 		--all of the functions you are adding to the level table go up here
-	
-		-- cues
-
-		function level:cue(beat, ctype, tick)
-			ctype = ctype or "SayGetSetGo"
-			tick = tick or 1
-			self:addevent(beat, "SayReadyGetSetGo", {phraseToSay = ctype, tick = tick, voiceSource = "Nurse", volume = 100})
-		end
 
 		--custom methods
 
-		function level:rdcode(beat, code,extime)
+		function level:rdcode(beat, code, extime, sortoffset)
 			beat = beat or 0
 			extime = extime or "OnBar"
-			self:addevent(beat, "CallCustomMethod", {methodName = code, executionTime = extime, sortOffset = 0})
+			sortoffset = sortoffset or 0
+			self:addevent(beat, "CallCustomMethod", {methodName = code, executionTime = extime, sortOffset = sortoffset})
 		end
 		
 		function level:runtag(beat, tag)
 			beat = beat or 0
 			self:addevent(beat, "TagAction", {Action = 'Run', Tag = tag})
-		end
-		
-		--bpm
-		function level:setbpm(beat, bpm)
-			self:addevent(beat, "SetBeatsPerMinute", {beatsPerMinute = bpm})
-		end
-		
-		--sound + songs
-		function level:playsound(beat, sound,offset,soundtype)
-			offset = offset or 0
-			soundtype = soundtype or "MusicSound"
-			self:addevent(beat, "PlaySound", {filename = sound, volume = 100, pitch = 100, pan = 0, offset = offset, isCustom = true, customSoundType = soundtype })
 		end
 		
 		--dialog
@@ -47,6 +28,11 @@ local extension = function(_level)
 		
 		function level:hidedialog(beat)
 			level:dialog(beat,'',false)
+		end
+		
+		--comments
+		function level:showcomments()
+			self.doshowcomments = true
 		end
 		
 		--bruh
@@ -68,11 +54,6 @@ local extension = function(_level)
 			if dmult then
 				self:durationmult(speed)
 			end
-		end
-		
-	
-		function level:showcomments()
-			self.doshowcomments = true
 		end
 		
 
