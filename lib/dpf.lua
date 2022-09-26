@@ -16,6 +16,23 @@ function dpf.loadjson(f,w,force)
     cf = io.open(f, "r+")
   end
   local text = cf:read("*a")
+
+  local in_str = false
+  local i = 1
+
+  while i <= #text do
+    if text:sub(i,i) == '"' and text:sub(i-1,i) ~= '\\"' then
+      in_str = not in_str
+
+    elseif text:sub(i,i+3) == 'null' and not in_str then
+      text = text:sub(1,i-1) .. '"_DN_NULL"' .. text:sub(i+4,-1)
+      print(("Replaced the 'null' at %s with \"_DN_NULL\"; surrounding: '%s'"):format(i, text:sub(i-20, i+23)))
+      i = i - 1
+    end
+
+    i = i + 1
+  end
+
   if string.sub(f,-8) == ".rdlevel" then
     text = text:sub(4) -- BEGONE, ∩╗┐
   end
