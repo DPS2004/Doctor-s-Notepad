@@ -362,6 +362,8 @@ local extension = function(_level)
 					CustomScreenScroll = {floatX = {1, 0}, floatY = {1, 1}, _alias = {'screenscroll', 'customscreenscroll'}, _onTop = true},
 					Aberration = {intensity = 100},
 					Blizzard = {intensity = 100},
+					Blur = {intensity = 100},
+					RadialBlur = {intensity = 100},
 					WavyRows = {amplitude = {15, 0}, frequency = {2, 1}, _customFunc = function()
 						local s = 'if amplitude then level:comment(beat, "()=>wavyRowsAmplitude(" .. index .. ", " .. amplitude .. ", " .. duration .. ")") end\n'
 						s = s .. 'if frequency then level:rdcode(beat, "room[" .. index .. "].wavyRowsFrequency = " .. frequency, "OnBar") end\n'

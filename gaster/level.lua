@@ -11,11 +11,6 @@ local colors = {
 }
 ]]
 
-level:comment(3, "default color, action tab")
-level:comment(4, "default color, audio tab", nil, "Song")
-level:comment(5, "red color, rooms tab", "FF0000", "Rooms")
-level:comment(5, "blue color, sprites tab", "0000FF", "Sprites", "vw3padz")
-
 local colors = {
 	{level:rgb(200, 0, 0), level:rgb(100, 0, 0)}, -- red
 	{level:rgb(200, 200, 0), level:rgb(100, 100, 0)}, -- yellow
