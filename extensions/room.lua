@@ -810,7 +810,7 @@ end]]
 			
 			
 			-- background
-			function room:setbg(beat,filenames,bgtype,fps,mode,sx,sy,color,filter)
+			function room:setbg(beat,filenames,bgtype,fps,mode,sx,sy,color,filter,duration,ease)
 
 				mode = mode or 'ScaleToFill'
 				sx = sx or 0
@@ -819,6 +819,8 @@ end]]
 				fps = fps or 30
 				bgtype = bgtype or 'Image'
 				filter = filter or 'NearestNeighbor'
+				duration = duration or 0
+				ease = ease or "Linear"
 
 				if type(filenames) ~= 'table' then
 					filenames = {tostring(filenames)}
@@ -838,19 +840,23 @@ end]]
 						fps = fps,
 						filter = filter,
 						scrollX = sx,
-						scrollY = sy
+						scrollY = sy,
+						duration = duration,
+						ease = ease
 					}
 				)
 			end
 
 			-- foreground
-			function room:setfg(beat,filenames,fps,mode,sx,sy,color)
+			function room:setfg(beat,filenames,fps,mode,sx,sy,color,duration,ease)
 
 				mode = mode or 'ScaleToFill'
 				sx = sx or 0
 				sy = sy or 0
 				color = color or 'ffffffff'
 				fps = fps or 30
+				duration = duration or 0
+				ease = ease or "Linear"
 
 				if type(filenames) ~= 'table' then
 					filenames = {tostring(filenames)}
@@ -868,7 +874,9 @@ end]]
 						image = filenames,
 						fps = fps,
 						scrollX = sx,
-						scrollY = sy
+						scrollY = sy,
+						duration = duration,
+						ease = ease
 					}
 				)
 			end

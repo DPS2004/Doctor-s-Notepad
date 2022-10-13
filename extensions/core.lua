@@ -40,13 +40,17 @@ local extension = function(_level)
 		level.hidedialogue = level.hidedialog
 		--comments
 		
-		
-		function level:comment(beat, text)
-			self:addevent(beat, "Comment", {show = self.doshowcomments, text=text})
+		-- tabs can be "Actions", "Song", "Sprites" or "Rooms". defaults to "Actions"
+		-- target is necessary if the tab is "Sprites"
+		function level:comment(beat, text, color, tab, target)
+			color = color or "F2E644"
+			tab = tab or "Actions"
+
+			self:addevent(beat, "Comment", {show = self.doshowcomments, text=text, tab=tab, color=color, target=target})
 		end
 		
 		function level:ccode(beat,text)
-			self:addevent(beat, "Comment", {show = false, text="()=>"..text})
+			self:addevent(beat, "Comment", {show = false, text="()=>"..text, tab="Actions", color="F2E644"})
 		end
 		
 		function level:speed(beat, speed, dmult)
