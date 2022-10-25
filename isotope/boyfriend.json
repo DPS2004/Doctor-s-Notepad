@@ -1,0 +1,10 @@
+{
+"size": [42, 41],
+"clips": [
+    { "name": "neutral", "frames": [0, 1, 1, 1], "loop": "yes", "fps": 0},
+    { "name": "happy", "frames": [2, 3, 3, 3], "loop": "no", "fps": 0},
+    { "name": "barely", "frames": [4, 5, 5, 5, 5], "loop": "onBeat", "fps": 0, "loopStart": 1},
+    { "name": "missed", "frames": [4, 5, 5, 5, 5], "loop": "onBeat", "fps": 0, "loopStart": 1},
+    { "name": "die", "frames": [6, 7, 7, 7], "loop": "onBeat", "fps": 0},
+]
+}

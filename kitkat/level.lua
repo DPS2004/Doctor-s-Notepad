@@ -69,8 +69,9 @@ function kitkat_dropdecos(beat,dstart,dend)
 		local cdeco = dropdecos[i]
 		local dropx = ((i - dstart) / (dend - dstart)) * 100
 		cdeco:show(beat)
+		local size = math.random(20,30)
 		cdeco:settint(beat,true,level:hsv(ddcolor,255 - math.random(20),255 - math.random(20)))
-		cdeco:move(beat,{x=dropx + math.random(-2,2),y=50 + (dddirection*100),sx = 20, sy = 20,rot=math.random(-360,360)})
+		cdeco:move(beat,{x=dropx + math.random(-2,2),y=50 + (dddirection*100),sx = size, sy = size,rot=math.random(-360,360)})
 		cdeco:move(beat,{x=dropx + math.random(-2,2),y=50 - (dddirection*100), rot=math.random(-360,360)},1 + (math.random(-4,4) / 20),'outSine')
 	end
 	ddcolor = ddcolor + 25
@@ -78,7 +79,7 @@ function kitkat_dropdecos(beat,dstart,dend)
 		
 end
 
-for i=0,99 do --initialize 100 decos
+for i=0,19 do --initialize 20 decos
 	kitkat_initdeco()
 end
 
