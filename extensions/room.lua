@@ -364,6 +364,7 @@ local extension = function(_level)
 					Blizzard = {intensity = 100},
 					Blur = {intensity = 100},
 					RadialBlur = {intensity = 100},
+					HueShift = {intensity = 100},
 					WavyRows = {amplitude = {15, 0}, frequency = {2, 1}, _customFunc = function()
 						local s = 'if amplitude then level:comment(beat, "()=>wavyRowsAmplitude(" .. index .. ", " .. amplitude .. ", " .. duration .. ")") end\n'
 						s = s .. 'if frequency then level:rdcode(beat, "room[" .. index .. "].wavyRowsFrequency = " .. frequency, "OnBar") end\n'
@@ -1015,7 +1016,9 @@ end]]
 					image = {},
 					filter = "NearestNeighbor",
 					scrollX = 0,
-					scrollY = 0
+					scrollY = 0,
+					duration = 0,
+					ease = 'Linear'
 				}
 			)
 		end
