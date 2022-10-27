@@ -1,7 +1,7 @@
 ﻿{
 	"settings":
 	{
-		"version": 51, 
+		"version": 53, 
 		"artist": "", 
 		"song": "", 
 		"specialArtistType": "None", 
@@ -16,6 +16,7 @@
 		"previewSongStartTime": 0, 
 		"previewSongDuration": 10, 
 		"songNameHue": 0.4074649, 
+		"songLabelGrayscale": false, 
 		"description": "", 
 		"tags": "", 
 		"separate2PLevelFilename": "", 
@@ -51,6 +52,9 @@
 		{ "bar": 4, "beat": 2, "y": 0, "type": "ReorderRooms", "order": [0, 1, 2, 3] },
 	],
 	"conditionals":
+	[
+	],
+	"bookmarks":
 	[
 	]
 }

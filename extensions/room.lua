@@ -362,6 +362,9 @@ local extension = function(_level)
 					CustomScreenScroll = {floatX = {1, 0}, floatY = {1, 1}, _alias = {'screenscroll', 'customscreenscroll'}, _onTop = true},
 					Aberration = {intensity = 100},
 					Blizzard = {intensity = 100},
+					Blur = {intensity = 100},
+					RadialBlur = {intensity = 100},
+					HueShift = {intensity = 100},
 					WavyRows = {amplitude = {15, 0}, frequency = {2, 1}, _customFunc = function()
 						local s = 'if amplitude then level:comment(beat, "()=>wavyRowsAmplitude(" .. index .. ", " .. amplitude .. ", " .. duration .. ")") end\n'
 						s = s .. 'if frequency then level:rdcode(beat, "room[" .. index .. "].wavyRowsFrequency = " .. frequency, "OnBar") end\n'
@@ -849,13 +852,15 @@ end]]
 			end
 
 			-- foreground
-			function room:setfg(beat,filenames,fps,mode,sx,sy,color)
+			function room:setfg(beat,filenames,fps,mode,sx,sy,color,duration,ease)
 
 				mode = mode or 'ScaleToFill'
 				sx = sx or 0
 				sy = sy or 0
 				color = color or 'ffffffff'
 				fps = fps or 30
+				duration = duration or 0
+				ease = ease or "Linear"
 
 				if type(filenames) ~= 'table' then
 					filenames = {tostring(filenames)}
@@ -873,7 +878,9 @@ end]]
 						image = filenames,
 						fps = fps,
 						scrollX = sx,
-						scrollY = sy
+						scrollY = sy,
+						duration = duration,
+						ease = ease
 					}
 				)
 			end
