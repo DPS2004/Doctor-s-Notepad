@@ -1,0 +1,115 @@
+﻿{
+	"settings":
+	{
+		"version": 54, 
+		"artist": "", 
+		"song": "", 
+		"specialArtistType": "None", 
+		"artistPermission": "", 
+		"artistLinks": "", 
+		"author": "", 
+		"difficulty": "Medium", 
+		"seizureWarning": false, 
+		"previewImage": "", 
+		"syringeIcon": "", 
+		"previewSong": "", 
+		"previewSongStartTime": 0, 
+		"previewSongDuration": 10, 
+		"songNameHue": 0.4074649, 
+		"songLabelGrayscale": false, 
+		"description": "", 
+		"tags": "", 
+		"separate2PLevelFilename": "", 
+		"canBePlayedOn": "OnePlayerOnly", 
+		"firstBeatBehavior": "RunNormally", 
+		"multiplayerAppearance": "HorizontalStrips", 
+		"levelVolume": 1, 
+		"rankMaxMistakes": [20, 15, 10, 5], 
+		"mods": "classicHitParticles", 
+		"rankDescription":
+		[
+			"Better call 911, now!",
+			"Ugh, you can do better",
+			"Not bad I guess...",
+			"We make a good team!",
+			"You are really good!",
+			"Wow! That's awesome!!"
+		]
+	},
+	"rows":
+	[
+		{ "character": "Boy", "rowType": "Classic", "row": 0, "rooms": [0], "player": "P1", "pulseSound": "Shaker", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+		{ "character": "Boy", "rowType": "Classic", "row": 1, "rooms": [0], "player": "P1", "cpuMarker": "BlankCPU", "pulseSound": "None", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+	],
+	"decorations":
+	[
+	],
+	"events":
+	[
+		{ "bar": 1, "beat": 1, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "--x---", "syncoBeat": -1, "syncoSwing": 0 },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "SetRowXs", "row": 1, "pattern": "--x---", "syncoBeat": -1, "syncoSwing": 0 },
+		{ "bar": 1, "beat": 1, "y": 0, "type": "SetCrotchetsPerBar", "crotchetsPerBar": 4, "visualBeatMultiplier": 1 },
+		{ "bar": 1, "beat": 1, "y": 0, "type": "MoveRow", "row": 0, "target": "WholeRow", "customPosition": true, "rowPosition": [50, 50], "pivot": 0.5, "duration": 0, "ease": "Linear" },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "MoveRow", "row": 1, "target": "WholeRow", "customPosition": true, "rowPosition": [50, 50], "pivot": 0.5, "duration": 0, "ease": "Linear" },
+		{ "bar": 1, "beat": 1, "y": 3, "type": "TintRows", "row": 1, "border": "None", "borderColor": "FFFFFF", "borderOpacity": 100, "opacity": 50, "tint": true, "tintColor": "FF0000", "tintOpacity": 100 },
+		{ "bar": 1, "beat": 1, "y": 4, "type": "HideRow", "row": 1, "show": "OnlyRow", "transition": "Instant" },
+		{ "bar": 1, "beat": 1.5, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 1 },
+		{ "bar": 1, "beat": 1.5, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.5, "swing": 0, "hold": 1 },
+		{ "bar": 2, "beat": 1, "y": 1, "type": "SetRowXs", "row": 1, "pattern": "-xburd", "syncoBeat": -1, "syncoSwing": 0 },
+		{ "bar": 2, "beat": 1, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "-xburd", "syncoBeat": -1, "syncoSwing": 0 },
+		{ "bar": 2, "beat": 1, "y": 0, "type": "SetCrotchetsPerBar", "crotchetsPerBar": 5, "visualBeatMultiplier": 1 },
+		{ "bar": 2, "beat": 1, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 1, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.5, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 3.5, "y": 1, "type": "SetRowXs", "row": 1, "pattern": "--x---", "syncoBeat": -1, "syncoSwing": 0 },
+		{ "bar": 2, "beat": 3.5, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "--x---", "syncoBeat": -1, "syncoSwing": 0 },
+		{ "bar": 3, "beat": 1, "y": 0, "type": "SetCrotchetsPerBar", "crotchetsPerBar": 7, "visualBeatMultiplier": 1 },
+		{ "bar": 3, "beat": 2, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0.25, "hold": 0 },
+		{ "bar": 3, "beat": 2, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.5, "swing": 0.25, "hold": 0 },
+		{ "bar": 3, "beat": 6, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0.75, "hold": 0 },
+		{ "bar": 3, "beat": 6, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.5, "swing": 0.75, "hold": 0 },
+		{ "bar": 4, "beat": 1, "y": 0, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
+		{ "bar": 4, "beat": 1, "y": 0, "type": "SetCrotchetsPerBar", "crotchetsPerBar": 3, "visualBeatMultiplier": 1 },
+		{ "bar": 4, "beat": 2, "y": 0, "type": "ReorderRooms", "order": [0, 1, 2, 3] },
+		{ "bar": 4, "beat": 3, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 1, "swing": 0.75, "hold": 0 },
+		{ "bar": 4, "beat": 3, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 1, "swing": 0.75, "hold": 0 },
+	],
+	"conditionals":
+	[
+		{ "id": 1, "type": "Custom", "tag": "1", "name": "alreadyhere", "expression": "g"},
+		{ "id": 2, "type": "LastHit", "tag": "2", "name": "alrd2", "row": 0, "result": "SlightlyEarly"},
+		{ "id": 3, "type": "TimesExecuted", "tag": "3", "name": "bgu", "maxTimes": 3},
+		{ "id": 4, "type": "Language", "tag": "4", "name": "gah", "Language": "English"},
+		{ "id": 5, "type": "PlayerMode", "tag": "5", "name": "mn", "twoPlayerMode": false},
+		{ "id": 6, "type": "LastHit", "tag": "6", "name": "Last Hit With Perfect", "row": -1, "result": "Perfect"},
+		{ "id": 7, "type": "LastHit", "tag": "7", "name": "Last Hit With Slightly Late", "row": -1, "result": "SlightlyLate"},
+		{ "id": 8, "type": "LastHit", "tag": "8", "name": "Last Hit With Very Late", "row": -1, "result": "VeryLate"},
+		{ "id": 9, "type": "LastHit", "tag": "9", "name": "Last Hit With Very Early", "row": -1, "result": "VeryEarly"},
+	],
+	"bookmarks":
+	[
+	],
+	"colorPalette":
+	[
+		"000000ff",
+		"ffffffff",
+		"7f7f7fff",
+		"c3c3c3ff",
+		"880015ff",
+		"b97a57ff",
+		"ff0000ff",
+		"ffaec9ff",
+		"ff7f27ff",
+		"ffc90eff",
+		"fff200ff",
+		"efe4b0ff",
+		"22b14cff",
+		"b5e61dff",
+		"00a2e8ff",
+		"99d9eaff",
+		"3f48ccff",
+		"7092beff",
+		"a349a4ff",
+		"c8bfe7ff",
+		"00000000"
+	]
+}
