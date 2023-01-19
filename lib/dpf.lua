@@ -1,5 +1,8 @@
 local dpf = {}
 
+-- bit of a hack, but oh well
+DN_NULL = '_DN_NULL'
+local DN_NULL = '"' .. DN_NULL .. '"'
 
 function dpf.loadjson(f,w,force)
   w = w or {}
@@ -25,8 +28,8 @@ function dpf.loadjson(f,w,force)
       in_str = not in_str
 
     elseif text:sub(i,i+3) == 'null' and not in_str then
-      text = text:sub(1,i-1) .. '"_DN_NULL"' .. text:sub(i+4,-1)
-      print(("Replaced the 'null' at %s with \"_DN_NULL\"; surrounding: '%s'"):format(i, text:sub(i-20, i+23)))
+      text = text:sub(1,i-1) .. DN_NULL .. text:sub(i+4,-1)
+      print(("Replaced the 'null' at %s with %s; surrounding: '%s'"):format(i, DN_NULL, text:sub(i-20, i+23)))
       i = i - 1
     end
 
@@ -59,7 +62,7 @@ end
 function dpf.saverdlevel(f,w)
   local cf = io.open(f, "w")
   local str = json.encode(w)
-  str = string.gsub(str,'"_DN_NULL"','null')
+  str, replacements = string.gsub(str,DN_NULL,'null')
   cf:write(str)
   cf:close()
 end
