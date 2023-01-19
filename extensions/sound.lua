@@ -48,7 +48,7 @@ local extension = function(_level)
 			offset = offset or 0
 			soundtype = soundtype or "CueSound"
 
-			self:addevent(beat, "PlaySound", {filename = sound, volume = volume, pitch = pitch, pan = pan, offset = offset, isCustom = true, customSoundType = soundtype })
+			self:addevent(beat, "PlaySound", {sound = {filename = sound, volume = volume, pitch = pitch, pan = pan, offset = offset}, isCustom = true, customSoundType = soundtype })
 
 		end
 
