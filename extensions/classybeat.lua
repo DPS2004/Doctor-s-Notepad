@@ -10,8 +10,9 @@ local extension = function(_level)
 		local classyXSize = 24
 		local classyHitXSize = 142
 
-		-- xbrud-
-		-- X, left swing, swing bounce, up arrow, down arrow, normal
+		-- Set Row X pattern: xbrud-
+		-- translation: X, left swing, swing bounce, up arrow, down arrow, normal
+
 		local patternToExpression = {
 			['x'] = {
 				appear = 'X-Open',			-- runs on the Set Row X event
@@ -305,7 +306,12 @@ local extension = function(_level)
 			local room = row.room
 
 			-- generate classybeat stuff
-			function row:classyinit(filename)
+			function row:classyinit(filename, disableHeart)
+				row.classyinit = function()
+					error('classyinit() already called for this row!', 2)
+				end
+
+				disableHeart = not not disableHeart
 				filename = filename or 'ClassyBeat'
 
 				row.classy = {}
@@ -405,7 +411,7 @@ local extension = function(_level)
 					row.classy[7]:playexpression(0, 'happy')
 
 					level:tag('[onHeldPressHit][row' .. idx .. ']CLASSYBEAT_HOLDSTART_TAG')
-					row.classy[7]:playexpression(0, 'HeldStart') -- to-do: add this expression
+					row.classy[7]:playexpression(0, 'HeldStart')
 
 					level:endtag()
 
@@ -478,6 +484,10 @@ local extension = function(_level)
 									if curPattern.appear then cbeat:playexpression(beat, curPattern.appear) end
 
 								end
+
+							elseif event.type == 'AddFreeTimeBeat' or event.type == 'PulseFreeTimeBeat' then -- why are there two events :edegabudgetcuts:
+
+
 
 							end
 

@@ -166,6 +166,30 @@
                 28
             ],
             "portraitScale": 2
+        },
+        {
+            "name": "HeldStart",
+            "frames": [
+                2,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56
+            ],
+            "loop": "yes",
+            "fps": 60,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
         }
     ]
 }
