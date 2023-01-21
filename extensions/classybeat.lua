@@ -10,6 +10,8 @@ local extension = function(_level)
 		local classyXSize = 24
 		local classyHitXSize = 142
 
+		local classyHitTaggedEventsBeat = 0
+
 		-- Set Row X pattern: xbrud-
 		-- translation: X, left swing, swing bounce, up arrow, down arrow, normal
 
@@ -177,8 +179,14 @@ local extension = function(_level)
 
 			end
 
-			return {bar = lastEvent.bar, beat = lastEvent.beat + 999}
+			-- fallback in case we dont find any other event, just return a fake event so the pulse never disappears
+			return {bar = lastEvent.bar, beat = lastEvent.beat + 100, fake = true}
 
+		end
+
+		-- place tagged events at the last event in the level
+		for _,e in ipairs(level.data.events) do
+			classyHitTaggedEventsBeat = math.max(classyHitTaggedEventsBeat, getBeatFromPair(e.bar, e.beat))
 		end
 
 		-- row functions to wrap so we can reposition the classybeats and such
@@ -333,6 +341,9 @@ local extension = function(_level)
 				row.classy.hidden = true
 				row.classy.freePulse = 0 -- freetime support
 
+				setvalue(row, 'syncoPulse', 0, -1)
+				setvalue(row, 'syncoSwing', 0, 0)
+
 				-- generate the row
 				do
 					local classyX = 5
@@ -410,24 +421,24 @@ local extension = function(_level)
 					level:tag('[onMiss][row' .. idx .. ']CLASSYBEAT_MISSBEAT_TAG')
 
 					level:conditional(condVeryEarly)
-					row.classy[7]:playexpression(999, 'missed_early')
+					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'missed_early')
 
 					level:conditional(condEarly)
-					row.classy[7]:playexpression(999, 'barely_early')
+					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'barely_early')
 
 					level:conditional(condLate)
-					row.classy[7]:playexpression(999, 'barely_late')
+					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'barely_late')
 
 					level:conditional(condVeryLate)
-					row.classy[7]:playexpression(999, 'missed_late')
+					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'missed_late')
 
 					level:endconditional()
 
 					level:tag('[onHit][row' .. idx .. ']CLASSYBEAT_HITBEAT_TAG')
-					row.classy[7]:playexpression(999, 'happy')
+					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'happy')
 
 					level:tag('[onHeldPressHit][row' .. idx .. ']CLASSYBEAT_HOLDSTART_TAG')
-					row.classy[7]:playexpression(999, 'HeldStart')
+					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'HeldStart')
 
 					level:endtag()
 
@@ -464,14 +475,25 @@ local extension = function(_level)
 
 								end
 
+								local syncoPulse = getvalue(row, 'syncoPulse', beat)
+								local syncoSwing = getvalue(row, 'syncoSwing', beat)
+
+								local isSyncopationActive = syncoPulse > -1
+
 								-- found the pulses
 								for i = 1, 6 do
 									local tick = i % 2 == 0 and tickEven or tickOdd
 
+									local isSyncopated = isSyncopationActive and (i > syncoPulse + 1)
+									local isNextFirstSyncopatedPulse = isSyncopationActive and (i == syncoPulse + 1)
+
+									local beatSyncoAdd = isSyncopated and -(origTick / 2) or 0
+									local tickSyncoAdd = isNextFirstSyncopatedPulse and -(origTick / 2) or 0
+
 									table.insert(pulses, {
 										pulse = i,
-										beat = beat,
-										tick = tick,
+										beat = beat + beatSyncoAdd,
+										tick = tick + tickSyncoAdd,
 										origTick = origTick,
 										swingType = swingType,
 										hold = event.hold
@@ -501,6 +523,9 @@ local extension = function(_level)
 
 								end
 
+								setvalue(row, 'syncoPulse', beat, event.syncoBeat)
+								setvalue(row, 'syncoSwing', beat, event.syncoSwing)
+
 							elseif event.type == 'AddFreeTimeBeat' then
 								row.classy.freePulse = 1 -- start freetime
 
@@ -517,7 +542,8 @@ local extension = function(_level)
 									tick = tick,
 									origTick = 0.5,
 									swingType = 'straight',
-									hold = event.hold
+									hold = event.hold,
+									dontMakeExitAnimation = nextPulse.fake
 								})
 
 							elseif event.type == 'PulseFreeTimeBeat' then -- why are there two events :edegabudgetcuts:
@@ -559,7 +585,8 @@ local extension = function(_level)
 												tick = tick,
 												origTick = 0.5,
 												swingType = 'straight',
-												hold = event.hold
+												hold = event.hold,
+												dontMakeExitAnimation = nextPulse.fake
 											})
 										else
 											-- hit, so reset the freetime
@@ -613,7 +640,7 @@ local extension = function(_level)
 
 							end
 
-							if pattern.nextPulse then cbeat:playexpression(beat + tick, pattern.nextPulse) end
+							if pattern.nextPulse and not pulse.dontMakeExitAnimation then cbeat:playexpression(beat + tick, pattern.nextPulse) end
 
 						else -- holding required, so use the special animations
 
