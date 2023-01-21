@@ -165,6 +165,22 @@ local extension = function(_level)
 
 		end
 
+		local function findNextFreeTime(rowIndex, lastEvent, lastIndex)
+			local events = level.data.events
+
+			for i = lastIndex + 1, #events do
+				local event = events[i]
+
+				if event.row == rowIndex and event.type == 'PulseFreeTimeBeat' then
+					return event
+				end
+
+			end
+
+			return {bar = lastEvent.bar, beat = lastEvent.beat + 999}
+
+		end
+
 		-- row functions to wrap so we can reposition the classybeats and such
 		local wrappedFunctions = {
 			movex = function(row, beat, _, duration, ease)
@@ -306,16 +322,16 @@ local extension = function(_level)
 			local room = row.room
 
 			-- generate classybeat stuff
-			function row:classyinit(filename, disableHeart)
+			function row:classyinit(filename)
 				row.classyinit = function()
 					error('classyinit() already called for this row!', 2)
 				end
 
-				disableHeart = not not disableHeart
 				filename = filename or 'ClassyBeat'
 
 				row.classy = {}
 				row.classy.hidden = true
+				row.classy.freePulse = 0 -- freetime support
 
 				-- generate the row
 				do
@@ -394,24 +410,24 @@ local extension = function(_level)
 					level:tag('[onMiss][row' .. idx .. ']CLASSYBEAT_MISSBEAT_TAG')
 
 					level:conditional(condVeryEarly)
-					row.classy[7]:playexpression(0, 'missed_early')
+					row.classy[7]:playexpression(999, 'missed_early')
 
 					level:conditional(condEarly)
-					row.classy[7]:playexpression(0, 'barely_early')
+					row.classy[7]:playexpression(999, 'barely_early')
 
 					level:conditional(condLate)
-					row.classy[7]:playexpression(0, 'barely_late')
+					row.classy[7]:playexpression(999, 'barely_late')
 
 					level:conditional(condVeryLate)
-					row.classy[7]:playexpression(0, 'missed_late')
+					row.classy[7]:playexpression(999, 'missed_late')
 
 					level:endconditional()
 
 					level:tag('[onHit][row' .. idx .. ']CLASSYBEAT_HITBEAT_TAG')
-					row.classy[7]:playexpression(0, 'happy')
+					row.classy[7]:playexpression(999, 'happy')
 
 					level:tag('[onHeldPressHit][row' .. idx .. ']CLASSYBEAT_HOLDSTART_TAG')
-					row.classy[7]:playexpression(0, 'HeldStart')
+					row.classy[7]:playexpression(999, 'HeldStart')
 
 					level:endtag()
 
@@ -421,7 +437,7 @@ local extension = function(_level)
 				do
 					local pulses = {}
 
-					for _,event in ipairs(level.data.events) do
+					for i, event in ipairs(level.data.events) do
 
 						if event.row == idx then
 
@@ -485,9 +501,77 @@ local extension = function(_level)
 
 								end
 
-							elseif event.type == 'AddFreeTimeBeat' or event.type == 'PulseFreeTimeBeat' then -- why are there two events :edegabudgetcuts:
+							elseif event.type == 'AddFreeTimeBeat' then
+								row.classy.freePulse = 1 -- start freetime
 
+								local nextPulse = findNextFreeTime(idx, event, i)
 
+								local nextPulseBeat = getBeatFromPair(nextPulse.bar, nextPulse.beat)
+								local thisPulseBeat = getBeatFromPair(event.bar, event.beat)
+
+								local tick = nextPulseBeat - thisPulseBeat
+
+								table.insert(pulses, {
+									pulse = row.classy.freePulse,
+									beat = thisPulseBeat,
+									tick = tick,
+									origTick = 0.5,
+									swingType = 'straight',
+									hold = event.hold
+								})
+
+							elseif event.type == 'PulseFreeTimeBeat' then -- why are there two events :edegabudgetcuts:
+
+								if row.classy.freePulse > 0 then -- only if we have an active freetime
+									
+									local action = event.action
+									local pulse = row.classy.freePulse
+
+									if action == 'Remove' then
+										pulse = 0
+
+									else
+
+										if action == 'Increment' then
+											pulse = math.min(pulse + 1, 7)
+
+										elseif action == 'Decrement' then
+											pulse = math.max(pulse - 1, 1)
+
+										elseif action == 'Custom' then
+											pulse = event.customPulse + 1
+
+										end
+
+										if pulse < 7 then
+											-- normal pulse
+
+											local nextPulse = findNextFreeTime(idx, event, i)
+
+											local nextPulseBeat = getBeatFromPair(nextPulse.bar, nextPulse.beat)
+											local thisPulseBeat = getBeatFromPair(event.bar, event.beat)
+
+											local tick = nextPulseBeat - thisPulseBeat
+
+											table.insert(pulses, {
+												pulse = pulse,
+												beat = thisPulseBeat,
+												tick = tick,
+												origTick = 0.5,
+												swingType = 'straight',
+												hold = event.hold
+											})
+										else
+											-- hit, so reset the freetime
+											pulse = 0
+
+										end
+
+									end
+
+									row.classy.freePulse = pulse
+
+								end
 
 							end
 
