@@ -180,7 +180,7 @@ local extension = function(_level)
 			end
 
 			-- fallback in case we dont find any other event, just return a fake event so the pulse never disappears
-			return {bar = lastEvent.bar, beat = lastEvent.beat + 100, fake = true}
+			return {bar = lastEvent.bar, beat = lastEvent.beat + 999, fake = true}
 
 		end
 
