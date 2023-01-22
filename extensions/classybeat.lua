@@ -190,6 +190,15 @@ local extension = function(_level)
 
 		end
 
+		local function calculate_beat(beat, row, i)
+			local cbeat = row.classy[i]
+
+			local delay = getvalue(row, 'classyDelay', beat)
+			beat = beat + delay * cbeat.delayMultiplier
+
+			return beat
+		end
+
 		local function reposition_classy(beat, row, index, duration, ease)
 
 			local cbeat = row.classy[index]
@@ -197,7 +206,8 @@ local extension = function(_level)
 
 			local newx, newy = calculate_classy_position(cbeat, row, beat)
 
-			cbeat:move(beat, {
+			local Beat = calculate_beat(beat, row, index)
+			cbeat:move(Beat, {
 				x = newx / 3.52,
 				y = newy / 1.98,
 				rot = getvalue(row, 'rot', finBeat),
@@ -248,7 +258,8 @@ local extension = function(_level)
 
 					local newx, newy = calculate_classy_position(cbeat, row, beat)
 
-					cbeat:movex(beat, newx / 3.52, duration, ease)
+					local Beat = calculate_beat(beat, row, i)
+					cbeat:movex(Beat, newx / 3.52, duration, ease)
 
 				end
 
@@ -262,7 +273,8 @@ local extension = function(_level)
 
 					local newx, newy = calculate_classy_position(cbeat, row, beat)
 
-					cbeat:movey(beat, newy / 1.98, duration, ease)
+					local Beat = calculate_beat(beat, row, i)
+					cbeat:movey(Beat, newy / 1.98, duration, ease)
 
 				end
 
@@ -279,7 +291,8 @@ local extension = function(_level)
 					local rowsx = getvalue(row, 'sx', finBeat)
 					local rowx = getvalue(row, 'x', beat)
 
-					cbeat:move(beat, {
+					local Beat = calculate_beat(beat, row, i)
+					cbeat:move(Beat, {
 						x = newx / 3.52,
 						sx = rowsx
 					}, duration, ease)
@@ -294,47 +307,54 @@ local extension = function(_level)
 					local cbeat = row.classy[i]
 					local finBeat = beat + duration
 
-					cbeat:movesy(beat, getvalue(row, 'sy', finBeat), duration, ease)
+					local Beat = calculate_beat(beat, row, i)
+					cbeat:movesy(Beat, getvalue(row, 'sy', finBeat), duration, ease)
 
 				end
 
 			end,
-			setroom = function(row, ...)
+			setroom = function(row, beat, ...)
 
 				for i = 1, CLASSYCOUNT do
-					row.classy[i]:setroom(...)
+					local Beat = calculate_beat(beat, row, i)
+					row.classy[i]:setroom(Beat, ...)
 				end
 
 			end,
-			setborder = function(row, ...)
+			setborder = function(row, beat, ...)
 				
 				for i = 1, CLASSYCOUNT do
-					row.classy[i]:setborder(...)
+					local Beat = calculate_beat(beat, row, i)
+					row.classy[i]:setborder(Beat, ...)
 				end
 
 			end,
-			settint = function(row, ...)
+			settint = function(row, beat, ...)
 				
 				for i = 1, CLASSYCOUNT do
-					row.classy[i]:settint(...)
+					local Beat = calculate_beat(beat, row, i)
+					row.classy[i]:settint(Beat, ...)
 				end
 
 			end,
 			setopacity = function(row, beat, opacity, duration, ease)
 				
 				for i = 1, CLASSYCOUNT do
-					row.classy[i]:setopacity(beat, opacity, duration, ease)
+					local Beat = calculate_beat(beat, row, i)
+					row.classy[i]:setopacity(Beat, opacity, duration, ease)
 				end
 
 			end,
 			show = function(row, beat)
 				
-				if row.classy.hidden then return end
+				if getvalue(row, 'classyHidden', beat) then return end
 
 				row:showchar(beat, 0)
 
 				for i = 1, CLASSYCOUNT do
-					row.classy[i]:show(beat)
+
+					local Beat = calculate_beat(beat, row, i)
+					row.classy[i]:show(Beat)
 				end
 
 			end,
@@ -343,27 +363,33 @@ local extension = function(_level)
 				if row.classy.special then return end
 
 				for i = 1, CLASSYCOUNT do
-					row.classy[i]:hide(beat)
+
+					local Beat = calculate_beat(beat, row, i)
+					row.classy[i]:hide(Beat)
 				end
 
 			end,
 			showchar = function(row, beat)
-				row.classy.hidden = true
+				setvalue(row, 'classyHidden', beat, true)
 
 				for i = 1, CLASSYCOUNT do
-					row.classy[i]:hide(beat)
+
+					local Beat = calculate_beat(beat, row, i)
+					row.classy[i]:hide(Beat)
 				end
 
 			end,
 			showrow = function(row, beat)
-				row.classy.hidden = false
+				setvalue(row, 'classyHidden', beat, false)
 
 				row.classy.special = true
 				row:hide(beat)
 				row.classy.special = nil
 
 				for i = 1, CLASSYCOUNT do
-					row.classy[i]:show(beat)
+
+					local Beat = calculate_beat(beat, row, i)
+					row.classy[i]:show(Beat)
 				end
 
 			end,
@@ -387,9 +413,10 @@ local extension = function(_level)
 				disableHeartCrack = not not disableHeartCrack
 
 				row.classy = {}
-				row.classy.hidden = true
 				row.classy.freePulse = 0 -- freetime support
 
+				setvalue(row, 'classyDelay', 0, 0)
+				setvalue(row, 'classyHidden', 0, true)
 				setvalue(row, 'syncoPulse', 0, -1)
 				setvalue(row, 'syncoSwing', 0, 0)
 
@@ -407,6 +434,7 @@ local extension = function(_level)
 
 						cbeat._relativeX = classyX
 						cbeat.width = classyXSize
+						cbeat.delayMultiplier = i
 
 						setvalue(cbeat, 'currentPattern', 0, patternToExpression['-'])
 
@@ -425,6 +453,7 @@ local extension = function(_level)
 
 						yellow._relativeX = classyX
 						yellow.width = classyHitXSize
+						yellow.delayMultiplier = 7
 
 						row.classy[7] = yellow
 
@@ -434,6 +463,7 @@ local extension = function(_level)
 
 						heart._relativeX = classyX
 						heart.width = classyHitXSize
+						heart.delayMultiplier = 8
 
 						row.classy[8] = heart
 
@@ -447,6 +477,7 @@ local extension = function(_level)
 
 						connector._relativeX = 8
 						connector.width = 8
+						connector.delayMultiplier = 0
 						connector:movesx(0, 8 / classyXSize, 0, 'Linear')
 
 						row.classy[9] = connector
@@ -766,7 +797,7 @@ local extension = function(_level)
 				end
 
 				function row:showclassy(beat)
-					row.classy.hidden = false
+					setvalue(row, 'classyHidden', beat, false)
 
 					if getvalue(row, 'hidden', beat) then return end -- do nothing more if the row is hidden
 
@@ -779,7 +810,7 @@ local extension = function(_level)
 				end
 
 				function row:hideclassy(beat)
-					row.classy.hidden = true
+					setvalue(row, 'classyHidden', beat, true)
 
 					if not getvalue(row, 'hidden', beat) then
 						row:show(beat, 0)
@@ -789,6 +820,11 @@ local extension = function(_level)
 						cbeat:hide(beat)
 					end
 
+				end
+
+				-- makes classybeats' movements delayed by some amount of beats, good for fancy wavey effects and such
+				function row:delayclassy(beat, delay)
+					setvalue(row, 'classyDelay', beat, delay or 0)
 				end
 
 			end
