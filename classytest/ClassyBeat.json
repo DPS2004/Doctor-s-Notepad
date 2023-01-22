@@ -115,6 +115,24 @@
             "portraitScale": 2
         },
         {
+            "name": "X-Hold",
+            "frames": [
+                13
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
             "name": "X-Open",
             "frames": [
                 11,
@@ -1028,5 +1046,67 @@
             ],
             "portraitScale": 2
         },
+            {
+            "name": "syncoPulse",
+            "frames": [
+                117,
+                116,
+                115
+            ],
+            "loop": "yes",
+            "fps": 10,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+            {
+            "name": "syncoPulseExit",
+            "frames": [
+                6,
+                5,
+                4,
+                3,
+                2,
+                1,
+                0,
+                117,
+                117,
+                117,
+                117,
+                117,
+                117,
+                116,
+                116,
+                116,
+                116,
+                116,
+                116,
+                115,
+                115,
+                115,
+                115,
+                115,
+                115
+            ],
+            "loop": "yes",
+            "fps": 60,
+            "loopStart": 7,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        }
     ]
 }

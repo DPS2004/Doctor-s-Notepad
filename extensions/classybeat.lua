@@ -11,6 +11,7 @@ local extension = function(_level)
 		local classyHitXSize = 142
 
 		local classyHitTaggedEventsBeat = 0
+		local varCount = 0
 
 		-- Set Row X pattern: xbrud-
 		-- translation: X, left swing, swing bounce, up arrow, down arrow, normal
@@ -45,13 +46,22 @@ local extension = function(_level)
 			['r'] = {
 				pulse = 'W-Bounce',
 				nextPulse = 'barely'
+			},
+			['synco'] = {
+				appear = 'syncoPulse',
+				disappear = 'neutral',
+				pulse = 'happy',
+				nextPulse = 'syncoPulseExit',
+				swingLeft = 'W-Left',
+				swingRight = 'W-Right',
+				swingBounce = 'W-Bounce'
 			}
 		}
 
 		-- timing: VeryEarly, SlightlyEarly, Perfect, SlightlyLate, VeryLate
 		local function newHitConditional(name, row, timing)
 			local cond = {}
-			cond.id = #level.conditionals + 1 + 9
+			cond.id = #level.data.conditionals + #level.conditionals + 1
 			cond.level = level
 
 			cond.name = name
@@ -71,6 +81,44 @@ local extension = function(_level)
 						tag = tostring(self.id),
 						row = self.row,
 						result = self.result
+					}
+				)
+			end
+
+			table.insert(level.conditionals, cond)
+			return cond
+
+		end
+
+		local function newConditional(name, expression)
+			local cond = {}
+			cond.id = #level.data.conditionals + #level.conditionals + 1
+			cond.level = level
+
+			cond.name = name
+			cond.expression = expression
+			cond.red = false
+
+			function cond:enable(val)
+				cond.red = not not val
+			end
+
+			function cond:getid()
+				if cond.red then
+					return '~' .. self.id .. 'd0'
+				else
+					return self.id .. 'd0'
+				end
+			end
+
+			function cond:save()
+				table.insert(self.level.data.conditionals,
+					{
+						type = 'Custom',
+						id = self.id,
+						name = self.name,
+						tag = tostring(self.id),
+						expression = self.expression
 					}
 				)
 			end
@@ -330,12 +378,13 @@ local extension = function(_level)
 			local room = row.room
 
 			-- generate classybeat stuff
-			function row:classyinit(filename)
+			function row:classyinit(filename, disableHeartCrack)
 				row.classyinit = function()
 					error('classyinit() already called for this row!', 2)
 				end
 
 				filename = filename or 'ClassyBeat'
+				disableHeartCrack = not not disableHeartCrack
 
 				row.classy = {}
 				row.classy.hidden = true
@@ -516,8 +565,8 @@ local extension = function(_level)
 
 									if curPattern.disappear then cbeat:playexpression(beat, curPattern.disappear) end
 
-									setvalue(cbeat, 'currentPattern', beat, patternToExpression[char])
-									curPattern = getvalue(cbeat, 'currentPattern', beat)
+									curPattern = patternToExpression[char]
+									setvalue(cbeat, 'currentPattern', beat, curPattern)
 
 									if curPattern.appear then cbeat:playexpression(beat, curPattern.appear) end
 
@@ -525,6 +574,14 @@ local extension = function(_level)
 
 								setvalue(row, 'syncoPulse', beat, event.syncoBeat)
 								setvalue(row, 'syncoSwing', beat, event.syncoSwing)
+
+								if event.syncoBeat > -1 then
+									local cbeat = row.classy[event.syncoBeat+1]
+
+									setvalue(cbeat, 'currentPattern', beat, patternToExpression.synco)
+									cbeat:playexpression(beat, patternToExpression.synco.appear)
+
+								end
 
 							elseif event.type == 'AddFreeTimeBeat' then
 								row.classy.freePulse = 1 -- start freetime
@@ -650,6 +707,48 @@ local extension = function(_level)
 						end
 
 					end
+
+				end
+
+				disableHeartCrack = true -- disable heart functionality for now
+
+				-- heart cracking, if not diabled
+				if not disableHeartCrack and varCount < 10 then
+
+					level:tag('[onMiss][row' .. idx .. ']CLASSYBEAT_MISSBEAT_TAG')
+
+					local variable = 'i' .. varCount
+					varCount = varCount + 1
+
+					level:rdcode(classyHitTaggedEventsBeat, variable .. '++')
+
+					local stage1 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE1', variable .. ' < missesToCrackHeart / 5 * 1')
+					local stage2 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE2', variable .. ' < missesToCrackHeart / 5 * 2')
+					local stage3 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE3', variable .. ' < missesToCrackHeart / 5 * 3')
+					local stage4 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE4', variable .. ' < missesToCrackHeart / 5 * 4')
+					local stage5 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE5', variable .. ' < missesToCrackHeart / 5 * 5')
+
+					level:conditional(stage5)
+					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'break')
+
+					level:conditional(stage4)
+					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_4')
+
+					level:conditional(stage3)
+					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_3')
+
+					level:conditional(stage2)
+					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_2')
+
+					level:conditional(stage1)
+					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_1')
+
+					level:endconditional()
+					level:endtag()
+
+				elseif not disableHeartCrack and varCount > 9 then
+
+					error('Only 10 classybeat rows can have heart cracking enabled! It must be disabled for any other rows.', 2)
 
 				end
 	

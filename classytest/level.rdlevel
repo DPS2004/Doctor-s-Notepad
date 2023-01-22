@@ -39,6 +39,7 @@
 	"rows":
 	[
 		{ "character": "Boy", "rowType": "Classic", "row": 0, "rooms": [0], "player": "P1", "pulseSound": "Shaker", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+		{ "character": "Samurai", "rowType": "Classic", "row": 1, "rooms": [0], "player": "P1", "pulseSound": "Kick", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
 	],
 	"decorations":
 	[
@@ -48,10 +49,12 @@
 		{ "bar": 1, "beat": 1, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "-x----", "syncoBeat": -1, "syncoSwing": 0.25 },
 		{ "bar": 1, "beat": 1, "y": 0, "type": "SetCrotchetsPerBar", "visualBeatMultiplier": 1, "crotchetsPerBar": 4 },
 		{ "bar": 1, "beat": 1, "y": 0, "type": "MoveRow", "row": 0, "target": "WholeRow", "customPosition": true, "rowPosition": [50, 50], "pivot": 0.5, "duration": 0, "ease": "Linear" },
-		{ "bar": 1, "beat": 1, "y": 1, "type": "MoveRow", "row": 2, "target": "WholeRow", "customPosition": true, "rowPosition": [50, 50], "pivot": 0.5, "duration": 0, "ease": "Linear" },
-		{ "bar": 1, "beat": 1, "y": 3, "type": "TintRows", "row": 2, "tintColor": "FF0000FF", "ease": "Linear", "border": "None", "opacity": 50, "tint": true, "duration": 0, "effect": "None" },
-		{ "bar": 1, "beat": 1, "y": 4, "type": "HideRow", "row": 2, "transition": "Instant", "show": "OnlyRow" },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "MoveRow", "row": 3, "target": "WholeRow", "customPosition": true, "rowPosition": [50, 50], "pivot": 0.5, "duration": 0, "ease": "Linear" },
+		{ "bar": 1, "beat": 1, "y": 3, "type": "TintRows", "row": 3, "tintColor": "FF0000FF", "ease": "Linear", "border": "None", "opacity": 50, "tint": true, "duration": 0, "effect": "None" },
+		{ "bar": 1, "beat": 1, "y": 4, "type": "HideRow", "row": 3, "transition": "Instant", "show": "OnlyRow" },
+		{ "bar": 1, "beat": 1, "y": 2, "type": "CallCustomMethod", "methodName": "missesToCrackHeart = 10", "executionTime": "OnBar", "sortOffset": 0 },
 		{ "bar": 1, "beat": 1.5, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 4, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 1, "swing": 0, "hold": 0 },
 		{ "bar": 1, "beat": 4.5, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "------", "syncoBeat": -1, "syncoSwing": 0 },
 		{ "bar": 2, "beat": 1, "y": 0, "type": "SetCrotchetsPerBar", "visualBeatMultiplier": 1, "crotchetsPerBar": 5 },
 		{ "bar": 2, "beat": 2.5, "y": 0, "type": "AddFreeTimeBeat", "row": 0, "hold": 0, "pulse": 0 },
@@ -62,13 +65,17 @@
 		{ "bar": 2, "beat": 5.25, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
 		{ "bar": 3, "beat": 1, "y": 0, "type": "SetCrotchetsPerBar", "visualBeatMultiplier": 1, "crotchetsPerBar": 7 },
 		{ "bar": 3, "beat": 1, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
+		{ "bar": 3, "beat": 2, "y": 1, "type": "SetRowXs", "row": 1, "pattern": "-x----", "syncoBeat": 2, "syncoSwing": 0.5 },
 		{ "bar": 3, "beat": 2, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0.25, "hold": 0 },
+		{ "bar": 3, "beat": 4, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.5, "swing": 0, "hold": 0 },
 		{ "bar": 3, "beat": 6, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0.75, "hold": 0 },
 		{ "bar": 4, "beat": 1, "y": 0, "type": "MoveRoom", "roomPosition": [50, 50], "duration": 1, "ease": "Linear" },
 		{ "bar": 4, "beat": 1, "y": 0, "type": "SetCrotchetsPerBar", "visualBeatMultiplier": 1, "crotchetsPerBar": 3 },
 		{ "bar": 4, "beat": 2, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "------", "syncoBeat": 4, "syncoSwing": 0.5 },
 		{ "bar": 4, "beat": 2, "y": 0, "type": "ReorderRooms", "order": [0, 1, 2, 3] },
 		{ "bar": 5, "beat": 1, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 1, "swing": 0.5, "hold": 0 },
+		{ "bar": 7, "beat": 2, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 0 },
+		{ "bar": 9, "beat": 1, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "------", "syncoBeat": -1, "syncoSwing": 0.5 },
 	],
 	"conditionals":
 	[
