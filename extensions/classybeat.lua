@@ -188,7 +188,7 @@ local extension = function(_level)
 			if usePivot then
 
 				local pivx = charx + relx - rowx
-				local newpx = -(pivx / cbeat.sheetWidth * 100 - 50)
+				local newpx = -(pivx / rowsx / cbeat.sheetWidth * 100 - 50)
 
 				cbeat:movepx(beat, newpx, 0, 'Linear')
 
