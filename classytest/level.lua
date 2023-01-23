@@ -16,7 +16,7 @@ mycoolrow:classyusepivot(1, true)
 mycoolrow:rotate(1, 20, 2, 'OutSine')
 mycoolrow:rotate(3, -20, 4, 'InOutSine')
 mycoolrow:rotate(7, 20, 4, 'InOutSine')
-mycoolrow:rotate(11, -20, 4, 'InOutSine')
+mycoolrow:rotate(11, 0, 4, 'InOutSine')
 
 mycoolrow2:delayclassy(1, 0.25)
 mycoolrow2:movey(1, 40, 1, 'OutQuad')

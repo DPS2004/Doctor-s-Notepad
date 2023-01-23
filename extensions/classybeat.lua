@@ -3,6 +3,7 @@ local sin = math.sin
 local cos = math.cos 
 
 local CLASSYCOUNT = 9 -- 6 green segments + 1 yellow segment + 1 heart + 1 character-line connector
+local MAXVARCOUNT = 10 -- maximum amount of ints available
 
 local extension = function(_level)
 	_level.initqueue.queue(6,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
@@ -93,6 +94,36 @@ local extension = function(_level)
 
 		end
 
+		local function newTimeConditional(name, times)
+			local cond = {}
+			cond.id = #level.data.conditionals + #level.conditionals + 1
+			cond.level = level
+
+			cond.name = name
+			cond.times = times
+
+			function cond:getid()
+				return self.id .. 'd0'
+			end
+
+			function cond:save()
+				table.insert(self.level.data.conditionals,
+					{
+						type = 'TimesExecuted',
+						id = self.id,
+						name = self.name,
+						tag = tostring(self.id),
+						maxTimes = self.times
+					}
+				)
+			end
+
+			table.insert(level.conditionals, cond)
+			return cond
+
+		end
+		local onetime = newTimeConditional('DN_CLASSYBEAT_RUNONCE', 1)
+
 		local function newConditional(name, expression)
 			local cond = {}
 			cond.id = #level.data.conditionals + #level.conditionals + 1
@@ -102,15 +133,15 @@ local extension = function(_level)
 			cond.expression = expression
 			cond.red = false
 
-			function cond:enable(val)
+			function cond:setred(val)
 				cond.red = not not val
 			end
 
 			function cond:getid()
 				if cond.red then
-					return '~' .. self.id .. 'd0'
+					return onetime.id .. '&~' .. self.id .. 'd0'
 				else
-					return self.id .. 'd0'
+					return onetime.id .. '&' .. self.id .. 'd0'
 				end
 			end
 
@@ -432,12 +463,12 @@ local extension = function(_level)
 			local room = row.room
 
 			-- generate classybeat stuff
-			function row:classyinit(filename, disableHeartCrack)
+			function row:classyinit(disableHeartCrack)
 				row.classyinit = function()
 					error('classyinit() already called for this row!', 2)
 				end
 
-				filename = filename or 'ClassyBeat'
+				local filename = 'ClassyBeat'
 				disableHeartCrack = not not disableHeartCrack
 
 				row.classy = {}
@@ -774,45 +805,51 @@ local extension = function(_level)
 
 				end
 
-				disableHeartCrack = true -- disable heart functionality for now
-
 				-- heart cracking, if not diabled
-				if not disableHeartCrack and varCount < 10 then
+				if not disableHeartCrack and varCount < MAXVARCOUNT then
 
 					level:tag('[onMiss][row' .. idx .. ']CLASSYBEAT_MISSBEAT_TAG')
 
 					local variable = 'i' .. varCount
 					varCount = varCount + 1
 
-					level:rdcode(classyHitTaggedEventsBeat, variable .. '++')
+					local variablePlusOne = '(' .. variable .. '+ 1)'
 
-					local stage1 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE1', variable .. ' < missesToCrackHeart / 5 * 1')
-					local stage2 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE2', variable .. ' < missesToCrackHeart / 5 * 2')
-					local stage3 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE3', variable .. ' < missesToCrackHeart / 5 * 3')
-					local stage4 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE4', variable .. ' < missesToCrackHeart / 5 * 4')
-					local stage5 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE5', variable .. ' < missesToCrackHeart / 5 * 5')
+					local stage1 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE1', variablePlusOne .. ' / missesToCrackHeart * 5 < 1')
+					local stage2 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE2', variablePlusOne .. ' / missesToCrackHeart * 5 < 2')
+					local stage3 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE3', variablePlusOne .. ' / missesToCrackHeart * 5 < 3')
+					local stage4 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE4', variablePlusOne .. ' / missesToCrackHeart * 5 < 4')
+					local stage5 = newConditional('DN_CLASSYBEAT_' .. idx .. '_CRACKSTAGE5', variablePlusOne .. ' / missesToCrackHeart * 5 < 5')
 
-					level:conditional(stage5)
-					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'break')
-
-					level:conditional(stage4)
-					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_4')
-
-					level:conditional(stage3)
-					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_3')
-
-					level:conditional(stage2)
-					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_2')
+					stage1:setred(true)
+					stage2:setred(true)
+					stage3:setred(true)
+					stage4:setred(true)
+					stage5:setred(true)
 
 					level:conditional(stage1)
 					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_1')
 
+					level:conditional(stage2)
+					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_2')
+
+					level:conditional(stage3)
+					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_3')
+
+					level:conditional(stage4)
+					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_4')
+
+					level:conditional(stage5)
+					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'break')
+
 					level:endconditional()
+
+					level:rdcode(classyHitTaggedEventsBeat, variable .. '++', 100)
 					level:endtag()
 
-				elseif not disableHeartCrack and varCount > 9 then
+				elseif not disableHeartCrack and varCount >= MAXVARCOUNT then
 
-					error('Only 10 classybeat rows can have heart cracking enabled! It must be disabled for any other rows.', 2)
+					error('Only ' .. MAXVARCOUNT .. ' classybeat rows can have heart cracking enabled! It must be disabled for any other rows.', 2)
 
 				end
 	

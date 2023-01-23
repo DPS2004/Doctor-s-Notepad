@@ -46,14 +46,19 @@
 	],
 	"events":
 	[
-		{ "bar": 1, "beat": 1, "y": 1, "type": "SetRowXs", "row": 1, "pattern": "--x-x-", "syncoBeat": -1, "syncoSwing": 0.5 },
+		{ "bar": 1, "beat": 1, "y": 1, "type": "SetRowXs", "row": 1, "pattern": "-x-x--", "syncoBeat": -1, "syncoSwing": 0.5 },
 		{ "bar": 1, "beat": 2, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 0 },
-		{ "bar": 1, "beat": 2, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 1, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 2, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 4, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
 		{ "bar": 1, "beat": 5, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "-xbrud", "syncoBeat": -1, "syncoSwing": 0 },
 		{ "bar": 1, "beat": 6, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 6, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 8, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
 		{ "bar": 2, "beat": 1, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "------", "syncoBeat": 4, "syncoSwing": 0.5 },
-		{ "bar": 2, "beat": 1, "y": 2, "type": "AddClassicBeat", "row": 1, "tick": 0.75, "swing": 1, "hold": 0 },
 		{ "bar": 2, "beat": 2, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 2, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 4, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 6, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
 	],
 	"conditionals":
 	[
