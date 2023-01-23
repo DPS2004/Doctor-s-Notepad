@@ -60,6 +60,13 @@
 		{ "bar": 2, "beat": 2, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
 		{ "bar": 2, "beat": 4, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
 		{ "bar": 2, "beat": 6, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 6, "y": 0, "type": "AddFreeTimeBeat", "row": 0, "hold": 0, "pulse": 0 },
+		{ "bar": 2, "beat": 7, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
+		{ "bar": 2, "beat": 8, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
+		{ "bar": 3, "beat": 1, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
+		{ "bar": 3, "beat": 2, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
+		{ "bar": 3, "beat": 3, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
+		{ "bar": 3, "beat": 4, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
 	],
 	"conditionals":
 	[

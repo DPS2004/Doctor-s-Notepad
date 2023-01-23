@@ -225,7 +225,7 @@ local extension = function(_level)
 
 			if usePivot then
 
-				local pivx = charx + relx - rowx - 9
+				local pivx = char_relx + relx
 				local newpx = -(pivx / rowsx / cbeat.sheetWidth * 100 - 50)
 
 				cbeat:movepx(beat, newpx, 0, 'Linear')
@@ -752,7 +752,7 @@ local extension = function(_level)
 									pulse = row._classylist.freePulse,
 									beat = thisPulseBeat,
 									tick = tick,
-									origTick = 0.5,
+									origTick = tick + 0.5,
 									swingType = 'straight',
 									hold = event.hold,
 									dontMakeExitAnimation = nextPulse.fake
