@@ -8,7 +8,10 @@ local extension = function(_level)
 	_level.initqueue.queue(6,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
 
 		local classyXSize = 24
+		local classyXSheetSize = classyXSize + 8
+
 		local classyHitXSize = 142
+		local classyHitXSheetSize = classyHitXSize
 
 		local classyHitTaggedEventsBeat = 0
 		local varCount = 0
@@ -167,26 +170,40 @@ local extension = function(_level)
 			local rowrot = getvalue(row, 'rot', beat)
 			local rowpivot = getvalue(row, 'pivot', beat)
 			local rowsx, rowsy = getvalue(row, 'sx', beat), getvalue(row, 'sy', beat)
+			local usePivot = getvalue(row, 'classyPositionUsePivot', beat)
 
 			local rowrad = rad(rowrot)
 
 			-- row character position
-			local char_relx = -282 * rowpivot * rowsx
+			local char_relx = -285 * rowpivot * rowsx
 			local charx, chary = rotate_point(char_relx, 0, rowrad)
 
 			charx = charx + rowx
 			chary = chary + rowy
-			
+
 			-- classybeat position
 			local relx = cbeat._relativeX * rowsx
 			local rely = 0
 
-			local c_newx, c_newy = rotate_point(relx, rely, rowrad)
+			if usePivot then
 
-			local newx = charx + c_newx
-			local newy = chary + c_newy
+				local pivx = charx + relx - rowx
+				local newpx = -(pivx / cbeat.sheetWidth * 100 - 50)
 
-			return newx, newy, charx, chary
+				cbeat:movepx(beat, newpx, 0, 'Linear')
+
+				return rowx, rowy, charx, chary, true
+
+			else
+
+				local c_newx, c_newy = rotate_point(relx, rely, rowrad)
+
+				local newx = charx + c_newx
+				local newy = chary + c_newy
+
+				return newx, newy, charx, chary
+
+			end
 
 		end
 
@@ -204,7 +221,14 @@ local extension = function(_level)
 			local cbeat = row.classy[index]
 			local finBeat = beat + duration
 
-			local newx, newy = calculate_classy_position(cbeat, row, beat)
+			local newx, newy, _, _, movePosInstant = calculate_classy_position(cbeat, row, beat)
+
+			if movePosInstant then
+				cbeat:move(beat, {
+					x = newx / 3.52,
+					y = newy / 1.98
+				}, 0, 'Linear')
+			end
 
 			local Beat = calculate_beat(beat, row, index)
 			cbeat:move(Beat, {
@@ -393,8 +417,12 @@ local extension = function(_level)
 				end
 
 			end,
-			movepivot = reposition_all_classy,
-			rotate = reposition_all_classy
+			movepivot = function(row, beat, pivot, duration, ease)
+				reposition_all_classy(beat, row, duration, ease)
+			end,
+			rotate = function(row, beat, rotation, duration, ease)
+				reposition_all_classy(beat, row, duration, ease)
+			end
 		}
 		
 		-- add classyinit() for every row
@@ -415,6 +443,7 @@ local extension = function(_level)
 				row.classy = {}
 				row.classy.freePulse = 0 -- freetime support
 
+				setvalue(row, 'classyPositionUsePivot', 0, false)
 				setvalue(row, 'classyDelay', 0, 0)
 				setvalue(row, 'classyHidden', 0, true)
 				setvalue(row, 'syncoPulse', 0, -1)
@@ -434,6 +463,7 @@ local extension = function(_level)
 
 						cbeat._relativeX = classyX
 						cbeat.width = classyXSize
+						cbeat.sheetWidth = classyXSheetSize
 						cbeat.delayMultiplier = i
 
 						setvalue(cbeat, 'currentPattern', 0, patternToExpression['-'])
@@ -453,6 +483,7 @@ local extension = function(_level)
 
 						yellow._relativeX = classyX
 						yellow.width = classyHitXSize
+						yellow.sheetWidth = classyHitXSheetSize
 						yellow.delayMultiplier = 7
 
 						row.classy[7] = yellow
@@ -463,6 +494,7 @@ local extension = function(_level)
 
 						heart._relativeX = classyX
 						heart.width = classyHitXSize
+						heart.sheetWidth = classyHitXSheetSize
 						heart.delayMultiplier = 8
 
 						row.classy[8] = heart
@@ -475,8 +507,9 @@ local extension = function(_level)
 						local connector = level:newdecoration(filename, idx*10 + 1, room)
 						connector:setvisibleatstart(false)
 
-						connector._relativeX = 8
+						connector._relativeX = 5
 						connector.width = 8
+						connector.sheetWidth = classyXSheetSize
 						connector.delayMultiplier = 0
 						connector:movesx(0, 8 / classyXSize, 0, 'Linear')
 
@@ -825,6 +858,15 @@ local extension = function(_level)
 				-- makes classybeats' movements delayed by some amount of beats, good for fancy wavey effects and such
 				function row:delayclassy(beat, delay)
 					setvalue(row, 'classyDelay', beat, delay or 0)
+				end
+
+				function row:classyusepivot(beat, usePivot)
+					setvalue(row, 'classyPositionUsePivot', beat, not not usePivot)
+
+					for i = 1, CLASSYCOUNT do
+						row.classy[i]:movepx(beat, 50)
+					end
+					reposition_all_classy(beat, row, 0, 'Linear')
 				end
 
 			end
