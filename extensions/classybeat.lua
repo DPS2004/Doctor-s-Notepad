@@ -5,6 +5,13 @@ local cos = math.cos
 local CLASSYCOUNT = 9 -- 6 green segments + 1 yellow segment + 1 heart + 1 character-line connector
 local MAXVARCOUNT = 10 -- maximum amount of ints available
 
+-- used for creating the decos and copying over required files
+local CLASSYBASEFILENAME = 'ClassyBeat'
+local CLASSYHITFILENAME = CLASSYBASEFILENAME .. 'Hit'
+local CLASSYHITHEARTFILENAME = CLASSYHITFILENAME .. 'Heart'
+local CLASSYFILENAMEENDINGS = {'.json', '.png', '_freeze.png', '_glow.png', '_outline.png'}
+local CLASSYBASEPATH = 'ccs/' .. CLASSYBASEFILENAME
+
 local extension = function(_level)
 	_level.initqueue.queue(6,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
 
@@ -218,7 +225,7 @@ local extension = function(_level)
 
 			if usePivot then
 
-				local pivx = charx + relx - rowx
+				local pivx = charx + relx - rowx - 9
 				local newpx = -(pivx / rowsx / cbeat.sheetWidth * 100 - 50)
 
 				cbeat:movepx(beat, newpx, 0, 'Linear')
@@ -239,7 +246,7 @@ local extension = function(_level)
 		end
 
 		local function calculate_beat(beat, row, i)
-			local cbeat = row.classy[i]
+			local cbeat = row._classylist[i]
 
 			local delay = getvalue(row, 'classyDelay', beat)
 			beat = beat + delay * cbeat.delayMultiplier
@@ -249,7 +256,7 @@ local extension = function(_level)
 
 		local function reposition_classy(beat, row, index, duration, ease)
 
-			local cbeat = row.classy[index]
+			local cbeat = row._classylist[index]
 			local finBeat = beat + duration
 
 			local newx, newy, _, _, movePosInstant = calculate_classy_position(cbeat, row, beat)
@@ -297,6 +304,47 @@ local extension = function(_level)
 
 		end
 
+		local function combinePath(path, file)
+			return path .. '/' .. file
+		end
+
+		local function copyFiles(srcpath, filename, dstpath)
+
+			for _,v in ipairs(CLASSYFILENAMEENDINGS) do
+				local srcfilename = combinePath(srcpath, filename) .. v
+				local srcfile = io.open(srcfilename, 'rb')
+
+				local dstfilename = combinePath(dstpath, filename) .. v
+				local dstfile = io.open(dstfilename, 'wb')
+
+				print('Copying file "' .. srcfilename .. '" to "' .. dstfilename .. '"')
+
+				dstfile:write(srcfile:read('*all'))
+
+				srcfile:close()
+				dstfile:close()
+
+			end
+
+		end
+
+		local function copyClassybeatFiles()
+
+			local dstpath = inlevel --h?
+
+			-- copy base
+			copyFiles(CLASSYBASEPATH, CLASSYBASEFILENAME, dstpath)
+
+			-- copy hit
+			copyFiles(CLASSYBASEPATH, CLASSYHITFILENAME, dstpath)
+
+			-- copy hitheart
+			copyFiles(CLASSYBASEPATH, CLASSYHITHEARTFILENAME, dstpath)
+
+			copyClassybeatFiles = function() end -- overwrite it so it does nothing later
+
+		end
+
 		-- place tagged events at the last event in the level
 		for _,e in ipairs(level.data.events) do
 			classyHitTaggedEventsBeat = math.max(classyHitTaggedEventsBeat, getBeatFromPair(e.bar, e.beat))
@@ -308,7 +356,7 @@ local extension = function(_level)
 
 				for i = 1, CLASSYCOUNT do
 
-					local cbeat = row.classy[i]
+					local cbeat = row._classylist[i]
 					local finBeat = beat + duration
 
 					local newx, newy = calculate_classy_position(cbeat, row, beat)
@@ -323,7 +371,7 @@ local extension = function(_level)
 
 				for i = 1, CLASSYCOUNT do
 
-					local cbeat = row.classy[i]
+					local cbeat = row._classylist[i]
 					local finBeat = beat + duration
 
 					local newx, newy = calculate_classy_position(cbeat, row, beat)
@@ -338,7 +386,7 @@ local extension = function(_level)
 
 				for i = 1, CLASSYCOUNT do
 
-					local cbeat = row.classy[i]
+					local cbeat = row._classylist[i]
 					local finBeat = beat + duration
 
 					local newx, newy, charx, chary = calculate_classy_position(cbeat, row, beat)
@@ -359,7 +407,7 @@ local extension = function(_level)
 
 				for i = 1, CLASSYCOUNT do
 
-					local cbeat = row.classy[i]
+					local cbeat = row._classylist[i]
 					local finBeat = beat + duration
 
 					local Beat = calculate_beat(beat, row, i)
@@ -368,11 +416,12 @@ local extension = function(_level)
 				end
 
 			end,
-			setroom = function(row, beat, ...)
+			setroom = function(row, beat, room)
 
 				for i = 1, CLASSYCOUNT do
 					local Beat = calculate_beat(beat, row, i)
-					row.classy[i]:setroom(Beat, ...)
+					row._classylist[i]:setroom(Beat, room)
+					reposition_all_classy(Beat, row, 0, 'Linear')
 				end
 
 			end,
@@ -380,7 +429,7 @@ local extension = function(_level)
 				
 				for i = 1, CLASSYCOUNT do
 					local Beat = calculate_beat(beat, row, i)
-					row.classy[i]:setborder(Beat, ...)
+					row._classylist[i]:setborder(Beat, ...)
 				end
 
 			end,
@@ -388,7 +437,7 @@ local extension = function(_level)
 				
 				for i = 1, CLASSYCOUNT do
 					local Beat = calculate_beat(beat, row, i)
-					row.classy[i]:settint(Beat, ...)
+					row._classylist[i]:settint(Beat, ...)
 				end
 
 			end,
@@ -396,12 +445,11 @@ local extension = function(_level)
 				
 				for i = 1, CLASSYCOUNT do
 					local Beat = calculate_beat(beat, row, i)
-					row.classy[i]:setopacity(Beat, opacity, duration, ease)
+					row._classylist[i]:setopacity(Beat, opacity, duration, ease)
 				end
 
 			end,
 			show = function(row, beat)
-				
 				if getvalue(row, 'classyHidden', beat) then return end
 
 				row:showchar(beat, 0)
@@ -409,42 +457,42 @@ local extension = function(_level)
 				for i = 1, CLASSYCOUNT do
 
 					local Beat = calculate_beat(beat, row, i)
-					row.classy[i]:show(Beat)
+					row._classylist[i]:show(Beat)
 				end
 
 			end,
 			hide = function(row, beat)
 
-				if row.classy.special then return end
-
 				for i = 1, CLASSYCOUNT do
 
 					local Beat = calculate_beat(beat, row, i)
-					row.classy[i]:hide(Beat)
+					row._classylist[i]:hide(Beat)
 				end
 
 			end,
 			showchar = function(row, beat)
-				setvalue(row, 'classyHidden', beat, true)
 
 				for i = 1, CLASSYCOUNT do
 
 					local Beat = calculate_beat(beat, row, i)
-					row.classy[i]:hide(Beat)
+					row._classylist[i]:hide(Beat)
 				end
 
 			end,
 			showrow = function(row, beat)
-				setvalue(row, 'classyHidden', beat, false)
+				local hidden = getvalue(row, 'classyHidden', beat)
 
-				row.classy.special = true
-				row:hide(beat)
-				row.classy.special = nil
+				if not hidden then
+					row:hide(beat, 0)
+				end
 
 				for i = 1, CLASSYCOUNT do
 
 					local Beat = calculate_beat(beat, row, i)
-					row.classy[i]:show(Beat)
+
+					if not hidden then
+						row._classylist[i]:show(Beat)
+					end
 				end
 
 			end,
@@ -464,15 +512,23 @@ local extension = function(_level)
 
 			-- generate classybeat stuff
 			function row:classyinit(disableHeartCrack)
-				row.classyinit = function()
+				row._classylistinit = function()
 					error('classyinit() already called for this row!', 2)
 				end
 
-				local filename = 'ClassyBeat'
 				disableHeartCrack = not not disableHeartCrack
 
-				row.classy = {}
-				row.classy.freePulse = 0 -- freetime support
+				copyClassybeatFiles(CLASSYBASEFILENAME)
+
+				row._classylist = {}
+				row._classylist.freePulse = 0 -- freetime support
+
+				row.classy = {
+					beats = {},
+					hitbar = nil,
+					heart = nil,
+					connector = nil
+				}
 
 				setvalue(row, 'classyPositionUsePivot', 0, false)
 				setvalue(row, 'classyDelay', 0, 0)
@@ -482,12 +538,12 @@ local extension = function(_level)
 
 				-- generate the row
 				do
-					local classyX = 5
+					local classyX = 6.5
 
 					-- green segments
 					for i = 1, 6 do
 
-						local cbeat = level:newdecoration(filename, idx*10, room)
+						local cbeat = level:newdecoration(CLASSYBASEFILENAME, idx*10, room)
 						cbeat:setvisibleatstart(false)
 
 						classyX = classyX + classyXSize
@@ -499,7 +555,8 @@ local extension = function(_level)
 
 						setvalue(cbeat, 'currentPattern', 0, patternToExpression['-'])
 
-						row.classy[i] = cbeat
+						row._classylist[i] = cbeat
+						row.classy.beats[i] = cbeat
 
 					end
 
@@ -509,7 +566,7 @@ local extension = function(_level)
 						classyX = classyX + classyHitXSize/2 + 8
 
 						-- yellow part
-						local yellow = level:newdecoration(filename .. 'Hit', 60, room)
+						local yellow = level:newdecoration(CLASSYHITFILENAME, 60, room)
 						yellow:setvisibleatstart(false)
 
 						yellow._relativeX = classyX
@@ -517,10 +574,11 @@ local extension = function(_level)
 						yellow.sheetWidth = classyHitXSheetSize
 						yellow.delayMultiplier = 7
 
-						row.classy[7] = yellow
+						row._classylist[7] = yellow
+						row.classy.hitbar = yellow
 
 						-- heart
-						local heart = level:newdecoration(filename .. 'HitHeart', 70, room)
+						local heart = level:newdecoration(CLASSYHITHEARTFILENAME, 70, room)
 						heart:setvisibleatstart(false)
 
 						heart._relativeX = classyX
@@ -528,23 +586,25 @@ local extension = function(_level)
 						heart.sheetWidth = classyHitXSheetSize
 						heart.delayMultiplier = 8
 
-						row.classy[8] = heart
+						row._classylist[8] = heart
+						row.classy.heart = heart
 
 					end
 
 					-- character-line connector
 					do
 
-						local connector = level:newdecoration(filename, idx*10 + 1, room)
+						local connector = level:newdecoration(CLASSYBASEFILENAME, idx*10 + 1, room)
 						connector:setvisibleatstart(false)
 
-						connector._relativeX = 5
+						connector._relativeX = 8
 						connector.width = 8
 						connector.sheetWidth = classyXSheetSize
 						connector.delayMultiplier = 0
 						connector:movesx(0, 8 / classyXSize, 0, 'Linear')
 
-						row.classy[9] = connector
+						row._classylist[9] = connector
+						row.classy.connector = connector
 
 					end
 
@@ -565,24 +625,24 @@ local extension = function(_level)
 					level:tag('[onMiss][row' .. idx .. ']CLASSYBEAT_MISSBEAT_TAG')
 
 					level:conditional(condVeryEarly)
-					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'missed_early')
+					row._classylist[7]:playexpression(classyHitTaggedEventsBeat, 'missed_early')
 
 					level:conditional(condEarly)
-					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'barely_early')
+					row._classylist[7]:playexpression(classyHitTaggedEventsBeat, 'barely_early')
 
 					level:conditional(condLate)
-					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'barely_late')
+					row._classylist[7]:playexpression(classyHitTaggedEventsBeat, 'barely_late')
 
 					level:conditional(condVeryLate)
-					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'missed_late')
+					row._classylist[7]:playexpression(classyHitTaggedEventsBeat, 'missed_late')
 
 					level:endconditional()
 
 					level:tag('[onHit][row' .. idx .. ']CLASSYBEAT_HITBEAT_TAG')
-					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'happy')
+					row._classylist[7]:playexpression(classyHitTaggedEventsBeat, 'happy')
 
 					level:tag('[onHeldPressHit][row' .. idx .. ']CLASSYBEAT_HOLDSTART_TAG')
-					row.classy[7]:playexpression(classyHitTaggedEventsBeat, 'HeldStart')
+					row._classylist[7]:playexpression(classyHitTaggedEventsBeat, 'HeldStart')
 
 					level:endtag()
 
@@ -655,7 +715,7 @@ local extension = function(_level)
 								for i = 1, 6 do
 
 									local char = pattern:sub(i,i)
-									local cbeat = row.classy[i]
+									local cbeat = row._classylist[i]
 									local curPattern = getvalue(cbeat, 'currentPattern', beat)
 
 									if curPattern.disappear then cbeat:playexpression(beat, curPattern.disappear) end
@@ -671,7 +731,7 @@ local extension = function(_level)
 								setvalue(row, 'syncoSwing', beat, event.syncoSwing)
 
 								if event.syncoBeat > -1 then
-									local cbeat = row.classy[event.syncoBeat+1]
+									local cbeat = row._classylist[event.syncoBeat+1]
 
 									setvalue(cbeat, 'currentPattern', beat, patternToExpression.synco)
 									cbeat:playexpression(beat, patternToExpression.synco.appear)
@@ -679,7 +739,7 @@ local extension = function(_level)
 								end
 
 							elseif event.type == 'AddFreeTimeBeat' then
-								row.classy.freePulse = 1 -- start freetime
+								row._classylist.freePulse = 1 -- start freetime
 
 								local nextPulse = findNextFreeTime(idx, event, i)
 
@@ -689,7 +749,7 @@ local extension = function(_level)
 								local tick = nextPulseBeat - thisPulseBeat
 
 								table.insert(pulses, {
-									pulse = row.classy.freePulse,
+									pulse = row._classylist.freePulse,
 									beat = thisPulseBeat,
 									tick = tick,
 									origTick = 0.5,
@@ -700,10 +760,10 @@ local extension = function(_level)
 
 							elseif event.type == 'PulseFreeTimeBeat' then -- why are there two events :edegabudgetcuts:
 
-								if row.classy.freePulse > 0 then -- only if we have an active freetime
+								if row._classylist.freePulse > 0 then -- only if we have an active freetime
 									
 									local action = event.action
-									local pulse = row.classy.freePulse
+									local pulse = row._classylist.freePulse
 
 									if action == 'Remove' then
 										pulse = 0
@@ -748,7 +808,7 @@ local extension = function(_level)
 
 									end
 
-									row.classy.freePulse = pulse
+									row._classylist.freePulse = pulse
 
 								end
 
@@ -766,7 +826,7 @@ local extension = function(_level)
 						local tick = pulse.tick
 						local hold = pulse.hold
 
-						local cbeat = row.classy[idx]
+						local cbeat = row._classylist[idx]
 						local pattern = getvalue(cbeat, 'currentPattern', beat)
 
 						if hold == 0 then -- pulse normally, no holding required
@@ -828,19 +888,19 @@ local extension = function(_level)
 					stage5:setred(true)
 
 					level:conditional(stage1)
-					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_1')
+					row._classylist[8]:playexpression(classyHitTaggedEventsBeat, 'crack_1')
 
 					level:conditional(stage2)
-					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_2')
+					row._classylist[8]:playexpression(classyHitTaggedEventsBeat, 'crack_2')
 
 					level:conditional(stage3)
-					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_3')
+					row._classylist[8]:playexpression(classyHitTaggedEventsBeat, 'crack_3')
 
 					level:conditional(stage4)
-					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'crack_4')
+					row._classylist[8]:playexpression(classyHitTaggedEventsBeat, 'crack_4')
 
 					level:conditional(stage5)
-					row.classy[8]:playexpression(classyHitTaggedEventsBeat, 'break')
+					row._classylist[8]:playexpression(classyHitTaggedEventsBeat, 'break')
 
 					level:endconditional()
 
@@ -867,26 +927,29 @@ local extension = function(_level)
 				end
 
 				function row:showclassy(beat)
-					setvalue(row, 'classyHidden', beat, false)
 
 					if getvalue(row, 'hidden', beat) then return end -- do nothing more if the row is hidden
 
 					row:showchar(beat, 0)
 
-					for _, cbeat in ipairs(row.classy) do
+					for _, cbeat in ipairs(row._classylist) do
 						cbeat:show(beat)
 					end
 
+					setvalue(row, 'classyHidden', beat, false)
 				end
 
 				function row:hideclassy(beat)
+					local hidden = getvalue(row, 'classyHidden', beat)
 					setvalue(row, 'classyHidden', beat, true)
 
 					if not getvalue(row, 'hidden', beat) then
 						row:show(beat, 0)
+					elseif not hidden then
+						row:showrow(beat, 0)
 					end
 
-					for _, cbeat in ipairs(row.classy) do
+					for _, cbeat in ipairs(row._classylist) do
 						cbeat:hide(beat)
 					end
 
@@ -901,7 +964,7 @@ local extension = function(_level)
 					setvalue(row, 'classyPositionUsePivot', beat, not not usePivot)
 
 					for i = 1, CLASSYCOUNT do
-						row.classy[i]:movepx(beat, 50)
+						row._classylist[i]:movepx(beat, 50)
 					end
 					reposition_all_classy(beat, row, 0, 'Linear')
 				end
