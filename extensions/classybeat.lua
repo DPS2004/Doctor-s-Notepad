@@ -211,6 +211,9 @@ local extension = function(_level)
 			local rowsx, rowsy = getvalue(row, 'sx', beat), getvalue(row, 'sy', beat)
 			local usePivot = getvalue(row, 'classyPositionUsePivot', beat)
 
+			local xOffset = getvalue(cbeat, 'classy_xOffset', beat) * 3.52
+			local yOffset = getvalue(cbeat, 'classy_yOffset', beat) * 1.98
+
 			local rowrad = rad(rowrot)
 
 			-- row character position
@@ -229,9 +232,9 @@ local extension = function(_level)
 				local pivx = char_relx + relx
 				local newpx = -(pivx / rowsx / cbeat.sheetWidth * 100 - 50)
 
-				cbeat:movepx(beat, newpx, 0, 'Linear')
+				cbeat:movepx(beat, newpx + getvalue(cbeat, 'classy_pxOffset', beat) - 50, 0, 'Linear')
 
-				return rowx, rowy, charx, chary, true
+				return rowx + xOffset, rowy + yOffset, charx, chary, true
 
 			else
 
@@ -240,7 +243,7 @@ local extension = function(_level)
 				local newx = charx + c_newx
 				local newy = chary + c_newy
 
-				return newx, newy, charx, chary
+				return newx + xOffset, newy + yOffset, charx, chary
 
 			end
 
@@ -273,9 +276,10 @@ local extension = function(_level)
 			cbeat:move(Beat, {
 				x = newx / 3.52,
 				y = newy / 1.98,
-				rot = getvalue(row, 'rot', finBeat),
-				sx = getvalue(row, 'sx', finBeat),
-				sy = getvalue(row, 'sy', finBeat)
+				rot = getvalue(row, 'rot', finBeat) + getvalue(cbeat, 'classy_rotOffset', Beat),
+				sx = getvalue(row, 'sx', finBeat) + getvalue(cbeat, 'classy_sxOffset', Beat) - 1,
+				sy = getvalue(row, 'sy', finBeat) + getvalue(cbeat, 'classy_syOffset', Beat) - 1,
+				py = getvalue(cbeat, 'classy_pyOffset', Beat)
 			}, duration, ease)
 
 		end
@@ -426,8 +430,8 @@ local extension = function(_level)
 					local cbeat = row._classylist[i]
 					local finBeat = beat + duration
 
-					local Beat = calculate_beat(beat, row, i)
-					cbeat:movesy(Beat, getvalue(row, 'sy', finBeat), duration, ease)
+					local Beat = calculate_beat(finBeat, row, i)
+					cbeat:movesy(Beat, getvalue(row, 'sy', finBeat) + getvalue(cbeat, 'classy_syOffset', finBeat), duration, ease)
 
 				end
 
@@ -551,6 +555,7 @@ local extension = function(_level)
 				setvalue(row, 'classyHidden', 0, true)
 				setvalue(row, 'syncoPulse', 0, -1)
 				setvalue(row, 'syncoSwing', 0, 0)
+				setvalue(row, 'classyLocked', 0, false)
 
 				-- generate the row
 				do
@@ -621,6 +626,20 @@ local extension = function(_level)
 
 						row._classylist[9] = connector
 						row.classy.connector = connector
+
+					end
+
+					for i = 1, CLASSYCOUNT do
+
+						local cbeat = row._classylist[i]
+
+						setvalue(cbeat, 'classy_xOffset', 0, 0)
+						setvalue(cbeat, 'classy_yOffset', 0, 0)
+						setvalue(cbeat, 'classy_sxOffset', 0, 1)
+						setvalue(cbeat, 'classy_syOffset', 0, 1)
+						setvalue(cbeat, 'classy_pxOffset', 0, 50)
+						setvalue(cbeat, 'classy_pyOffset', 0, 50)
+						setvalue(cbeat, 'classy_rotOffset', 0, 0)
 
 					end
 
@@ -1070,6 +1089,33 @@ local extension = function(_level)
 						row._classylist[i]:movepx(beat, 50)
 					end
 					reposition_all_classy(beat, row, 0, 'Linear')
+				end
+
+				function row:lockposition(beat, lock)
+					setvalue(row, 'classyLocked', beat, not not lock)
+
+				end
+
+				function row:classyoffset(beat, part, p, duration, ease)
+					if not getvalue(row, 'classyLocked', beat) then return end
+					if part < 1 then part = 9 end -- connector patch lol
+
+					local cbeat = row._classylist[part]
+					for k,v in pairs(p) do
+						if k == 'rotate' then k = 'rot' end
+
+						local newkey = 'classy_' .. k .. 'Offset'
+
+						if pcall(getvalue, cbeat, newkey, 0) then
+							setvalue(cbeat, newkey, beat, v)
+						else
+							error(k .. ' not a valid movement!', 2)
+						end
+
+					end
+
+					reposition_classy(beat, row, part, duration, ease)
+
 				end
 
 			end
