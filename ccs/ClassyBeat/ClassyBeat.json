@@ -1,0 +1,1112 @@
+{
+    "size": [
+        32,
+        54
+    ],
+    "clips": [
+        {
+            "name": "neutral",
+            "frames": [
+                0
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "happy",
+            "frames": [
+                10,
+                9,
+                8,
+                7,
+                6
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 4,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "barely",
+            "frames": [
+                6,
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+            ],
+            "loop": "no",
+            "fps": 60,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "missed",
+            "frames": [
+                10,
+                9,
+                8,
+                7,
+                6,
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "X",
+            "frames": [
+                64
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "X-Hold",
+            "frames": [
+                13
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "X-Open",
+            "frames": [
+                11,
+                12,
+                13,
+                14,
+                13
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 4,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "X-Close",
+            "frames": [
+                13,
+                12,
+                11,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "X-Both",
+            "frames": [
+                11,
+                12,
+                13,
+                14,
+                13,
+                12,
+                11,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "X-Flash",
+            "frames": [
+                21,
+                20,
+                19,
+                18,
+                17,
+                16,
+                15,
+                13
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 7,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "C",
+            "frames": [
+                65
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "C-Open",
+            "frames": [
+                22,
+                23,
+                24,
+                25,
+                24
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 4,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "C-Close",
+            "frames": [
+                24,
+                23,
+                22,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "C-Both",
+            "frames": [
+                22,
+                23,
+                24,
+                25,
+                24,
+                23,
+                22,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "C-Flash",
+            "frames": [
+                32,
+                31,
+                30,
+                29,
+                28,
+                27,
+                26,
+                24
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 7,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "S",
+            "frames": [
+                75
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "S-Open",
+            "frames": [
+                33,
+                34,
+                35,
+                36,
+                35
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 4,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "S-Close",
+            "frames": [
+                35,
+                34,
+                33,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "S-Both",
+            "frames": [
+                33,
+                34,
+                35,
+                36,
+                35,
+                34,
+                33,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "S-Flash",
+            "frames": [
+                43,
+                42,
+                41,
+                40,
+                39,
+                38,
+                37,
+                35
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 7,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "T",
+            "frames": [
+                76
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "T-Open",
+            "frames": [
+                44,
+                45,
+                46,
+                47,
+                46
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 4,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "T-Close",
+            "frames": [
+                46,
+                45,
+                44,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "T-Both",
+            "frames": [
+                44,
+                45,
+                46,
+                47,
+                46,
+                45,
+                44,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "T-Flash",
+            "frames": [
+                54,
+                53,
+                52,
+                51,
+                50,
+                49,
+                48,
+                46
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 7,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "U",
+            "frames": [
+                60
+            ],
+            "loop": "yes",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "U-Open",
+            "frames": [
+                63,
+                62,
+                62,
+                61,
+                60
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 4,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "U-Close",
+            "frames": [
+                60,
+                59,
+                58,
+                57,
+                56,
+                55,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "U-Both",
+            "frames": [
+                63,
+                62,
+                62,
+                61,
+                60,
+                59,
+                58,
+                57,
+                56,
+                55,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "D",
+            "frames": [
+                71
+            ],
+            "loop": "yes",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "D-Open",
+            "frames": [
+                74,
+                73,
+                73,
+                72,
+                71
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 4,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "D-Close",
+            "frames": [
+                71,
+                70,
+                69,
+                68,
+                67,
+                66,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "D-Both",
+            "frames": [
+                74,
+                73,
+                73,
+                72,
+                71,
+                70,
+                69,
+                68,
+                67,
+                66,
+                0
+            ],
+            "loop": "no",
+            "fps": 30,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "W-L",
+            "frames": [
+                83
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "W-R",
+            "frames": [
+                77
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "W-Left",
+            "frames": [
+                87,
+                86,
+                85,
+                84,
+                83
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 4,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "W-Right",
+            "frames": [
+                81,
+                80,
+                79,
+                78,
+                77
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 4,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "W-Bounce",
+            "frames": [
+                88,
+                89,
+                10,
+                90,
+                91,
+                8,
+                92,
+                93,
+                91,
+                93,
+                6
+            ],
+            "loop": "yes",
+            "fps": 45,
+            "loopStart": 11,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "B",
+            "frames": [
+                6
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "E",
+            "frames": [
+                106
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                17
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "E-Open",
+            "frames": [
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106
+            ],
+            "loop": "yes",
+            "fps": 40,
+            "loopStart": 8,
+            "portraitOffset": [
+                3,
+                17
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "E-Close",
+            "frames": [
+                106,
+                105,
+                104,
+                103,
+                102,
+                101,
+                100,
+                99,
+                0
+            ],
+            "loop": "no",
+            "fps": 40,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                17
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "E-Both",
+            "frames": [
+                106,
+                105,
+                104,
+                103,
+                102,
+                101,
+                100,
+                99,
+                0,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106
+            ],
+            "loop": "yes",
+            "fps": 60,
+            "loopStart": 19,
+            "portraitOffset": [
+                3,
+                17
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },   
+              {
+            "name": "HeldStart",
+            "frames": [
+                109,
+                110,
+                111,
+                112,
+                113,
+                114
+            ],
+            "loop": "yes",
+            "fps": 60,
+            "loopStart": 1,
+            "portraitOffset": [
+                3,
+                17
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+            {
+            "name": "HeldEnd",
+            "frames": [
+                6,
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+            ],
+            "loop": "yes",
+            "fps": 60,
+            "loopStart": 6,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+            {
+            "name": "BeatHitOnYellowBar",
+            "frames": [
+                1,
+                3,
+                5,
+                6,
+                8,
+                10,
+                8,
+                6,
+                5,
+                3,
+                0
+            ],
+            "loop": "yes",
+            "fps": 30,
+            "loopStart": 16,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+            {
+            "name": "syncoPulse",
+            "frames": [
+                117,
+                116,
+                115
+            ],
+            "loop": "yes",
+            "fps": 10,
+            "loopStart": 0,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        },
+            {
+            "name": "syncoPulseExit",
+            "frames": [
+                6,
+                5,
+                4,
+                3,
+                2,
+                1,
+                0,
+                117,
+                117,
+                117,
+                117,
+                117,
+                117,
+                116,
+                116,
+                116,
+                116,
+                116,
+                116,
+                115,
+                115,
+                115,
+                115,
+                115,
+                115
+            ],
+            "loop": "yes",
+            "fps": 60,
+            "loopStart": 7,
+            "portraitOffset": [
+                3,
+                27
+            ],
+            "portraitSize": [
+                25,
+                27
+            ],
+            "portraitScale": 2
+        }
+    ]
+}

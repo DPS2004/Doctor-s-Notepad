@@ -1,0 +1,195 @@
+{
+    "size": [
+        142,
+        54
+    ],
+    "clips": [
+        {
+            "name": "neutral",
+            "frames": [
+                50
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "happy",
+            "frames": [
+                9,
+                9,
+                8,
+                7,
+                6,
+                5,
+                4,
+                3,
+                2,
+                1,
+                0,
+                50
+            ],
+            "loop": "no",
+            "fps": 40,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "barely_late",
+            "frames": [
+                19,
+                19,
+                18,
+                17,
+                16,
+                15,
+                14,
+                13,
+                12,
+                11,
+                10,
+                50
+            ],
+            "loop": "no",
+            "fps": 40,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "missed_late",
+            "frames": [
+                29,
+                29,
+                28,
+                27,
+                26,
+                25,
+                24,
+                23,
+                22,
+                21,
+                20,
+                50
+            ],
+            "loop": "no",
+            "fps": 40,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "barely_early",
+            "frames": [
+                30,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                50
+            ],
+            "loop": "no",
+            "fps": 40,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "missed_early",
+            "frames": [
+                40,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50
+            ],
+            "loop": "no",
+            "fps": 40,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "HeldStart",
+            "frames": [
+                2,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56
+            ],
+            "loop": "yes",
+            "fps": 60,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        }
+    ]
+}

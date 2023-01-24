@@ -1,0 +1,113 @@
+﻿{
+	"settings":
+	{
+		"version": 54, 
+		"artist": "", 
+		"song": "", 
+		"specialArtistType": "None", 
+		"artistPermission": "", 
+		"artistLinks": "", 
+		"author": "", 
+		"difficulty": "Medium", 
+		"seizureWarning": false, 
+		"previewImage": "", 
+		"syringeIcon": "", 
+		"previewSong": "", 
+		"previewSongStartTime": 0, 
+		"previewSongDuration": 10, 
+		"songNameHue": 0.4074649, 
+		"songLabelGrayscale": false, 
+		"description": "", 
+		"tags": "", 
+		"separate2PLevelFilename": "", 
+		"canBePlayedOn": "OnePlayerOnly", 
+		"firstBeatBehavior": "RunEventsOnPrebar", 
+		"multiplayerAppearance": "HorizontalStrips", 
+		"levelVolume": 1, 
+		"rankMaxMistakes": [20, 15, 10, 5], 
+		"mods": "classicHitParticles", 
+		"rankDescription":
+		[
+			"Better call 911, now!",
+			"Ugh, you can do better",
+			"Not bad I guess...",
+			"We make a good team!",
+			"You are really good!",
+			"Wow! That's awesome!!"
+		]
+	},
+	"rows":
+	[
+		{ "character": "Boy", "rowType": "Classic", "row": 0, "rooms": [0], "player": "P1", "pulseSound": "Shaker", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+		{ "character": "Samurai", "rowType": "Classic", "row": 1, "rooms": [0], "player": "P1", "pulseSound": "Kick", "pulseSoundVolume": 100, "pulseSoundPitch": 100, "pulseSoundPan": 0, "pulseSoundOffset": 0 },
+	],
+	"decorations":
+	[
+	],
+	"events":
+	[
+		{ "bar": 1, "beat": 1, "y": 1, "type": "SetRowXs", "row": 1, "pattern": "-x-x--", "syncoBeat": -1, "syncoSwing": 0.5 },
+		{ "bar": 1, "beat": 1, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "--x---", "syncoBeat": -1, "syncoSwing": 0 },
+		{ "bar": 1, "beat": 2, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 2, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 4, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 5, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "-xbrud", "syncoBeat": -1, "syncoSwing": 0 },
+		{ "bar": 1, "beat": 6, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 6, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 1, "beat": 8, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 1, "y": 0, "type": "SetRowXs", "row": 0, "pattern": "---x--", "syncoBeat": 4, "syncoSwing": 0.5 },
+		{ "bar": 2, "beat": 2, "y": 0, "type": "AddClassicBeat", "row": 0, "tick": 0.5, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 2, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 4, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 6, "y": 1, "type": "AddClassicBeat", "row": 1, "tick": 0.25, "swing": 0, "hold": 0 },
+		{ "bar": 2, "beat": 6, "y": 0, "type": "AddFreeTimeBeat", "row": 0, "hold": 0, "pulse": 0 },
+		{ "bar": 2, "beat": 6.5, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Decrement", "customPulse": 0 },
+		{ "bar": 2, "beat": 7, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
+		{ "bar": 2, "beat": 7.5, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Custom", "customPulse": 5 },
+		{ "bar": 2, "beat": 8, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Custom", "customPulse": 3 },
+		{ "bar": 2, "beat": 8.5, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 0 },
+		{ "bar": 3, "beat": 1, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Custom", "customPulse": 5 },
+		{ "bar": 3, "beat": 1.5, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Remove", "customPulse": 0 },
+		{ "bar": 3, "beat": 2, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Custom", "customPulse": 1 },
+		{ "bar": 3, "beat": 3, "y": 0, "type": "AddFreeTimeBeat", "row": 0, "hold": 0, "pulse": 6 },
+		{ "bar": 3, "beat": 4, "y": 0, "type": "AddFreeTimeBeat", "row": 0, "hold": 0, "pulse": 2 },
+		{ "bar": 3, "beat": 4.5, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 4 },
+		{ "bar": 3, "beat": 5.5, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Custom", "customPulse": 5 },
+		{ "bar": 3, "beat": 6, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Custom", "customPulse": 6 },
+		{ "bar": 3, "beat": 7, "y": 0, "type": "AddFreeTimeBeat", "row": 0, "hold": 0, "pulse": 4 },
+		{ "bar": 3, "beat": 7.5, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 4 },
+		{ "bar": 3, "beat": 8, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Increment", "customPulse": 4 },
+		{ "bar": 3, "beat": 8.5, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Custom", "customPulse": 6 },
+		{ "bar": 4, "beat": 1, "y": 0, "type": "PulseFreeTimeBeat", "row": 0, "hold": 0, "action": "Custom", "customPulse": 6 },
+	],
+	"conditionals":
+	[
+	],
+	"bookmarks":
+	[
+	],
+	"colorPalette":
+	[
+		"000000ff",
+		"ffffffff",
+		"7f7f7fff",
+		"c3c3c3ff",
+		"880015ff",
+		"b97a57ff",
+		"ff0000ff",
+		"ffaec9ff",
+		"ff7f27ff",
+		"ffc90eff",
+		"fff200ff",
+		"efe4b0ff",
+		"22b14cff",
+		"b5e61dff",
+		"00a2e8ff",
+		"99d9eaff",
+		"3f48ccff",
+		"7092beff",
+		"a349a4ff",
+		"c8bfe7ff",
+		"00000000"
+	]
+}

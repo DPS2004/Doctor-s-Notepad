@@ -1,0 +1,143 @@
+{
+    "size": [
+        142,
+        54
+    ],
+    "clips": [
+        {
+            "name": "neutral",
+            "frames": [
+                0
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "crack_1",
+            "frames": [
+                1
+            ],
+            "loop": "no",
+            "fps": 40,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "crack_2",
+            "frames": [
+                2
+            ],
+            "loop": "no",
+            "fps": 40,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "crack_3",
+            "frames": [
+                3
+            ],
+            "loop": "no",
+            "fps": 40,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "crack_4",
+            "frames": [
+                4
+            ],
+            "loop": "onBeat",
+            "fps": 0,
+            "loopStart": 0,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        },
+        {
+            "name": "break",
+            "frames": [
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                18,
+                18,
+                18,
+                19,
+                19,
+                19,
+                19,
+                18,
+                18,
+                18,
+                18,
+                19,
+                19,
+                19,
+                19,
+                18,
+                18,
+                18,
+                18
+            ],
+            "loop": "yes",
+            "fps": 20,
+            "loopStart": 28,
+            "portraitOffset": [
+                4,
+                1
+            ],
+            "portraitSize": [
+                142,
+                28
+            ],
+            "portraitScale": 2
+        }
+    ]
+}

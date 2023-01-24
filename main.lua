@@ -10,7 +10,8 @@ extensions = {
 	'room',
     'decoration',
 	'color', 
-    'sound'
+    'sound',
+    'classybeat'
 }
 
 -- helpful functions
