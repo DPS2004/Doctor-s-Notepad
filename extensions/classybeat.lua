@@ -1,6 +1,7 @@
 local rad = math.rad
 local sin = math.sin
 local cos = math.cos 
+local abs = math.abs
 
 local CLASSYCOUNT = 9 -- 6 green segments + 1 yellow segment + 1 heart + 1 character-line connector
 local MAXVARCOUNT = 10 -- maximum amount of ints available
@@ -287,6 +288,17 @@ local extension = function(_level)
 
 		end
 
+		local function calculate_freetime_swing(tick, origTick)
+
+			if tick > origTick then
+				return 'startLeft'
+			elseif tick < origTick then
+				return 'startRight'
+			end
+
+			return 'straight'
+		end
+
 		local function findNextFreeTime(rowIndex, lastEvent, lastIndex)
 			local events = level.data.events
 
@@ -294,13 +306,13 @@ local extension = function(_level)
 				local event = events[i]
 
 				if event.row == rowIndex and event.type == 'PulseFreeTimeBeat' then
-					return event
+					return event, i
 				end
 
 			end
 
 			-- fallback in case we dont find any other event, just return a fake event so the pulse never disappears
-			return {bar = lastEvent.bar, beat = lastEvent.beat + 999, fake = true}
+			return {bar = lastEvent.bar, beat = lastEvent.beat + 999, fake = true}, lastIndex+1
 
 		end
 
@@ -343,6 +355,10 @@ local extension = function(_level)
 
 			copyClassybeatFiles = function() end -- overwrite it so it does nothing later
 
+		end
+
+		local function closeEnough(a, b)
+			return abs(a - b) < 0.001
 		end
 
 		-- place tagged events at the last event in the level
@@ -690,9 +706,12 @@ local extension = function(_level)
 
 									local isSyncopated = isSyncopationActive and (i > syncoPulse + 1)
 									local isNextFirstSyncopatedPulse = isSyncopationActive and (i == syncoPulse + 1)
+									local isNextSyncopationPulse = isSyncopationActive and (i == syncoPulse)
 
 									local beatSyncoAdd = isSyncopated and -(origTick / 2) or 0
 									local tickSyncoAdd = isNextFirstSyncopatedPulse and -(origTick / 2) or 0
+
+									local forceSwing = (isNextSyncopationPulse and 'swingLeft') or (isNextFirstSyncopatedPulse and 'swingRight') or nil
 
 									table.insert(pulses, {
 										pulse = i,
@@ -700,7 +719,8 @@ local extension = function(_level)
 										tick = tick + tickSyncoAdd,
 										origTick = origTick,
 										swingType = swingType,
-										hold = event.hold
+										hold = event.hold,
+										forceSwing = forceSwing
 									})
 
 									beat = beat + tick
@@ -739,76 +759,148 @@ local extension = function(_level)
 								end
 
 							elseif event.type == 'AddFreeTimeBeat' then
-								row._classylist.freePulse = 1 -- start freetime
 
-								local nextPulse = findNextFreeTime(idx, event, i)
+								local pulseNum = event.pulse + 1
+								local freeTimePulses = {}
+								local freeTimePulseDistances = {}
 
-								local nextPulseBeat = getBeatFromPair(nextPulse.bar, nextPulse.beat)
-								local thisPulseBeat = getBeatFromPair(event.bar, event.beat)
+								local thisPulse = event
+								local thisPulseIndex = i
 
-								local tick = nextPulseBeat - thisPulseBeat
+								while pulseNum < 7 do
 
-								table.insert(pulses, {
-									pulse = row._classylist.freePulse,
-									beat = thisPulseBeat,
-									tick = tick,
-									origTick = tick + 0.5,
-									swingType = 'straight',
-									hold = event.hold,
-									dontMakeExitAnimation = nextPulse.fake
-								})
+									if thisPulse.type == 'PulseFreeTimeBeat' then
+										
+										if thisPulse.action == 'Increment' then
+											pulseNum = math.min(7, pulseNum + 1)
+										elseif thisPulse.action == 'Decrement' then
+											pulseNum = math.max(1, pulseNum - 1)
+										elseif thisPulse.action == 'Custom' then
+											pulseNum = thisPulse.customPulse + 1
+										end
 
-							elseif event.type == 'PulseFreeTimeBeat' then -- why are there two events :edegabudgetcuts:
+									end
 
-								if row._classylist.freePulse > 0 then -- only if we have an active freetime
-									
-									local action = event.action
-									local pulse = row._classylist.freePulse
+									freeTimePulses[#freeTimePulses+1] = {
+										event = thisPulse,
+										index = pulseNum,
+										beat = getBeatFromPair(thisPulse.bar, thisPulse.beat)
+									}
 
-									if action == 'Remove' then
-										pulse = 0
+									if thisPulse.action == 'Remove' then
+										break
+									end
 
-									else
+									local nextPulse, nextPulseIndex = findNextFreeTime(idx, thisPulse, thisPulseIndex)
 
-										if action == 'Increment' then
-											pulse = math.min(pulse + 1, 7)
+									if nextPulse.fake then break end
 
-										elseif action == 'Decrement' then
-											pulse = math.max(pulse - 1, 1)
+									thisPulse = nextPulse
+									thisPulseIndex = nextPulseIndex
 
-										elseif action == 'Custom' then
-											pulse = event.customPulse + 1
+								end
+
+								thisPulse = nil
+								thisPulseIndex = nil
+
+								local origTick = -1
+
+								-- banana detection algorithm lol
+								if #freeTimePulses > 6 then
+
+									local firstPulse = freeTimePulses[1]
+									local seventhPulse = freeTimePulses[7]
+
+									local totalTime = seventhPulse.beat - firstPulse.beat
+									local segmentLength = totalTime / 6
+
+									if origTick < 0 then
+
+										local correctBeats = 0
+
+										for i = 1, #freeTimePulses do
+
+											local thisPulse = freeTimePulses[i]
+
+											if closeEnough(firstPulse.beat + segmentLength*(i-1), thisPulse.beat) then
+
+												correctBeats = correctBeats + 1
+
+											end
 
 										end
 
-										if pulse < 7 then
-											-- normal pulse
+										if correctBeats > 3 then
+											origTick = segmentLength
+										end
 
-											local nextPulse = findNextFreeTime(idx, event, i)
+									end
 
-											local nextPulseBeat = getBeatFromPair(nextPulse.bar, nextPulse.beat)
-											local thisPulseBeat = getBeatFromPair(event.bar, event.beat)
+									if origTick < 0 then
 
-											local tick = nextPulseBeat - thisPulseBeat
+										local distanceCounts = {}
 
-											table.insert(pulses, {
-												pulse = pulse,
-												beat = thisPulseBeat,
-												tick = tick,
-												origTick = 0.5,
-												swingType = 'straight',
-												hold = event.hold,
-												dontMakeExitAnimation = nextPulse.fake
-											})
-										else
-											-- hit, so reset the freetime
-											pulse = 0
+										for i = 1, #freeTimePulses - 1 do
+											local distance = freeTimePulses[i+1].beat - freeTimePulses[i].beat
+
+											freeTimePulseDistances[i] = distance
+											distanceCounts[distance] = (distanceCounts[distance] or 0) + 1
+										end
+
+										for distance, count in pairs(distanceCounts) do
+
+											if count > #freeTimePulses / 2 then
+												origTick = distance
+												break
+
+											end
 
 										end
 
 									end
 
-									row._classylist.freePulse = pulse
+									if origTick < 0 then
+
+										local equalDistanceThrees = 0
+
+										for i = 1, #freeTimePulses, 3 do
+
+											if closeEnough(firstPulse.beat + segmentLength * (i-1), freeTimePulses[i].beat) then
+												equalDistanceThrees = equalDistanceThrees + 1
+											end
+
+										end
+
+										if equalDistanceThrees > 2 then
+											origTick = segmentLength
+
+										end
+
+									end
+
+								end
+
+								for i = 1, #freeTimePulses-1 do
+
+									local thisPulse = freeTimePulses[i]
+									local nextPulse = freeTimePulses[i+1]
+
+									local thisEvent = thisPulse.event
+									local thisPulseIndex = thisPulse.index
+									local nextEvent = nextPulse.event
+
+									local tick = nextPulse.beat - thisPulse.beat
+									local usedOrigTick = (origTick > -1) and origTick or tick
+
+									table.insert(pulses, {
+										pulse = thisPulseIndex,
+										beat = thisPulse.beat,
+										tick = tick,
+										origTick = usedOrigTick,
+										swingType = calculate_freetime_swing(tick, usedOrigTick),
+										hold = thisEvent.hold,
+										dontMakeExitAnimation = nextEvent.fake
+									})
 
 								end
 
@@ -825,30 +917,41 @@ local extension = function(_level)
 						local origTick = pulse.origTick
 						local tick = pulse.tick
 						local hold = pulse.hold
+						local forceSwing = pulse.forceSwing
 
 						local cbeat = row._classylist[idx]
 						local pattern = getvalue(cbeat, 'currentPattern', beat)
 
 						if hold == 0 then -- pulse normally, no holding required
 
-							local swingFlag = (pulse.swingType ~= 'straight') and pattern.swingLeft and pattern.swingRight and pattern.swingBounce
+							local canPlayForced = forceSwing and pattern[forceSwing]
 
-							if swingFlag then -- use swing expressions if we have all of them and they're needed
+							if canPlayForced then -- a swing animation is forced, play it if the pattern has it
 
-								-- awful
-								local swing_expr1, swing_expr2 = pattern.swingLeft, pattern.swingRight
+								cbeat:playexpression(beat, pattern[forceSwing])
 
-								if pulse.swingType == 'startLeft' then
-									swing_expr1, swing_expr2 = pattern.swingLeft, pattern.swingBounce
+							else -- otherwise, proceed as normal
+
+								local swingFlag = (pulse.swingType ~= 'straight') and pattern.swingLeft and pattern.swingRight and pattern.swingBounce
+
+								if swingFlag then -- use swing expressions if we have all of them and they're needed
+
+									-- awful
+									local swing_expr1, swing_expr2 = pattern.swingLeft, pattern.swingRight
+
+									if pulse.swingType == 'startLeft' then
+										swing_expr1, swing_expr2 = pattern.swingLeft, pattern.swingBounce
+									end
+
+									if tick > origTick then cbeat:playexpression(beat, swing_expr1)
+									else cbeat:playexpression(beat, swing_expr2)
+									end
+
+								else -- use normal expressions in other cases
+
+									if pattern.pulse then cbeat:playexpression(beat, pattern.pulse) end
+
 								end
-
-								if tick > origTick then cbeat:playexpression(beat, swing_expr1)
-								else cbeat:playexpression(beat, swing_expr2)
-								end
-
-							else -- use normal expressions in other cases
-
-								if pattern.pulse then cbeat:playexpression(beat, pattern.pulse) end
 
 							end
 
