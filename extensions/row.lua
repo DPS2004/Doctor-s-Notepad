@@ -22,8 +22,8 @@ local extension = function(_level)
 				-- whole row
 				x = {{beat = 0, state = 50}},
 				y = {{beat = 0, state = 50}},
-				sx = {{beat = 0, state = 100}},
-				sy = {{beat = 0, state = 100}},
+				sx = {{beat = 0, state = 1}},
+				sy = {{beat = 0, state = 1}},
 				pivot = {{beat = 0, state = 0.5}},
 				rot = {{beat = 0, state = 0}},
 				
