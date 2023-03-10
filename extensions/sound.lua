@@ -48,7 +48,7 @@ local extension = function(_level)
 			offset = offset or 0
 			soundtype = soundtype or "CueSound"
 
-			self:addevent(beat, "PlaySound", {filename = sound, volume = volume, pitch = pitch, pan = pan, offset = offset, isCustom = true, customSoundType = soundtype })
+			self:addevent(beat, "PlaySound", {sound = {filename = sound, volume = volume, pitch = pitch, pan = pan, offset = offset}, isCustom = true, customSoundType = soundtype })
 
 		end
 
@@ -90,13 +90,16 @@ local extension = function(_level)
 
 			-- god
 			self:addevent(beat, "SetClapSounds", {
-				rowType = rowtype, 
-				p1Sound = p1sound,		p2Sound = p2sound,		cpuSound = cpusound,
-				p1Volume = p1volume, 	p2Volume = p2volume,	cpuVolume = cpuvolume,
-				p1Pitch = p1pitch,		p2Pitch = p2pitch,		cpuPitch = cpupitch,
-				p1Pan = p1pan, 			p2Pan = p2pan,			cpuPan = cpupan,
-				p1Offset = p1offset,	p2Offset = p2offset,	cpuOffset = cpuoffset,
-				p1Used = p1used,		p2Used = p2used,		cpuUsed = cpuused
+				rowType = rowtype,
+				p1Sound = p1used and {
+					filename = p1sound, volume = p1volume, pitch = p1pitch, pan = p1pan, offset = p1offset
+				} or DN_NULL,
+				p2Sound = p2used and {
+					filename = p2sound, volume = p2volume, pitch = p2pitch, pan = p2pan, offset = p2offset
+				} or DN_NULL,
+				cpuSound = cpuused and {
+					filename = cpusound, volume = cpuvolume, pitch = cpupitch, pan = cpupan, offset = cpuoffset
+				} or DN_NULL
 			})
 
 		end
@@ -155,7 +158,7 @@ local extension = function(_level)
 			pan = pan or 0
 
 			-- volume doesn't seem to be set correctly when loading in RD (set to 100%) even though it's set in the rdlevel file?
-			self:addevent(beat, 'SetBeatSound', {row = row, filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0})
+			self:addevent(beat, 'SetBeatSound', {row = row, sound = {filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0}})
 
 		end
 
