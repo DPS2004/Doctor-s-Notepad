@@ -130,7 +130,7 @@ local extension = function(_level)
 			return cond
 
 		end
-		local onetime = newTimeConditional('DN_CLASSYBEAT_RUNONCE', 1)
+		local onetime = {}
 
 		local function newConditional(name, expression)
 			local cond = {}
@@ -528,6 +528,8 @@ local extension = function(_level)
 		for idx = 0, #level.rows do
 
 			local row = level.rows[idx]
+			if not row then break end -- failsafe for when there are 0 rows idk its weird
+
 			local room = row.room
 
 			-- generate classybeat stuff
@@ -537,6 +539,7 @@ local extension = function(_level)
 				end
 
 				disableHeartCrack = not not disableHeartCrack
+				onetime = newTimeConditional('DN_CLASSYBEAT_RUNONCE', 1) -- add the conditional only if its used
 
 				copyClassybeatFiles(CLASSYBASEFILENAME)
 
