@@ -455,11 +455,9 @@ local extension = function(_level)
 				{
 					row = v.row,
 					border = getvalue(self.rows[v.row], "border", v.beat),
-					borderColor = getvalue(self.rows[v.row], "bordercolor", v.beat),
-					borderOpacity = getvalue(self.rows[v.row], "borderopacity", v.beat),
+					borderColor = getvalue(self.rows[v.row], "bordercolor", v.beat) .. level:alpha(getvalue(self.rows[v.row], "borderopacity", v.beat)),
 					tint = getvalue(self.rows[v.row], "tint", v.beat),
-					tintColor = getvalue(self.rows[v.row], "tintcolor", v.beat),
-					tintOpacity = getvalue(self.rows[v.row], "tintopacity", v.beat),
+					tintColor = getvalue(self.rows[v.row], "tintcolor", v.beat) .. level:alpha(getvalue(self.rows[v.row], "tintopacity", v.beat)),
 					opacity = getvalue(self.rows[v.row], "opacity", v.beat),
 					duration = v.duration,
 					ease = v.ease
