@@ -266,7 +266,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 
 		end)
@@ -284,7 +284,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 
 		end)
@@ -302,7 +302,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 
 		end)
@@ -320,7 +320,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 
 		end)
@@ -338,7 +338,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 
 		end)
@@ -356,7 +356,7 @@ local extension = function(_level)
 					},
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 
 		end)
@@ -371,7 +371,7 @@ local extension = function(_level)
 					angle = getvalue(self.decorations[v.idx], 'rot', v.beat),
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 
 		end)
@@ -384,7 +384,7 @@ local extension = function(_level)
 				{
 					target = v.target,
 					visible = getvalue(self.decorations[v.idx], 'visible', v.beat)
-				}
+				}, v._tag,v._cond
 			)
 
 		end)
@@ -396,15 +396,13 @@ local extension = function(_level)
 				{
 					target = v.target,
 					border = getvalue(self.decorations[v.idx], "border", v.beat),
-					borderColor = getvalue(self.decorations[v.idx], "bordercolor", v.beat),
-					borderOpacity = getvalue(self.decorations[v.idx], "borderopacity", v.beat),
+					borderColor = getvalue(self.decorations[v.idx], "bordercolor", v.beat) .. level:alpha(getvalue(self.decorations[v.idx], "borderopacity", v.beat)),
 					tint = getvalue(self.decorations[v.idx], "tint", v.beat),
-					tintColor = getvalue(self.decorations[v.idx], "tintcolor", v.beat),
-					tintOpacity = getvalue(self.decorations[v.idx], "tintopacity", v.beat),
+					tintColor = getvalue(self.decorations[v.idx], "tintcolor", v.beat) .. level:alpha(getvalue(self.decorations[v.idx], "borderopacity", v.beat)),
 					opacity = getvalue(self.decorations[v.idx], 'opacity', v.beat),
 					duration = v.duration,
 					ease = v.ease
-				}
+				}, v._tag,v._cond
 			)
 		end)
 		
