@@ -1,8 +1,7 @@
 local dpf = {}
 
 -- bit of a hack, but oh well
-DN_NULL = '_DN_NULL'
-local DN_NULL = '"' .. DN_NULL .. '"'
+local DN_NULL = '"' .. null .. '"'
 
 function dpf.loadjson(f,w,force)
   w = w or {}
