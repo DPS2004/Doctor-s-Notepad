@@ -11,7 +11,8 @@ extensions = {
     'decoration',
 	'color', 
     'sound',
-    'classybeat'
+    'classybeat',
+    'conditional'
 }
 
 -- helpful functions
