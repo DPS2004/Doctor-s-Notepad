@@ -47,6 +47,16 @@ local extension = function(_level)
 		function level:lasthitconditional(name, row, result)
 			local cond = genericconditional(name, 'LastHit')
 
+			if type(row) == 'table' then -- row object, get its id
+				for i, v in ipairs(level.data.rows) do
+					if level:getrow(v.row) == row then
+						row = v.row
+						break
+					end
+				end
+			end
+			if type(row) ~= 'number' then return end
+
 			cond.row = row; cond.result = result
 			cond.saver.row = row; cond.saver.result = result
 
@@ -56,8 +66,8 @@ local extension = function(_level)
 		function level:timesexecutedconditional(name, times)
 			local cond = genericconditional(name, 'TimesExecuted')
 
-			cond.times = times
-			cond.saver.times = times
+			cond.maxTimes = times
+			cond.saver.maxTimes = times
 
 			return cond
 		end
@@ -110,8 +120,8 @@ local extension = function(_level)
 		end
 
 		function level:conditional(conditionals, duration, func)
-			if not conditionals[1] then 
-				conditionals = {conditionals}
+			if not conditionals[1] then -- if this is not a list, and just a conditional
+				conditionals = {conditionals} -- make it a list to not have issues later
 			end
 
 			self.autocond = conditionals
@@ -127,6 +137,13 @@ local extension = function(_level)
 		function level:endconditional()
 			self.autocond = nil
 		end
+
+		-- aliases
+		level.custom = level.customconditional
+		level.lasthit = level.lasthitconditional
+		level.timesexecuted = level.timesexecutedconditional
+		level.language = level.languageconditional
+		level.playermode = level.playermodeconditional
 	
 		--if you need to initialize anything, do it here.
 
