@@ -123,6 +123,10 @@ local extension = function(_level)
 			if not conditionals[1] then -- if this is not a list, and just a conditional
 				conditionals = {conditionals} -- make it a list to not have issues later
 			end
+			if type(duration) == 'function' then -- if this is a function, set func to it (backwards compatibility)
+				func = duration
+				duration = 0
+			end
 
 			self.autocond = conditionals
 			self.autocondduration = duration or 0
@@ -139,6 +143,7 @@ local extension = function(_level)
 		end
 
 		-- aliases
+		level.newconditional = level.customconditional -- backwards compatibility
 		level.custom = level.customconditional
 		level.lasthit = level.lasthitconditional
 		level.timesexecuted = level.timesexecutedconditional

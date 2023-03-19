@@ -124,7 +124,7 @@ function rd.load(filename,extensions)
 		condduration = condduration or self.autocondduration
 
 		-- too lazy to add the condduration to every fakehandler so this will do
-		if cond.originatedFromFakeEvent then
+		if cond and cond.originatedFromFakeEvent then
 			condduration = cond.duration or self.autocondduration
 			cond = cond.conds or self.autocond
 		end
