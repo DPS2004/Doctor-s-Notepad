@@ -102,6 +102,7 @@ local extension = function(_level)
 
 		function level:getconditionalids(conditionals, duration)
 			if not conditionals then return nil end
+			if #conditionals < 1 then return nil end
 
 			local ids = {}
 
@@ -117,6 +118,21 @@ local extension = function(_level)
 
 			return table.concat(ids, '&') .. 'd' .. tostring(duration)
 
+		end
+
+		function level:copyconditionals(conditionals)
+			if not conditionals then return nil end
+			local copies = {}
+
+			for i = 1, #conditionals do
+				local newCond = {}
+				for k,v in pairs(conditionals[i]) do
+					newCond[k] = v
+				end
+				table.insert(copies, newCond)
+			end
+
+			return copies
 		end
 
 		function level:conditional(conditionals, duration, func)

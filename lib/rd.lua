@@ -148,7 +148,7 @@ function rd.load(filename,extensions)
         end
 		
 		newevent.tag = tag
-		newevent['if'] = level:getconditionalids(cond, condduration)
+		newevent['if'] = self:getconditionalids(cond, condduration)
 		
 		if not self.dofinalize then
 			table.insert(self.data.events, newevent)
@@ -170,9 +170,15 @@ function rd.load(filename,extensions)
 		
 		newevent.beat = beat
         newevent.type = event
-		
+
 		newevent._tag = tag
-		newevent._cond = {conds = cond, duration = condduration, originatedFromFakeEvent = true}
+
+		-- i am not sure why this function sometimes runs without conditional.lua having been initialised
+		if cond then
+			newevent._cond = {conds = self:copyconditionals(cond), duration = condduration, originatedFromFakeEvent = true}
+		else
+			newevent._cond = {}
+		end
 		
         for k, v in pairs(params) do
 			if k == 'duration' then
