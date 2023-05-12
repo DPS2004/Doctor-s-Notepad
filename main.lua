@@ -3,7 +3,8 @@
 
 --extensions to load
 
-
+-- As default-config.lua now exists, this is not needed here anymore -- keeping it commented out instead of removing it for now
+--[[
 extensions = {
 	'core',
 	'row',
@@ -14,6 +15,7 @@ extensions = {
     'classybeat',
     'conditional'
 }
+]]
 
 -- helpful functions
 
@@ -80,7 +82,7 @@ if not inlevel then
     error("Usage: main.lua [level folder]")
 end
 
-level = rd.load(inlevel .. "/level.rdlevel",extensions)
+level = rd.load(inlevel .. "/level.rdlevel")
 level:init()
 script = assert(loadfile(inlevel .. "/level.lua"))
 

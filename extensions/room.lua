@@ -1089,16 +1089,20 @@ end]]
 		
 		level.rooms = {}
 
-		for i = 0, 4 do
-            local newroom = level:getroom(i)
-			if (not beat) and (i ~= 4) then
-			
-				level:addfakeevent(0, "updateroomx", {room = i, duration = 0, ease = "Linear"})
-				level:addfakeevent(0, "updateroomy", {room = i, duration = 0, ease = "Linear"})
-				level:addfakeevent(0, "updateroomscale", {room = i, duration = 0, ease = "Linear"})
-				level:addfakeevent(0, "updateroommode", {room = i, duration = 0, ease = "Linear"})
-			end
-        end
+		if configHandler.getConfigValue("initevents") then
+
+			for i = 0, 4 do
+	            local newroom = level:getroom(i)
+				if (not beat) and (i ~= 4) then
+				
+					level:addfakeevent(0, "updateroomx", {room = i, duration = 0, ease = "Linear"})
+					level:addfakeevent(0, "updateroomy", {room = i, duration = 0, ease = "Linear"})
+					level:addfakeevent(0, "updateroomscale", {room = i, duration = 0, ease = "Linear"})
+					level:addfakeevent(0, "updateroommode", {room = i, duration = 0, ease = "Linear"})
+				end
+	        end
+
+	    end
 
         -- calling this here since the first room gotta be initialized first
         createlevelmethods()

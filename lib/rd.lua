@@ -1,8 +1,9 @@
 local rd = {}
+configHandler = dofile('lib/config.lua')
 
+function rd.load(filename)
+	configHandler.prepareLevelConfig(inlevel)
 
-
-function rd.load(filename,extensions)
     local level = {}
     level.data = dpf.loadjson(filename, {}, true)
 	
@@ -37,6 +38,7 @@ function rd.load(filename,extensions)
 	
 	level.initqueue = deeper.init()
 
+	local extensions = configHandler.getConfigValue('extensions')
 	for i,v in ipairs(extensions) do
 		local ext = dofile('extensions/'..v..'.lua')
 		print('loading extension '..v)
