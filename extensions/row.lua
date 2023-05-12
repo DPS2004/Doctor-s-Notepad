@@ -429,22 +429,24 @@ local extension = function(_level)
 		
 		level.rows = {}
 		
-		for i, v in ipairs(level.data.rows) do
-            local oldroom = v.rooms[1]
+		if configHandler.getConfigValue("initevents") then
 
-            --v.rooms = level:roomtable(0)
-            local newrow = level:getrow(v.row)
-			newrow.nativeroom = oldroom
-			
-            setvalue(newrow, "room", 0, oldroom)
-			if not beat then
-				level:addfakeevent(0, "updaterowx", {row = v.row, duration = 0, ease = "Linear"})
-				level:addfakeevent(0, "updaterowy", {row = v.row, duration = 0, ease = "Linear"})
-				level:addfakeevent(0, "updaterowpivot", {row = v.row, duration = 0, ease = "Linear"})
-			end
-        end
+			for i, v in ipairs(level.data.rows) do
+	            local oldroom = v.rooms[1]
+
+	            --v.rooms = level:roomtable(0)
+	            local newrow = level:getrow(v.row)
+				newrow.nativeroom = oldroom
+				
+	            setvalue(newrow, "room", 0, oldroom)
+				if not beat then
+					level:addfakeevent(0, "updaterowx", {row = v.row, duration = 0, ease = "Linear"})
+					level:addfakeevent(0, "updaterowy", {row = v.row, duration = 0, ease = "Linear"})
+					level:addfakeevent(0, "updaterowpivot", {row = v.row, duration = 0, ease = "Linear"})
+				end
+	        end
 		
-		
+		end
 		
 		-- fake event handlers
 		
@@ -455,11 +457,9 @@ local extension = function(_level)
 				{
 					row = v.row,
 					border = getvalue(self.rows[v.row], "border", v.beat),
-					borderColor = getvalue(self.rows[v.row], "bordercolor", v.beat),
-					borderOpacity = getvalue(self.rows[v.row], "borderopacity", v.beat),
+					borderColor = getvalue(self.rows[v.row], "bordercolor", v.beat) .. level:alpha(getvalue(self.rows[v.row], "borderopacity", v.beat)),
 					tint = getvalue(self.rows[v.row], "tint", v.beat),
-					tintColor = getvalue(self.rows[v.row], "tintcolor", v.beat),
-					tintOpacity = getvalue(self.rows[v.row], "tintopacity", v.beat),
+					tintColor = getvalue(self.rows[v.row], "tintcolor", v.beat) .. level:alpha(getvalue(self.rows[v.row], "tintopacity", v.beat)),
 					opacity = getvalue(self.rows[v.row], "opacity", v.beat),
 					duration = v.duration,
 					ease = v.ease

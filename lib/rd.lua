@@ -1,8 +1,9 @@
 local rd = {}
+configHandler = dofile('lib/config.lua')
 
+function rd.load(filename)
+	configHandler.prepareLevelConfig(inlevel)
 
-
-function rd.load(filename,extensions)
     local level = {}
     level.data = dpf.loadjson(filename, {}, true)
 	
@@ -27,6 +28,7 @@ function rd.load(filename,extensions)
 	level.autotag = nil
 	
 	level.autocond = nil
+	level.autocondduration = 0
 	
 	level.dmult = 1
 	
@@ -36,6 +38,7 @@ function rd.load(filename,extensions)
 	
 	level.initqueue = deeper.init()
 
+	local extensions = configHandler.getConfigValue('extensions')
 	for i,v in ipairs(extensions) do
 		local ext = dofile('extensions/'..v..'.lua')
 		print('loading extension '..v)
@@ -110,7 +113,7 @@ function rd.load(filename,extensions)
     end
 	
 	-- add an arbitrary event
-    function level:addevent(beat, event, params,tag,cond)
+    function level:addevent(beat, event, params,tag,cond,condduration)
         local newevent = {}
 		beat = beat + self.eos
         newevent.bar, newevent.beat = self:getbm(beat)
@@ -120,6 +123,13 @@ function rd.load(filename,extensions)
 		
 		tag = tag or self.autotag
 		cond = cond or self.autocond
+		condduration = condduration or self.autocondduration
+
+		-- too lazy to add the condduration to every fakehandler so this will do
+		if cond and cond.originatedFromFakeEvent then
+			condduration = cond.duration or self.autocondduration
+			cond = cond.conds or self.autocond
+		end
 		
         if not params.y then
 			if not self.eventyblacklist[event] then
@@ -140,7 +150,7 @@ function rd.load(filename,extensions)
         end
 		
 		newevent.tag = tag
-		newevent['if'] = cond
+		newevent['if'] = self:getconditionalids(cond, condduration)
 		
 		if not self.dofinalize then
 			table.insert(self.data.events, newevent)
@@ -151,19 +161,26 @@ function rd.load(filename,extensions)
     end
 
     -- add fake event, to be turned into a real event upon saving
-    function level:addfakeevent(beat, event, params,tag,cond)
+    function level:addfakeevent(beat, event, params,tag,cond,condduration)
         params = params or {}
 		
 		tag = tag or self.autotag
 		cond = cond or self.autocond
+		condduration = condduration or self.autocondduration
 		
         local newevent = {}		
 		
 		newevent.beat = beat
         newevent.type = event
-		
+
 		newevent._tag = tag
-		newevent._cond = cond
+
+		-- i am not sure why this function sometimes runs without conditional.lua having been initialised
+		if cond then
+			newevent._cond = {conds = self:copyconditionals(cond), duration = condduration, originatedFromFakeEvent = true}
+		else
+			newevent._cond = {}
+		end
 		
         for k, v in pairs(params) do
 			if k == 'duration' then
@@ -192,51 +209,6 @@ function rd.load(filename,extensions)
 	
 	function level:endtag()
 		self.autotag = nil
-	end
-	
-	function level:newconditional(name,t,func) --TODO: move rdcode stuff to an extension?
-		local cond = {}
-		cond.id = #self.conditionals + 1
-		cond.name = name
-		cond.level = self
-		if false then -- eventually non rdcode conditionals go here
-		
-		else
-			func = func or t
-			cond.type = 'Custom'
-			cond.expression = func
-		end
-		
-		function cond:getid()
-			return self.id .. 'd0'
-		end
-		
-		function cond:save()
-			table.insert(self.level.data.conditionals,
-				{
-					id = self.id,
-					name = self.name,
-					type = self.type,
-					expression = self.expression
-				}
-			)
-		end
-		
-		table.insert(self.conditionals,cond)
-		return cond
-	end
-	
-	function level:conditional(autocond,func)
-		self.autocond = autocond:getid()
-		if func then
-			func()
-			self:endconditional()
-		end
-	end
-	
-	
-	function level:endconditional()
-		self.autocond = nil
 	end
 	
 	function level:durationmult(dmult)

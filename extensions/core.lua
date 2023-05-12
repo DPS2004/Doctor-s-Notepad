@@ -53,8 +53,8 @@ local extension = function(_level)
 			self:addevent(beat, "Comment", {show = false, text="()=>"..text, tab="Actions", color="F2E644"})
 		end
 		
-		function level:speed(beat, speed, dmult)
-			self:addevent(beat, "SetSpeed", {speed = speed})
+		function level:speed(beat, speed, dmult, ease, duration)
+			self:addevent(beat, "SetSpeed", {speed = speed, ease = ease or "Linear", duration = duration or 1})
 			if dmult then
 				self:durationmult(speed)
 			end

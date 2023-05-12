@@ -10,6 +10,11 @@ local extension = function(_level)
 		function level:rgba(r,g,b,a)
 			return string.format("%02X%02X%02X%02X", math.floor(r+0,5), math.floor(g+0,5), math.floor(b+0,5), math.floor(a+0,5))
 		end
+
+		-- transforms number from 0-100 to 0-255 then to hex format
+		function level:alpha(a)
+			return string.format("%02X", math.floor(a*2.55+0.5))
+		end
 		
 		function level:hsvraw(h,s,v)
 			--adapted from https://github.com/EmmanuelOga/columns/blob/master/utils/color.lua
