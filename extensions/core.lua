@@ -100,6 +100,12 @@ local extension = function(_level)
 
 		level.doshowcomments = false
 		
+		function PX(x) 
+			return (x/352)*100
+		end
+		function PY(y)
+			return (y/198)*100
+		end
 		
 		-- fake event handlers
 		
