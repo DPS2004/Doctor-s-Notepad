@@ -10,6 +10,7 @@ local extension = function(_level)
 			end
 
 			local room = {}
+			room.objecttype = 'room'
 			room.level = self
 			room.index = index
 			room.values = {
@@ -1001,6 +1002,35 @@ end]]
 			level.rooms[index] = room
 
 			return room
+		end
+		
+		-- get the version of a room that is needed for your usecase
+		function level:parseroom(room,returntable)
+			
+			if type(room) == 'table' then 
+				if room.objecttype == 'room' then
+				
+					if returntable then
+						return room
+					else
+						return room.index
+					end
+					
+				else
+					error('Tried to use an object of type "'..room.objecttype..'" as a room!')
+				end
+			else
+				if room < 0 or room > 4 then
+					error('Tried to use a room with an id of '..room)
+				end
+				
+				if returntable then
+					return self:getroom(room)
+				else
+					return room
+				end
+			end
+		
 		end
 		
 		

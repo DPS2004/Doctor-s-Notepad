@@ -7,6 +7,7 @@ local extension = function(_level)
 			end
 
 			local row = {}
+			row.objecttype = 'row'
 			row.level = self
 			row.data =
 				tget(

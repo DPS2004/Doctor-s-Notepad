@@ -8,11 +8,12 @@ local extension = function(_level)
 
 			filename = filename or ''
 			depth = depth or 0
-			roomidx = math.min(math.max((roomidx or 0), 0), 3) -- clamp between 0 and 3
+			roomidx = level:parseroom(roomidx)
 			customname = customname or ('deco_' .. self.decoid)
 
 			local deco = {}
-
+			deco.objecttype = 'decoration'
+			
 			deco.level = self
 			deco.id = customname
 			deco.idx = self.decoid -- keep actual index in the table in this variable
@@ -212,7 +213,7 @@ local extension = function(_level)
 			end
 
 			function deco:setopacity(beat, opacity, duration, ease)
-
+				ease = ease or 'linear'
 				setvalue(self, "opacity", beat, opacity)
 				self.level:addfakeevent(beat, "updatedecotint", {idx = self.idx, target = self.id, duration = duration, ease = ease})
 
