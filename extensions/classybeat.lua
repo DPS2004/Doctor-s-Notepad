@@ -529,8 +529,8 @@ local extension = function(_level)
 
 			local row = level.rows[idx]
 			if not row then break end -- failsafe for when there are 0 rows idk its weird
-
-			local room = row.room
+			
+			local room = row.nativeroom
 
 			-- generate classybeat stuff
 			function row:classyinit(disableHeartCrack)

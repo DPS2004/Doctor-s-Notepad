@@ -244,7 +244,6 @@ local extension = function(_level)
 			-- text
 			-- the times here is just a table with offsets from the base 'beat' variable for each AdvanceText event
 			-- i.e. if beat is 3 and times is {1} then there will be the floating text event at beat 3 and an Advance Text event at beat 4 (3+1)
-			-- (notes for when docs get written)
 			function room:floatingtext(beat, text, times, x, y, size, angle, mode, showChildren, color, outlineColor, anchor, fadeOutRate)
 				x = x or 50
 				y = y or 50

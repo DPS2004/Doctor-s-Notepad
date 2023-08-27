@@ -8,7 +8,8 @@ extensions = {
 	'color', 
 	'sound',
 	'classybeat',
-	'conditional'
+	'conditional',
+	'advancedtext'
 }
 
 -- Whether to create initial events at the start of the level, useful to turn off if the level is already VFX'd
