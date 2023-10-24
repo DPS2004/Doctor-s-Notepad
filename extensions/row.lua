@@ -257,7 +257,7 @@ local extension = function(_level)
 				color = color or "000000"
 				opacity = opacity or 100
 				duration = duration or 0
-				ease = ease or "linear"
+				ease = ease or "Linear"
 				setvalue(self, "border", beat, bordertype)
 				setvalue(self, "bordercolor", beat, color)
 				setvalue(self, "borderopacity", beat, opacity)
@@ -269,7 +269,7 @@ local extension = function(_level)
 				color = color or "FFFFFF"
 				opacity = opacity or 100
 				duration = duration or 0
-				ease = ease or "linear"
+				ease = ease or "Linear"
 				setvalue(self, "tint", beat, showtint)
 				setvalue(self, "tintcolor", beat, color)
 				setvalue(self, "tintopacity", beat, opacity)
