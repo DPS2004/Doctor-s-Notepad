@@ -431,7 +431,7 @@ local extension = function(_level)
 					local finBeat = beat + duration
 
 					local Beat = calculate_beat(finBeat, row, i)
-					cbeat:movesy(Beat, getvalue(row, 'sy', finBeat) + getvalue(cbeat, 'classy_syOffset', finBeat), duration, ease)
+					cbeat:movesy(Beat, getvalue(row, 'sy', finBeat) + getvalue(cbeat, 'classy_syOffset', finBeat) - 1, duration, ease)
 
 				end
 
