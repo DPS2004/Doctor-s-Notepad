@@ -189,32 +189,6 @@ local extension = function(_level)
 							self[func](self, beat, v, duration, ease) -- dont think you can use : with this method though so gotta pass in self for the first variable
 						end
 					end
-
-					--[[
-					if k == "x" then
-						self:movex(beat, v, duration, ease)
-					elseif k == "y" then
-						self:movey(beat, v, duration, ease)
-					elseif k == "sx" then
-						self:movesx(beat, v, duration, ease)
-					elseif k == "sy" then
-						self:movesy(beat, v, duration, ease)
-					elseif k == "pivot" then
-						self:movepivot(beat, v, duration, ease)
-					elseif k == "rotate" or k == "rot" then
-						self:rotate(beat, v, duration, ease)
-					elseif k == "cx" then
-						self:movecx(beat, v, duration, ease)
-					elseif k == "cy" then
-						self:movecy(beat, v, duration, ease)
-					elseif k == "csx" then
-						self:movecsx(beat, v, duration, ease)
-					elseif k == "csy" then
-						self:movecsy(beat, v, duration, ease)
-					elseif k == "crotate" or k == "crot" then
-						self:crotate(beat, v, duration, ease)
-					end
-					]]
 				end
 			end
 			
