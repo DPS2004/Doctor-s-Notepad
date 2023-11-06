@@ -180,6 +180,20 @@ local extension = function(_level)
 			self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = voicesource, enabled = enabled, volume = volume})
 
 		end
+
+		-- voicesource can be
+		-- JyiCount, IanCountEnglish, IanCountEnglishFast, IanCountEnglishCalm
+
+		function level:setoneshotcountingsound(beat, row, voicesource, enabled, volume, subdivoffset)
+			beat = beat or 0
+			row = row or 0
+			voicesource = voicesource or 'JyiCount'
+			enabled = not not enabled
+			volume = volume or 100
+			subdivoffset = subdivoffset or 0.5
+
+			self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = voicesource, enabled = enabled, volume = volume, subdivOffset = subdivoffset})
+		end
 		
 		--add event type condensers
 
