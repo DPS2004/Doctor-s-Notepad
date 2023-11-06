@@ -243,51 +243,6 @@ function rd.load(filename)
 			end
 		end
 		return true
-	end	
-
-	-- utility error methods
-	function level:checkvar_throw(text, stackLevel)
-		error(text, stackLevel or 3)
-	end
-
-	-- method that checks if a variable is a certain type
-	-- n is the original variable name, a string
-	function level:checkvar_type(v, n, t, nilAccepted, stackLevel)
-		local vt = type(v)
-		if vt == nil and nilAccepted then return end
-		if vt ~= t then
-			level:checkvar_throw('invalid type exception: ' .. n .. ' is a ' .. vt .. ' but it should be a ' .. t, stackLevel)
-		end
-	end
-
-	-- method that checks if all of the members of a table are a given type
-	function level:checkvar_nestedtype(v, n, t, stackLevel)
-		stackLevel = stackLevel or 5
-
-		level:checkvar_type(v, n, 'table', stackLevel)
-
-		for k,v in ipairs(v) do
-			local vn = n .. '[' .. k .. ']'
-
-			if type(v) == 'table' then
-				level:checkvar_nestedtype(v, vn, t, array, stackLevel + 1)
-			else
-				level:checkvar_type(v, vn, t, stackLevel)
-			end
-		end
-	end
-
-	function level:checkvar_enum(v, n, enum, nilAccepted)
-		if v == nil and nilAccepted then return end
-		if not enum[v] then
-			local builder = {}
-			for k, _ in pairs(enum) do
-				if type(k) == 'string' then table.insert(builder, '"' .. k .. '"')
-				else table.insert(builder, k)
-				end
-			end
-			level:checkvar_throw('invalid type exception: ' .. n .. ' must be one of ' .. table.concat(builder, ', '))
-		end
 	end
 
     -- save level to file, and resolve fake events

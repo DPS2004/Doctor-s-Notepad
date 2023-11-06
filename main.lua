@@ -61,6 +61,51 @@ function getvalue(self, vname, beat)
     return matchval
 end
 
+-- utility error methods
+function checkvar_throw(text, stackLevel)
+    error(text, stackLevel or 3)
+end
+
+-- method that checks if a variable is a certain type
+-- n is the original variable name, a string
+function checkvar_type(v, n, t, nilAccepted, stackLevel)
+    local vt = type(v)
+    if vt == nil and nilAccepted then return end
+    if vt ~= t then
+        checkvar_throw('invalid type exception: ' .. n .. ' is a ' .. vt .. ' but it should be a ' .. t, stackLevel)
+    end
+end
+
+-- method that checks if all of the members of a table are a given type
+function checkvar_nestedtype(v, n, t, stackLevel)
+    stackLevel = stackLevel or 5
+
+    checkvar_type(v, n, 'table', stackLevel)
+
+    for k,v in ipairs(v) do
+        local vn = n .. '[' .. k .. ']'
+
+        if type(v) == 'table' then
+            checkvar_nestedtype(v, vn, t, array, stackLevel + 1)
+        else
+            checkvar_type(v, vn, t, stackLevel)
+        end
+    end
+end
+
+function checkvar_enum(v, n, enum, nilAccepted)
+    if v == nil and nilAccepted then return end
+    if not enum[v] then
+        local builder = {}
+        for k, _ in pairs(enum) do
+            if type(k) == 'string' then table.insert(builder, '"' .. k .. '"')
+            else table.insert(builder, k)
+            end
+        end
+        checkvar_throw('invalid type exception: ' .. n .. ' must be one of ' .. table.concat(builder, ', '))
+    end
+end
+
 -- Load Libraries
 json = require "lib/json" -- json parser
 

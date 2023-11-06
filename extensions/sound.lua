@@ -57,11 +57,11 @@ local extension = function(_level)
 		--all of the functions you are adding to the level table go up here
 
 		function level:cue(beat, ctype, voice, volume, tick)
-			level:checkvar_type(beat, 'beat', 'number')
-			level:checkvar_type(tick, 'tick', 'number', true)
-			level:checkvar_type(volume, 'volume', 'number', true)
-			level:checkvar_enum(ctype, 'ctype', ENUM_CUETYPE)
-			level:checkvar_enum(voice, 'voice', ENUM_CUEVOICE)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(tick, 'tick', 'number', true)
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_enum(ctype, 'ctype', ENUM_CUETYPE)
+			checkvar_enum(voice, 'voice', ENUM_CUEVOICE)
 
 			tick = tick or 1
 			volume = volume or 100
@@ -71,8 +71,8 @@ local extension = function(_level)
 
 
 		function level:setbpm(beat, bpm)
-			level:checkvar_type(beat, 'beat', 'number')
-			level:checkvar_type(bpm, 'bpm', 'number')
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(bpm, 'bpm', 'number')
 
 			beat = beat or 0
 			bpm = bpm or 100
@@ -82,13 +82,13 @@ local extension = function(_level)
 		end
 		
 		function level:playsound(beat, sound, volume, pitch, pan, offset, soundtype)
-			level:checkvar_type(beat, 'beat', 'number')
-			level:checkvar_type(sound, 'sound', 'string')
-			level:checkvar_enum(soundtype, 'soundtype', ENUM_PLAYSOUNDTYPE, true)
-			level:checkvar_type(volume, 'volume', 'number', true)
-			level:checkvar_type(pitch, 'pitch', 'number', true)
-			level:checkvar_type(pan, 'pan', 'number', true)
-			level:checkvar_type(offset, 'offset', 'number', true)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(sound, 'sound', 'string')
+			checkvar_enum(soundtype, 'soundtype', ENUM_PLAYSOUNDTYPE, true)
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_type(pitch, 'pitch', 'number', true)
+			checkvar_type(pan, 'pan', 'number', true)
+			checkvar_type(offset, 'offset', 'number', true)
 
 			volume = volume or 100
 			pitch = pitch or 100
@@ -101,18 +101,18 @@ local extension = function(_level)
 		end
 
 		function level:setclapsounds(beat, rowtype, p1sound, p1volume, p1pitch, p1pan, p1offset, p2sound, p2volume, p2pitch, p2pan, p2offset, cpusound, cpuvolume, cpupitch, cpupan, cpuoffset, p1used, p2used, cpuused)
-			level:checkvar_type(beat, 'beat', 'number')
-			level:checkvar_enum(rowtype, 'rowtype', ENUM_ROWTYPE)
-			level:checkvar_type(p1used, 'p1used', 'boolean')
-			level:checkvar_type(p2used, 'p2used', 'boolean')
-			level:checkvar_type(cpuused, 'cpuused', 'boolean')
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_enum(rowtype, 'rowtype', ENUM_ROWTYPE)
+			checkvar_type(p1used, 'p1used', 'boolean')
+			checkvar_type(p2used, 'p2used', 'boolean')
+			checkvar_type(cpuused, 'cpuused', 'boolean')
 
 			if p1used then
-				level:checkvar_enum(p1sound, 'p1sound', ENUM_CLAPSOUND)
-				level:checkvar_type(p1volume, 'p1volume', 'number', true)
-				level:checkvar_type(p1pitch, 'p1pitch', 'number', true)
-				level:checkvar_type(p1pan, 'p1pan', 'number', true)
-				level:checkvar_type(p1offset, 'p1offset', 'number', true)
+				checkvar_enum(p1sound, 'p1sound', ENUM_CLAPSOUND)
+				checkvar_type(p1volume, 'p1volume', 'number', true)
+				checkvar_type(p1pitch, 'p1pitch', 'number', true)
+				checkvar_type(p1pan, 'p1pan', 'number', true)
+				checkvar_type(p1offset, 'p1offset', 'number', true)
 
 				p1volume = p1volume or 100
 				p1pitch = p1pitch or 100
@@ -121,11 +121,11 @@ local extension = function(_level)
 			end
 
 			if p2used then
-				level:checkvar_enum(p2sound, 'p2sound', ENUM_CLAPSOUND)
-				level:checkvar_type(p2volume, 'p2volume', 'number', true)
-				level:checkvar_type(p2pitch, 'p2pitch', 'number', true)
-				level:checkvar_type(p2pan, 'p2pan', 'number', true)
-				level:checkvar_type(p2offset, 'p2offset', 'number', true)
+				checkvar_enum(p2sound, 'p2sound', ENUM_CLAPSOUND)
+				checkvar_type(p2volume, 'p2volume', 'number', true)
+				checkvar_type(p2pitch, 'p2pitch', 'number', true)
+				checkvar_type(p2pan, 'p2pan', 'number', true)
+				checkvar_type(p2offset, 'p2offset', 'number', true)
 
 				p2volume = p2volume or 100
 				p2pitch = p2pitch or 100
@@ -134,11 +134,11 @@ local extension = function(_level)
 			end
 
 			if cpuused then
-				level:checkvar_enum(cpusound, 'cpusound', ENUM_CLAPSOUND)
-				level:checkvar_type(cpuvolume, 'cpuvolume', 'number', true)
-				level:checkvar_type(cpupitch, 'cpupitch', 'number', true)
-				level:checkvar_type(cpupan, 'cpupan', 'number', true)
-				level:checkvar_type(cpuoffset, 'cpuoffset', 'number', true)
+				checkvar_enum(cpusound, 'cpusound', ENUM_CLAPSOUND)
+				checkvar_type(cpuvolume, 'cpuvolume', 'number', true)
+				checkvar_type(cpupitch, 'cpupitch', 'number', true)
+				checkvar_type(cpupan, 'cpupan', 'number', true)
+				checkvar_type(cpuoffset, 'cpuoffset', 'number', true)
 
 				cpuvolume = cpuvolume or 100
 				cpupitch = cpupitch or 100
@@ -163,21 +163,21 @@ local extension = function(_level)
 		end
 
 		function level:heartexplosioninterval(beat, intervaltype, interval)
-			level:checkvar_type(beat, 'beat', 'number')
-			level:checkvar_type(interval, 'interval', 'number')
-			level:checkvar_enum(intervaltype, 'intervaltype', ENUM_HEARTEXPLOSIONINTERVAL)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(interval, 'interval', 'number')
+			checkvar_enum(intervaltype, 'intervaltype', ENUM_HEARTEXPLOSIONINTERVAL)
 
 			self:addevent(beat, "SetHeartExplodeInterval", {intervalType = intervaltype, interval = interval})
 
 		end
 
 		function level:setgamesound(beat, soundtype, filename, volume, pitch, pan)
-			level:checkvar_type(beat, 'beat', 'number')
-			level:checkvar_enum(soundtype, 'soundtype', ENUM_GAMESOUND)
-			level:checkvar_type(filename, 'filename', 'string')
-			level:checkvar_type(volume, 'volume', 'number', true)
-			level:checkvar_type(pitch, 'pitch', 'number', true)
-			level:checkvar_type(pan, 'pan', 'number', true)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_enum(soundtype, 'soundtype', ENUM_GAMESOUND)
+			checkvar_type(filename, 'filename', 'string')
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_type(pitch, 'pitch', 'number', true)
+			checkvar_type(pan, 'pan', 'number', true)
 
 			volume = volume or 100
 			pitch = pitch or 100
@@ -188,12 +188,12 @@ local extension = function(_level)
 		end
 
 		function level:setbeatsound(beat, row, filename, volume, pitch, pan)
-			level:checkvar_type(beat, 'beat', 'number')
-			level:checkvar_type(row, 'row', 'number')
-			level:checkvar_enum(filename, 'filename', ENUM_BEATSOUND)
-			level:checkvar_type(volume, 'volume', 'number', true)
-			level:checkvar_type(pitch, 'pitch', 'number', true)
-			level:checkvar_type(pan, 'pan', 'number', true)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(row, 'row', 'number')
+			checkvar_enum(filename, 'filename', ENUM_BEATSOUND)
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_type(pitch, 'pitch', 'number', true)
+			checkvar_type(pan, 'pan', 'number', true)
 
 			volume = volume or 100
 			pitch = pitch or 100
@@ -205,11 +205,11 @@ local extension = function(_level)
 		end
 
 		function level:setcountingsound(beat, row, voicesource, enabled, volume)
-			level:checkvar_type(beat, 'beat', 'number')
-			level:checkvar_type(row, 'row', 'number')
-			level:checkvar_enum(voicesource, 'voicesource', ENUM_VOICESOURCE, true)
-			level:checkvar_type(enabled, 'enabled', 'boolean', true)
-			level:checkvar_type(volume, 'volume', 'number', true)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(row, 'row', 'number')
+			checkvar_enum(voicesource, 'voicesource', ENUM_VOICESOURCE, true)
+			checkvar_type(enabled, 'enabled', 'boolean', true)
+			checkvar_type(volume, 'volume', 'number', true)
 
 			voicesource = voicesource or 'JyiCount'
 			enabled = not not enabled
@@ -220,12 +220,12 @@ local extension = function(_level)
 		end
 
 		function level:setoneshotcountingsound(beat, row, voicesource, enabled, volume, subdivoffset)
-			level:checkvar_type(beat, 'beat', 'number')
-			level:checkvar_type(row, 'row', 'number')
-			level:checkvar_enum(voicesource, 'voicesource', ENUM_ONESHOT_VOICESOURCE, true)
-			level:checkvar_type(enabled, 'enabled', 'boolean', true)
-			level:checkvar_type(volume, 'volume', 'number', true)
-			level:checkvar_type(subdivoffset, 'subdivoffset', 'number', true)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(row, 'row', 'number')
+			checkvar_enum(voicesource, 'voicesource', ENUM_ONESHOT_VOICESOURCE, true)
+			checkvar_type(enabled, 'enabled', 'boolean', true)
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_type(subdivoffset, 'subdivoffset', 'number', true)
 
 			voicesource = voicesource or 'JyiCount'
 			enabled = not not enabled
