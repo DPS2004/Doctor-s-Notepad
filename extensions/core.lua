@@ -30,15 +30,14 @@ local extension = function(_level)
 			level:dialog(beat,'',false)
 		end
 		
+		--bruh
+		level.dialogue = level.dialog
+		level.hidedialogue = level.hidedialog
+		
 		--comments
 		function level:showcomments()
 			self.doshowcomments = true
 		end
-		
-		--bruh
-		level.dialogue = level.dialog
-		level.hidedialogue = level.hidedialog
-		--comments
 		
 		-- tabs can be "Actions", "Song", "Sprites" or "Rooms". defaults to "Actions"
 		-- target is necessary if the tab is "Sprites"
