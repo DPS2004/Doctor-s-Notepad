@@ -369,7 +369,11 @@ local extension = function(_level)
 						local s = 'if amplitude then level:comment(beat, "()=>wavyRowsAmplitude(" .. index .. ", " .. amplitude .. ", " .. duration .. ")") end\n'
 						s = s .. 'if frequency then level:rdcode(beat, "room[" .. index .. "].wavyRowsFrequency = " .. frequency, "OnBar") end\n'
 						return s
-					end}
+					end},
+					Brightness = {intensity = 100, _onTop = true},
+					Contrast = {intensity = 100, _onTop = true},
+					Saturation = {intensity = 100, _onTop = true},
+					Dots = {intensity = 100, _alias = {'dots', 'dotmatrix'}}
 				}
 
 				for k,v in pairs(roomPresets) do
