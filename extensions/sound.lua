@@ -1,24 +1,69 @@
 local extension = function(_level)
 	_level.initqueue.queue(5, function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
+
+		local ENUM_CUETYPE = {
+			SayReaDyGetSetGoNew = true, SayGetSetGo = true, SayReaDyGetSetOne = true, SayGetSetOne = true, SayReadyGetSetGo = true, JustSayReady = true,
+			JustSayRea = true, JustSayAnd = true, JustSayStop = true, JustSayDy = true, JustSayGo = true, JustSayAndStop = true, JustSayGet = true, JustSaySet = true,
+			Count1 = true, Count2 = true, Count3 = true, Count4 = true, Count5 = true
+		}
+
+		local ENUM_CUEVOICE = {
+			Nurse = true, NurseTired = true,
+			IanExcited = true, IanCalm = true, IanSlow = true,
+			NoneBottom = true, NoneTop = true
+		}
+
+		local ENUM_VOICESOURCE = {
+			JyiCount = true, JyiCountFast = true, JyiCountTired = true, JyiCountVeryTired = true, JyiCountJapanese = true, JyiCountLegacy = true,
+			IanCount = true, IanCountFast = true, IanCountCalm = true, IanCountSlow = true, IanCountSlower = true,
+			BirdCount = true, OwlCount = true, WhistleCount = true
+		}
+
+		local ENUM_BEATSOUND = {
+			None = true, Shaker = true, ShakerHi = true, Stick = true, StickOld = true, Sidestick = true, Punch = true, Ride2 = true,
+			Kick = true, KickChroma = true, KickClean = true, KickTight = true, KickHouse = true, KickRupture = true, KickEcho = true,
+			Hammer = true, Chuck = true, ClosedHat = true, HatTight = true, HatHouse = true, Sizzle = true, ClavesLow = true, ClavesHigh = true,
+			TomLowE = true, TomMidG = true, TomMidB = true, TomHighD = true, WoodblockHigh = true, WoodblockLow = true, TriangleMute = true, Cowbell = true
+		}
+
+		local ENUM_PLAYSOUNDTYPE = {
+			CueSound = true, MusicSound = true, BeatSound = true, HitSound = true, OtherSound = true
+		}
+
+		local ENUM_HEARTEXPLOSIONINTERVAL = {
+			OneBeatAfter = true, Instant = true, GatherNoCeil = true, GatherAndCeil = true
+		}
+
+		local ENUM_ROWTYPE = {
+			Classic = true, Oneshot = true
+		}
+
+		local ENUM_CLAPSOUND = {
+			ClapHit = true, ClapHitP2 = true, ClapHitCPU = true, ReverbClap = true, ClapHitMassivePreEcho = true, ClapHitEcho = true,
+			SnareAcoustic2 = true, SnareAcoustic4 = true, SnareHouse = true, SnareVapor = true
+		}
+
+		local ENUM_GAMESOUND = {
+			SmallMistake = true, BigMistake = true,
+			Hand1PopSound = true, Hand2PopSound = true,
+			HeartExplosion = true, HeartExplosion2 = true, HeartExplosion3 = true
+		}
+
+		local ENUM_ONESHOT_VOICESOURCE = {
+			JyiCount = true,
+			IanCountEnglish = true, IanCountEnglishFast = true, IanCountEnglishCalm = true
+		}
 		
 		--all of the functions you are adding to the level table go up here
-		
-		-- future notes for documentation
-
-		-- ctype can be any of the below
-		-- SayReaDyGetSetGoNew, SayGetSetGo, SayReaDyGetSetOne, SayGetSetOne, SayReadyGetSetGo, JustSayReady,
-		-- JustSayRea, JustSayAnd, JustSayStop, JustSayDy, JustSayGo, JustSayAndStop, JustSayGet, JustSaySet,
-		-- Count1, Count2, Count3, Count4, Count5
-
-		-- voice can be any of the below
-		-- Nurse, NurseTired, IanExcited, IanCalm, IanSlow, NoneBottom, NoneTop
 
 		function level:cue(beat, ctype, voice, volume, tick)
+			level:checkvar_type(beat, 'beat', 'number')
+			level:checkvar_type(tick, 'tick', 'number', true)
+			level:checkvar_type(volume, 'volume', 'number', true)
+			level:checkvar_enum(ctype, 'ctype', ENUM_CUETYPE)
+			level:checkvar_enum(voice, 'voice', ENUM_CUEVOICE)
 
-			beat = beat or 0
-			ctype = ctype or "SayGetSetGo"
 			tick = tick or 1
-			voice = voice or 'Nurse'
 			volume = volume or 100
 
 			self:addevent(beat, "SayReadyGetSetGo", {phraseToSay = ctype, tick = tick, voiceSource = voice, volume = volume})
@@ -26,6 +71,8 @@ local extension = function(_level)
 
 
 		function level:setbpm(beat, bpm)
+			level:checkvar_type(beat, 'beat', 'number')
+			level:checkvar_type(bpm, 'bpm', 'number')
 
 			beat = beat or 0
 			bpm = bpm or 100
@@ -33,14 +80,15 @@ local extension = function(_level)
 			self:addevent(beat, "SetBeatsPerMinute", {beatsPerMinute = bpm})
 
 		end
-
-
-		-- soundtype can be any of the below
-		-- CueSound, MusicSound, BeatSound, HitSound, OtherSound
 		
 		function level:playsound(beat, sound, volume, pitch, pan, offset, soundtype)
-
-			beat = beat or 0
+			level:checkvar_type(beat, 'beat', 'number')
+			level:checkvar_type(sound, 'sound', 'string')
+			level:checkvar_enum(soundtype, 'soundtype', ENUM_PLAYSOUNDTYPE, true)
+			level:checkvar_type(volume, 'volume', 'number', true)
+			level:checkvar_type(pitch, 'pitch', 'number', true)
+			level:checkvar_type(pan, 'pan', 'number', true)
+			level:checkvar_type(offset, 'offset', 'number', true)
 
 			volume = volume or 100
 			pitch = pitch or 100
@@ -52,41 +100,51 @@ local extension = function(_level)
 
 		end
 
-
-		-- p1sound, p2sound, cpusound can be any of the below
-		-- ClapHit, ClapHitP2, ClapHitCPU, ReverbClap, ClapHitMassivePreEcho, ClapHitEcho,
-		-- SnareAcoustic2, SnareAcoustic4, SnareHouse, SnareVapor
-
-		-- oh boy i cant wait to document this
-
 		function level:setclapsounds(beat, rowtype, p1sound, p1volume, p1pitch, p1pan, p1offset, p2sound, p2volume, p2pitch, p2pan, p2offset, cpusound, cpuvolume, cpupitch, cpupan, cpuoffset, p1used, p2used, cpuused)
+			level:checkvar_type(beat, 'beat', 'number')
+			level:checkvar_enum(rowtype, 'rowtype', ENUM_ROWTYPE)
+			level:checkvar_type(p1used, 'p1used', 'boolean')
+			level:checkvar_type(p2used, 'p2used', 'boolean')
+			level:checkvar_type(cpuused, 'cpuused', 'boolean')
 
-			beat = beat or 0
-			rowtype = rowtype or 'Classic' -- can also be 'Oneshot'
+			if p1used then
+				level:checkvar_enum(p1sound, 'p1sound', ENUM_CLAPSOUND)
+				level:checkvar_type(p1volume, 'p1volume', 'number', true)
+				level:checkvar_type(p1pitch, 'p1pitch', 'number', true)
+				level:checkvar_type(p1pan, 'p1pan', 'number', true)
+				level:checkvar_type(p1offset, 'p1offset', 'number', true)
 
-			p1sound = p1sound or 'ClapHit'
-			p2sound = p2sound or 'ClapHitP2'
-			cpusound = cpusound or 'ClapHitCPU'
+				p1volume = p1volume or 100
+				p1pitch = p1pitch or 100
+				p1pan = p1pan or 0
+				p1offset = p1offset or 0
+			end
 
-			p1volume = p1volume or 100
-			p2volume = p2volume or 100
-			cpuvolume = cpuvolume or 100
+			if p2used then
+				level:checkvar_enum(p2sound, 'p2sound', ENUM_CLAPSOUND)
+				level:checkvar_type(p2volume, 'p2volume', 'number', true)
+				level:checkvar_type(p2pitch, 'p2pitch', 'number', true)
+				level:checkvar_type(p2pan, 'p2pan', 'number', true)
+				level:checkvar_type(p2offset, 'p2offset', 'number', true)
 
-			p1pitch = p1pitch or 100
-			p2pitch = p2pitch or 100
-			cpupitch = cpupitch or 100
+				p2volume = p2volume or 100
+				p2pitch = p2pitch or 100
+				p2pan = p2pan or 0
+				p2offset = p2offset or 0
+			end
 
-			p1pan = p1pan or 0
-			p2pan = p2pan or 0
-			cpupan = cpupan or 0
+			if cpuused then
+				level:checkvar_enum(cpusound, 'cpusound', ENUM_CLAPSOUND)
+				level:checkvar_type(cpuvolume, 'cpuvolume', 'number', true)
+				level:checkvar_type(cpupitch, 'cpupitch', 'number', true)
+				level:checkvar_type(cpupan, 'cpupan', 'number', true)
+				level:checkvar_type(cpuoffset, 'cpuoffset', 'number', true)
 
-			p1offset = p1offset or 0
-			p2offset = p2offset or 0
-			cpuoffset = cpuoffset or 0
-
-			p1used = not not p1used
-			p2used = not not p2used
-			cpuused = not not cpuused
+				cpuvolume = cpuvolume or 100
+				cpupitch = cpupitch or 100
+				cpupan = cpupan or 0
+				cpuoffset = cpuoffset or 0
+			end
 
 			-- god
 			self:addevent(beat, "SetClapSounds", {
@@ -104,33 +162,22 @@ local extension = function(_level)
 
 		end
 
-
-		-- intervaltype can be
-		-- OneBeatAfter,	Instant,	GatherNoCeil,				GatherAndCeil
-
-		-- Fixed Interval,	Instant,	Combine on Fixed Interval,	Combine on Downbeat
-		-- ^ actual names in the event the hell why are they so different
-
 		function level:heartexplosioninterval(beat, intervaltype, interval)
-
-			beat = beat or 0
-			intervaltype = intervaltype or 'OneBeatAfter'
-			interval = interval or 0
+			level:checkvar_type(beat, 'beat', 'number')
+			level:checkvar_type(interval, 'interval', 'number')
+			level:checkvar_enum(intervaltype, 'intervaltype', ENUM_HEARTEXPLOSIONINTERVAL)
 
 			self:addevent(beat, "SetHeartExplodeInterval", {intervalType = intervaltype, interval = interval})
 
 		end
 
-
-		-- soundtype can be
-		-- SmallMistake, BigMistake, Hand1PopSound, Hand2PopSound, HeartExplosion, HeartExplosion2, HeartExplosion3
-
 		function level:setgamesound(beat, soundtype, filename, volume, pitch, pan)
-
-			beat = beat or 0
-
-			soundtype = soundtype or 'SmallMistake'
-			filename = filename or ''
+			level:checkvar_type(beat, 'beat', 'number')
+			level:checkvar_enum(soundtype, 'soundtype', ENUM_GAMESOUND)
+			level:checkvar_type(filename, 'filename', 'string')
+			level:checkvar_type(volume, 'volume', 'number', true)
+			level:checkvar_type(pitch, 'pitch', 'number', true)
+			level:checkvar_type(pan, 'pan', 'number', true)
 
 			volume = volume or 100
 			pitch = pitch or 100
@@ -140,19 +187,14 @@ local extension = function(_level)
 
 		end
 
-
-		-- filename can be
-		-- Shaker, None, ShakerHi, Stick, StickOld, Sidestick, Punch, Ride2,
-		-- Kick, KickChroma, KickClean, KickTight, KickHouse, KickRupture, KickEcho,
-		-- Hammer, Chuck, ClosedHat, HatTight, HatHouse, Sizzle, ClavesLow, ClavesHigh,
-		-- TomLowE, TomMidG, TomMidB, TomHighD, WoodblockHigh, WoodblockLow, TriangleMute, Cowbell
-
 		function level:setbeatsound(beat, row, filename, volume, pitch, pan)
+			level:checkvar_type(beat, 'beat', 'number')
+			level:checkvar_type(row, 'row', 'number')
+			level:checkvar_enum(filename, 'filename', ENUM_BEATSOUND)
+			level:checkvar_type(volume, 'volume', 'number', true)
+			level:checkvar_type(pitch, 'pitch', 'number', true)
+			level:checkvar_type(pan, 'pan', 'number', true)
 
-			beat = beat or 0
-
-			row = row or 0
-			filename = filename or 'Shaker'
 			volume = volume or 100
 			pitch = pitch or 100
 			pan = pan or 0
@@ -162,17 +204,13 @@ local extension = function(_level)
 
 		end
 
-
-		-- voicesource can be
-		-- JyiCount, JyiCountFast, JyiCountTired, JyiCountVeryTired, JyiCountJapanese,
-		-- IanCount, IanCountFast, IanCountCalm, IanCountSlow, IanCountSlower,
-		-- BirdCount, OwlCount, WhistleCount, JyiCountLegacy
-
 		function level:setcountingsound(beat, row, voicesource, enabled, volume)
+			level:checkvar_type(beat, 'beat', 'number')
+			level:checkvar_type(row, 'row', 'number')
+			level:checkvar_enum(voicesource, 'voicesource', ENUM_VOICESOURCE, true)
+			level:checkvar_type(enabled, 'enabled', 'boolean', true)
+			level:checkvar_type(volume, 'volume', 'number', true)
 
-			beat = beat or 0
-
-			row = row or 0
 			voicesource = voicesource or 'JyiCount'
 			enabled = not not enabled
 			volume = volume or 100
@@ -181,12 +219,14 @@ local extension = function(_level)
 
 		end
 
-		-- voicesource can be
-		-- JyiCount, IanCountEnglish, IanCountEnglishFast, IanCountEnglishCalm
-
 		function level:setoneshotcountingsound(beat, row, voicesource, enabled, volume, subdivoffset)
-			beat = beat or 0
-			row = row or 0
+			level:checkvar_type(beat, 'beat', 'number')
+			level:checkvar_type(row, 'row', 'number')
+			level:checkvar_enum(voicesource, 'voicesource', ENUM_ONESHOT_VOICESOURCE, true)
+			level:checkvar_type(enabled, 'enabled', 'boolean', true)
+			level:checkvar_type(volume, 'volume', 'number', true)
+			level:checkvar_type(subdivoffset, 'subdivoffset', 'number', true)
+
 			voicesource = voicesource or 'JyiCount'
 			enabled = not not enabled
 			volume = volume or 100
