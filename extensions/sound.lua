@@ -1,58 +1,45 @@
 local extension = function(_level)
 	_level.initqueue.queue(5, function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
 
-		local ENUM_CUETYPE = {
-			SayReaDyGetSetGoNew = true, SayGetSetGo = true, SayReaDyGetSetOne = true, SayGetSetOne = true, SayReadyGetSetGo = true, JustSayReady = true,
-			JustSayRea = true, JustSayAnd = true, JustSayStop = true, JustSayDy = true, JustSayGo = true, JustSayAndStop = true, JustSayGet = true, JustSaySet = true,
-			Count1 = true, Count2 = true, Count3 = true, Count4 = true, Count5 = true
-		}
+		create_enum('cuetype', {
+			'SayReaDyGetSetGoNew', 'SayGetSetGo', 'SayReaDyGetSetOne', 'SayGetSetOne', 'SayReadyGetSetGo', 'JustSayReady',
+			'JustSayRea', 'JustSayAnd', 'JustSayStop', 'JustSayDy', 'JustSayGo', 'JustSayAndStop', 'JustSayGet', 'JustSaySet',
+			'Count1', 'Count2', 'Count3', 'Count4', 'Count5'
+		})
 
-		local ENUM_CUEVOICE = {
-			Nurse = true, NurseTired = true,
-			IanExcited = true, IanCalm = true, IanSlow = true,
-			NoneBottom = true, NoneTop = true
-		}
+		create_enum('cuevoice', {'Nurse', 'NurseTired', 'IanExcited', 'IanCalm', 'IanSlow', 'NoneBottom', 'NoneTop'})
 
-		local ENUM_VOICESOURCE = {
-			JyiCount = true, JyiCountFast = true, JyiCountTired = true, JyiCountVeryTired = true, JyiCountJapanese = true, JyiCountLegacy = true,
-			IanCount = true, IanCountFast = true, IanCountCalm = true, IanCountSlow = true, IanCountSlower = true,
-			BirdCount = true, OwlCount = true, WhistleCount = true
-		}
+		create_enum('voicesource', {
+			'JyiCount', 'JyiCountFast', 'JyiCountTired', 'JyiCountVeryTired', 'JyiCountJapanese', 'JyiCountLegacy',
+			'IanCount', 'IanCountFast', 'IanCountCalm', 'IanCountSlow', 'IanCountSlower',
+			'BirdCount', 'OwlCount', 'WhistleCount'
+		})
 
-		local ENUM_BEATSOUND = {
-			None = true, Shaker = true, ShakerHi = true, Stick = true, StickOld = true, Sidestick = true, Punch = true, Ride2 = true,
-			Kick = true, KickChroma = true, KickClean = true, KickTight = true, KickHouse = true, KickRupture = true, KickEcho = true,
-			Hammer = true, Chuck = true, ClosedHat = true, HatTight = true, HatHouse = true, Sizzle = true, ClavesLow = true, ClavesHigh = true,
-			TomLowE = true, TomMidG = true, TomMidB = true, TomHighD = true, WoodblockHigh = true, WoodblockLow = true, TriangleMute = true, Cowbell = true
-		}
+		create_enum('beatsound', {
+			'None', 'Shaker', 'ShakerHi', 'Stick', 'StickOld', 'Sidestick', 'Punch', 'Ride2',
+			'Kick', 'KickChroma', 'KickClean', 'KickTight', 'KickHouse', 'KickRupture', 'KickEcho',
+			'Hammer', 'Chuck', 'ClosedHat', 'HatTight', 'HatHouse', 'Sizzle', 'ClavesLow', 'ClavesHigh',
+			'TomLowE', 'TomMidG', 'TomMidB', 'TomHighD', 'WoodblockHigh', 'WoodblockLow', 'TriangleMute', 'Cowbell'
+		})
 
-		local ENUM_PLAYSOUNDTYPE = {
-			CueSound = true, MusicSound = true, BeatSound = true, HitSound = true, OtherSound = true
-		}
+		create_enum('playsoundtype', {'CueSound', 'MusicSound', 'BeatSound', 'HitSound', 'OtherSound'})
 
-		local ENUM_HEARTEXPLOSIONINTERVAL = {
-			OneBeatAfter = true, Instant = true, GatherNoCeil = true, GatherAndCeil = true
-		}
+		create_enum('heartexplosioninterval', {'OneBeatAfter', 'Instant', 'GatherNoCeil', 'GatherAndCeil'})
 
-		local ENUM_ROWTYPE = {
-			Classic = true, Oneshot = true
-		}
+		create_enum('rowtype', {'Classic', 'Oneshot'})
 
-		local ENUM_CLAPSOUND = {
-			ClapHit = true, ClapHitP2 = true, ClapHitCPU = true, ReverbClap = true, ClapHitMassivePreEcho = true, ClapHitEcho = true,
-			SnareAcoustic2 = true, SnareAcoustic4 = true, SnareHouse = true, SnareVapor = true
-		}
+		create_enum('clapsound', {
+			'ClapHit', 'ClapHitP2', 'ClapHitCPU', 'ReverbClap', 'ClapHitMassivePreEcho', 'ClapHitEcho',
+			'SnareAcoustic2', 'SnareAcoustic4', 'SnareHouse', 'SnareVapor'
+		})
 
-		local ENUM_GAMESOUND = {
-			SmallMistake = true, BigMistake = true,
-			Hand1PopSound = true, Hand2PopSound = true,
-			HeartExplosion = true, HeartExplosion2 = true, HeartExplosion3 = true
-		}
+		create_enum('gamesound', {
+			'SmallMistake', 'BigMistake',
+			'Hand1PopSound', 'Hand2PopSound',
+			'HeartExplosion', 'HeartExplosion2', 'HeartExplosion3'
+		})
 
-		local ENUM_ONESHOT_VOICESOURCE = {
-			JyiCount = true,
-			IanCountEnglish = true, IanCountEnglishFast = true, IanCountEnglishCalm = true
-		}
+		create_enum('voicesource_oneshot', {'JyiCount', 'IanCountEnglish', 'IanCountEnglishFast', 'IanCountEnglishCalm'})
 		
 		--all of the functions you are adding to the level table go up here
 
@@ -60,8 +47,8 @@ local extension = function(_level)
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(tick, 'tick', 'number', true)
 			checkvar_type(volume, 'volume', 'number', true)
-			checkvar_enum(ctype, 'ctype', ENUM_CUETYPE)
-			checkvar_enum(voice, 'voice', ENUM_CUEVOICE)
+			checkvar_enum(ctype, 'ctype', enums.cuetype)
+			checkvar_enum(voice, 'voice', enums.cuevoice)
 
 			tick = tick or 1
 			volume = volume or 100
@@ -84,7 +71,7 @@ local extension = function(_level)
 		function level:playsound(beat, sound, volume, pitch, pan, offset, soundtype)
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(sound, 'sound', 'string')
-			checkvar_enum(soundtype, 'soundtype', ENUM_PLAYSOUNDTYPE, true)
+			checkvar_enum(soundtype, 'soundtype', enums.playsoundtype, true)
 			checkvar_type(volume, 'volume', 'number', true)
 			checkvar_type(pitch, 'pitch', 'number', true)
 			checkvar_type(pan, 'pan', 'number', true)
@@ -102,13 +89,13 @@ local extension = function(_level)
 
 		function level:setclapsounds(beat, rowtype, p1sound, p1volume, p1pitch, p1pan, p1offset, p2sound, p2volume, p2pitch, p2pan, p2offset, cpusound, cpuvolume, cpupitch, cpupan, cpuoffset, p1used, p2used, cpuused)
 			checkvar_type(beat, 'beat', 'number')
-			checkvar_enum(rowtype, 'rowtype', ENUM_ROWTYPE)
+			checkvar_enum(rowtype, 'rowtype', enum.rowtype)
 			checkvar_type(p1used, 'p1used', 'boolean')
 			checkvar_type(p2used, 'p2used', 'boolean')
 			checkvar_type(cpuused, 'cpuused', 'boolean')
 
 			if p1used then
-				checkvar_enum(p1sound, 'p1sound', ENUM_CLAPSOUND)
+				checkvar_enum(p1sound, 'p1sound', enum.clapsound)
 				checkvar_type(p1volume, 'p1volume', 'number', true)
 				checkvar_type(p1pitch, 'p1pitch', 'number', true)
 				checkvar_type(p1pan, 'p1pan', 'number', true)
@@ -121,7 +108,7 @@ local extension = function(_level)
 			end
 
 			if p2used then
-				checkvar_enum(p2sound, 'p2sound', ENUM_CLAPSOUND)
+				checkvar_enum(p2sound, 'p2sound', enum.clapsound)
 				checkvar_type(p2volume, 'p2volume', 'number', true)
 				checkvar_type(p2pitch, 'p2pitch', 'number', true)
 				checkvar_type(p2pan, 'p2pan', 'number', true)
@@ -134,7 +121,7 @@ local extension = function(_level)
 			end
 
 			if cpuused then
-				checkvar_enum(cpusound, 'cpusound', ENUM_CLAPSOUND)
+				checkvar_enum(cpusound, 'cpusound', enum.clapsound)
 				checkvar_type(cpuvolume, 'cpuvolume', 'number', true)
 				checkvar_type(cpupitch, 'cpupitch', 'number', true)
 				checkvar_type(cpupan, 'cpupan', 'number', true)
@@ -165,7 +152,7 @@ local extension = function(_level)
 		function level:heartexplosioninterval(beat, intervaltype, interval)
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(interval, 'interval', 'number')
-			checkvar_enum(intervaltype, 'intervaltype', ENUM_HEARTEXPLOSIONINTERVAL)
+			checkvar_enum(intervaltype, 'intervaltype', enum.heartexplosioninterval)
 
 			self:addevent(beat, "SetHeartExplodeInterval", {intervalType = intervaltype, interval = interval})
 
@@ -173,7 +160,7 @@ local extension = function(_level)
 
 		function level:setgamesound(beat, soundtype, filename, volume, pitch, pan)
 			checkvar_type(beat, 'beat', 'number')
-			checkvar_enum(soundtype, 'soundtype', ENUM_GAMESOUND)
+			checkvar_enum(soundtype, 'soundtype', enum.gamesound)
 			checkvar_type(filename, 'filename', 'string')
 			checkvar_type(volume, 'volume', 'number', true)
 			checkvar_type(pitch, 'pitch', 'number', true)
@@ -190,7 +177,7 @@ local extension = function(_level)
 		function level:setbeatsound(beat, row, filename, volume, pitch, pan)
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(row, 'row', 'number')
-			checkvar_enum(filename, 'filename', ENUM_BEATSOUND)
+			checkvar_enum(filename, 'filename', enums.beatsound)
 			checkvar_type(volume, 'volume', 'number', true)
 			checkvar_type(pitch, 'pitch', 'number', true)
 			checkvar_type(pan, 'pan', 'number', true)
@@ -207,7 +194,7 @@ local extension = function(_level)
 		function level:setcountingsound(beat, row, voicesource, enabled, volume)
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(row, 'row', 'number')
-			checkvar_enum(voicesource, 'voicesource', ENUM_VOICESOURCE, true)
+			checkvar_enum(voicesource, 'voicesource', enums.voicesource, true)
 			checkvar_type(enabled, 'enabled', 'boolean', true)
 			checkvar_type(volume, 'volume', 'number', true)
 
@@ -222,7 +209,7 @@ local extension = function(_level)
 		function level:setoneshotcountingsound(beat, row, voicesource, enabled, volume, subdivoffset)
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(row, 'row', 'number')
-			checkvar_enum(voicesource, 'voicesource', ENUM_ONESHOT_VOICESOURCE, true)
+			checkvar_enum(voicesource, 'voicesource', enum.voicesource_oneshot, true)
 			checkvar_type(enabled, 'enabled', 'boolean', true)
 			checkvar_type(volume, 'volume', 'number', true)
 			checkvar_type(subdivoffset, 'subdivoffset', 'number', true)

@@ -61,6 +61,12 @@ function getvalue(self, vname, beat)
     return matchval
 end
 
+function quoteifstring(v)
+    if type(v) == 'string' then return ('"' .. tostring(v) .. '"')
+    else return tostring(v)
+    end
+end
+
 -- utility error methods
 function checkvar_throw(text, stackLevel)
     error(text, stackLevel or 3)
@@ -69,8 +75,8 @@ end
 -- method that checks if a variable is a certain type
 -- n is the original variable name, a string
 function checkvar_type(v, n, t, nilAccepted, stackLevel)
+    if v == nil and nilAccepted then return end
     local vt = type(v)
-    if vt == nil and nilAccepted then return end
     if vt ~= t then
         checkvar_throw('invalid type exception: ' .. n .. ' is a ' .. vt .. ' but it should be a ' .. t, stackLevel)
     end
@@ -96,14 +102,24 @@ end
 function checkvar_enum(v, n, enum, nilAccepted)
     if v == nil and nilAccepted then return end
     if not enum[v] then
-        local builder = {}
-        for k, _ in pairs(enum) do
-            if type(k) == 'string' then table.insert(builder, '"' .. k .. '"')
-            else table.insert(builder, k)
-            end
-        end
-        checkvar_throw('invalid type exception: ' .. n .. ' must be one of ' .. table.concat(builder, ', '))
+        checkvar_throw('invalid type exception: ' .. n .. ' is ' .. quoteifstring(v) .. ' must be one of ' .. enum.__stringformat, 4)
     end
+end
+
+enums = {}
+
+function create_enum(name, list)
+    local new_enum = {}
+    local builder = {}
+
+    for i, v in ipairs(list) do
+        new_enum[v] = i
+        builder[i] = quoteifstring(v)
+    end
+
+    new_enum.__stringformat = table.concat(builder, ', ')
+    enums[name] = new_enum
+    return new_enum
 end
 
 -- Load Libraries
