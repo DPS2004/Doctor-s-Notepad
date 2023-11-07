@@ -67,6 +67,8 @@ function quoteifstring(v)
     end
 end
 
+checkvar_override = false
+
 -- utility error methods
 function checkvar_throw(text, stackLevel)
     error(text, stackLevel or 3)
@@ -75,6 +77,7 @@ end
 -- method that checks if a variable is a certain type
 -- n is the original variable name, a string
 function checkvar_type(v, n, t, nilAccepted, stackLevel)
+    if checkvar_override then return end
     if v == nil and nilAccepted then return end
     local vt = type(v)
     if vt ~= t then
@@ -84,6 +87,7 @@ end
 
 -- method that checks if all of the members of a table are a given type
 function checkvar_nestedtype(v, n, t, stackLevel)
+    if checkvar_override then return end
     stackLevel = stackLevel or 5
 
     checkvar_type(v, n, 'table', stackLevel)
@@ -100,10 +104,16 @@ function checkvar_nestedtype(v, n, t, stackLevel)
 end
 
 function checkvar_enum(v, n, enum, nilAccepted)
+    if checkvar_override then return end
     if v == nil and nilAccepted then return end
     if not enum[v] then
         checkvar_throw('invalid type exception: ' .. n .. ' is ' .. quoteifstring(v) .. ' must be one of ' .. enum.__stringformat, 4)
     end
+end
+
+function disable_checkvar()
+    print('Parameter safety checks disabled!')
+    checkvar_override = true
 end
 
 enums = {}
