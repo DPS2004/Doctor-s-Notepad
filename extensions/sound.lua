@@ -36,7 +36,8 @@ local extension = function(_level)
 		create_enum('gamesound', {
 			'SmallMistake', 'BigMistake',
 			'Hand1PopSound', 'Hand2PopSound',
-			'HeartExplosion', 'HeartExplosion2', 'HeartExplosion3'
+			'HeartExplosion', 'HeartExplosion2', 'HeartExplosion3',
+			'Skipshot', 'ClapSoundHold', 'FreezeshotSound', 'BurnshotSound'
 		})
 
 		create_enum('voicesource_oneshot', {'JyiCount', 'IanCountEnglish', 'IanCountEnglishFast', 'IanCountEnglishCalm'})
@@ -166,12 +167,103 @@ local extension = function(_level)
 			checkvar_type(pitch, 'pitch', 'number', true)
 			checkvar_type(pan, 'pan', 'number', true)
 
+			if soundtype == 'ClapSoundHold'
+			or soundtype == 'FreezeshotSound'
+			or soundtype == 'BurnshotSound' then
+				error('Sound "' .. soundtype .. '" has extra parameters, and as such, setting them through setgamesound will result in an incorrect event! Use the designated methods.', 2)
+			end
+
 			volume = volume or 100
 			pitch = pitch or 100
 			pan = pan or 0
 
 			self:addevent(beat, 'SetGameSound', {soundType = soundtype, filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0})
+		end
 
+		local function setgroupsubtype(obj, name)
+			if obj then
+				obj.groupSubType = name
+				obj.used = true
+				obj.offset = 0
+				return obj
+			else
+				return {groupSubType = name, used = false}
+			end
+		end
+
+		local function checksubtype(obj, name)
+			if not obj.used then return end
+
+			checkvar_type(obj.filename, name .. '.filename', 'string')
+			checkvar_type(obj.volume, name .. '.volume', 'number')
+			checkvar_type(obj.pitch, name .. '.pitch', 'number')
+			checkvar_type(obj.pan, name .. '.pan', 'number')
+		end
+
+		function level:setholdclapsound(beat, filename, longholdstart, longholdend, shortholdstart, shortholdend)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(filename, 'filename', 'string')
+
+			checkvar_type(longholdstart, 'longholdstart', 'table', true)
+			checkvar_type(longholdend, 'longholdend', 'table', true)
+			checkvar_type(shortholdstart, 'shortholdstart', 'table', true)
+			checkvar_type(shortholdend, 'shortholdend', 'table', true)
+
+			longholdstart = setgroupsubtype(longholdstart, 'ClapSoundHoldLongStart')
+			longholdend = setgroupsubtype(longholdend, 'ClapSoundHoldLongEnd')
+			shortholdstart = setgroupsubtype(shortholdstart, 'ClapSoundHoldShortStart')
+			shortholdend = setgroupsubtype(shortholdend, 'ClapSoundHoldShortEnd')
+
+			checksubtype(longholdstart, 'longholdstart')
+			checksubtype(longholdend, 'longholdend')
+			checksubtype(shortholdstart, 'shortholdstart')
+			checksubtype(shortholdend, 'shortholdend')
+
+			self:addevent(beat, 'SetGameSound', {soundType = 'ClapSoundHold', filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0, soundSubtypes = {longholdend, longholdstart, shortholdend, shortholdstart}})
+		end
+
+		function level:setfreezeshotsound(beat, filename, lowcue, highcue, risercue, cymbalcue)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(filename, 'filename', 'string')
+
+			checkvar_type(lowcue, 'lowcue', 'table', true)
+			checkvar_type(highcue, 'highcue', 'table', true)
+			checkvar_type(risercue, 'risercue', 'table', true)
+			checkvar_type(cymbalcue, 'cymbalcue', 'table', true)
+
+			lowcue = setgroupsubtype(lowcue, 'FreezeshotSoundCueLow')
+			highcue = setgroupsubtype(highcue, 'FreezeshotSoundCueHigh')
+			risercue = setgroupsubtype(risercue, 'FreezeshotSoundRiser')
+			cymbalcue = setgroupsubtype(cymbalcue, 'FreezeshotSoundCymbal')
+
+			checksubtype(lowcue, 'lowcue')
+			checksubtype(highcue, 'highcue')
+			checksubtype(risercue, 'risercue')
+			checksubtype(cymbalcue, 'cymbalcue')
+
+			self:addevent(beat, 'SetGameSound', {soundType = 'FreezeshotSound', filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0, soundSubtypes = {lowcue, highcue, risercue, cymbalcue}})
+		end
+
+		function level:setburnshotsound(beat, filename, lowcue, highcue, risercue, cymbalcue)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(filename, 'filename', 'string')
+
+			checkvar_type(lowcue, 'lowcue', 'table', true)
+			checkvar_type(highcue, 'highcue', 'table', true)
+			checkvar_type(risercue, 'risercue', 'table', true)
+			checkvar_type(cymbalcue, 'cymbalcue', 'table', true)
+
+			lowcue = setgroupsubtype(lowcue, 'BurnshotSoundCueLow')
+			highcue = setgroupsubtype(highcue, 'BurnshotSoundCueHigh')
+			risercue = setgroupsubtype(risercue, 'BurnshotSoundRiser')
+			cymbalcue = setgroupsubtype(cymbalcue, 'BurnshotSoundCymbal')
+
+			checksubtype(lowcue, 'lowcue')
+			checksubtype(highcue, 'highcue')
+			checksubtype(risercue, 'risercue')
+			checksubtype(cymbalcue, 'cymbalcue')
+
+			self:addevent(beat, 'SetGameSound', {soundType = 'BurnshotSound', filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0, soundSubtypes = {lowcue, highcue, risercue, cymbalcue}})
 		end
 
 		function level:setbeatsound(beat, row, filename, volume, pitch, pan)
