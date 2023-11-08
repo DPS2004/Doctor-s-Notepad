@@ -111,9 +111,9 @@ function checkvar_enum(v, n, enum, nilAccepted)
     end
 end
 
-function checkvar_color(c, n, nilAccepted)
+function checkvar_color(c, n, nilAccepted, stackLevel)
     if c == nil and nilAccepted then return end
-    checkvar_type(c, n, 'string')
+    checkvar_type(c, n, 'string', stackLevel)
 end
 
 function disable_checkvar()
