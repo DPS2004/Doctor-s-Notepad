@@ -111,6 +111,11 @@ function checkvar_enum(v, n, enum, nilAccepted)
     end
 end
 
+function checkvar_color(c, n, nilAccepted)
+    if c == nil and nilAccepted then return end
+    checkvar_type(c, n, 'string')
+end
+
 function disable_checkvar()
     print('Parameter safety checks disabled!')
     checkvar_override = true
