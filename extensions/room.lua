@@ -1,5 +1,24 @@
 local extension = function(_level)
 	_level.initqueue.queue(2,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
+
+		create_enum('textanchor', {'UpperLeft', 'UpperCenter', 'UpperRight', 'MiddleLeft', 'MiddleCenter', 'MiddleRight', 'LowerLeft', 'LowerCenter', 'LowerRight'})
+		create_enum('textmode', {'FadeOut', 'HideAbruptly'})
+		create_enum('theme', {
+			'None', 'Intimate', 'IntimateSimple', 'InsomniacDay', 'InsomniacNight', 'Matrix', 'NeonMuseum', 'CrossesStraight', 'CrossesFalling', 'CubesFalling', 'CubesFallingNiceBlue',
+			'OrientalTechno', 'Kaleidoscope', 'PoliticiansRally', 'Rooftop', 'RooftopSummer', 'RooftopAutumn', 'BackAlley', 'Sky', 'NightSky', 'HallOfMirrors', 'CoffeeShop',
+			'CoffeeShopNight', 'Garden', 'GardenNight', 'TrainDay', 'TrainNight', 'DesertDay', 'DesertNight', 'HospitalWard', 'HospitalWardNight', 'PaigeOffice', 'Basement',
+			'ColeWardNight', 'ColeWardSunrise', 'BoyWard', 'GirlWard', 'Skyline', 'SkylineBlue', 'FloatingHeart', 'FloatingHeartWithCubes', 'FloatingHeartBroken',
+			'FloatingHeartBrokenWithCubes', 'ZenGarden', 'Space', 'RollerDisco', 'Vaporwave', 'Stadium', 'StadiumStormy', 'AthleteWard', 'AthleteWardNight', 'ProceduralTree'
+		})
+		create_enum('handpos', {'Left', 'Right', 'p1', 'p2', 'Both'})
+		create_enum('roomcontentmode', {'Center', 'ScaleToFill', 'AspectFill', 'AspectFit', 'Tiled'})
+		create_enum('bgtype', {'Color', 'Image'})
+		create_enum('bgfilter', {'NearestNeighbor', 'Bilinear'})
+		create_enum('bassdropstrength', {'Low', 'Medium', 'High'})
+		create_enum('shakestrength', {'Low', 'Medium', 'High'})
+		create_enum('textexplosionmode', {'OneColor', 'Random'})
+		create_enum('textexplosiondirection', {'Left', 'Right'})
+		create_enum('stutteraction', {'Add', 'Cancel'})
 		
 		--all of the functions you are adding to the level table go up here
 		
@@ -39,6 +58,11 @@ local extension = function(_level)
 			}
 			--move rooms
 			function room:movex(beat, x, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(x, 'x', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "x", beat, x)
@@ -46,6 +70,11 @@ local extension = function(_level)
 			end
 
 			function room:movey(beat, y, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(y, 'y', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "y", beat, y)
@@ -53,6 +82,11 @@ local extension = function(_level)
 			end
 
 			function room:movesx(beat, sx, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(sx, 'sx', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "sx", beat, sx)
@@ -60,6 +94,11 @@ local extension = function(_level)
 			end
 
 			function room:movesy(beat, sy, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(sy, 'sy', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "sy", beat, sy)
@@ -68,6 +107,11 @@ local extension = function(_level)
 			end
 			
 			function room:movepx(beat, px, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(px, 'px', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "px", beat, px)
@@ -75,6 +119,11 @@ local extension = function(_level)
 			end
 
 			function room:movepy(beat, py, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(py, 'py', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "py", beat, py)
@@ -83,6 +132,11 @@ local extension = function(_level)
 			end
 
 			function room:rotate(beat, rot, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(rot, 'rot', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "angle", beat, rot)
@@ -92,6 +146,11 @@ local extension = function(_level)
 			
 
 			function room:move(beat, p, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(p, 'p', 'table')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				for k, v in pairs(p) do
@@ -105,29 +164,16 @@ local extension = function(_level)
 							self[func](self, beat, v, duration, ease) -- dont think you can use : with this method though so gotta pass in self for the first variable
 						end
 					end
-
-					--[[
-					if k == "x" then
-						self:movex(beat, v, duration, ease)
-					elseif k == "y" then
-						self:movey(beat, v, duration, ease)
-					elseif k == "sx" then
-						self:movesx(beat, v, duration, ease)
-					elseif k == "sy" then
-						self:movesy(beat, v, duration, ease)
-					elseif k == "px" then
-						self:movepx(beat, v, duration, ease)
-					elseif k == "py" then
-						self:movepy(beat, v, duration, ease)
-					elseif k == "rotate" or k == "rot" then
-						self:rotate(beat, v, duration, ease)
-					end
-					]]
 				end
 			end
 			
 			--move cams
 			function room:camx(beat, x, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(x, 'x', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "camx", beat, x)
@@ -135,6 +181,11 @@ local extension = function(_level)
 			end
 
 			function room:camy(beat, y, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(y, 'y', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "camy", beat, y)
@@ -142,12 +193,22 @@ local extension = function(_level)
 			end
 
 			function room:camzoom(beat, z, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(z, 'z', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "camzoom", beat, z)
 				self.level:addfakeevent(beat, "updatecamzoom", {room = index, duration = duration, ease = ease})
 			end
 			function room:camrot(beat, z, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(z, 'z', 'number')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "camrot", beat, z)
@@ -155,6 +216,11 @@ local extension = function(_level)
 			end
 			
 			function room:cam(beat, p, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(p, 'p', 'table')
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(duration, 'duration', 'number', true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				for k, v in pairs(p) do
@@ -173,6 +239,9 @@ local extension = function(_level)
 			
 			--flip
 			function room:xflip(beat,state)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(state, 'state', 'boolean', true)
+
 				if type(state) ~= 'boolean' then
 					state = not getvalue(self, "xflip", beat)
 				end
@@ -181,6 +250,9 @@ local extension = function(_level)
 			end
 			
 			function room:yflip(beat,state)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(state, 'state', 'boolean', true)
+
 				if type(state) ~= 'boolean' then
 					state = not getvalue(self, "yflip", beat)
 				end
@@ -190,6 +262,9 @@ local extension = function(_level)
 
 			-- change content mode
 			function room:stretchmode(beat, state)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(state, 'state', 'boolean', true)
+
 				if type(state) ~= 'boolean' then
 					state = not getvalue(self, "stretch", beat)
 				end
@@ -199,6 +274,9 @@ local extension = function(_level)
 
 			-- mask
 			function room:mask(beat, filenames, fps)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(fps, 'fps', 'number')
+
 				filenames = filenames or ''
 				fps = fps or 30
 
@@ -214,6 +292,9 @@ local extension = function(_level)
 
 			-- perspective
 			function room:setperspective(beat, pos, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				local newcorners = {}
 
@@ -245,9 +326,22 @@ local extension = function(_level)
 			-- the times here is just a table with offsets from the base 'beat' variable for each AdvanceText event
 			-- i.e. if beat is 3 and times is {1} then there will be the floating text event at beat 3 and an Advance Text event at beat 4 (3+1)
 			function room:floatingtext(beat, text, times, x, y, size, angle, mode, showChildren, color, outlineColor, anchor, fadeOutRate)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(text, 'text', 'number')
+				checkvar_type(times, 'times', 'table', true)
+				checkvar_type(x, 'x', 'number', true)
+				checkvar_type(y, 'y', 'number', true)
+				checkvar_type(size, 'size', 'number', true)
+				checkvar_type(angle, 'angle', 'number', true)
+				checkvar_enum(mode, 'mode', enums.textmode, true)
+				checkvar_type(showChildren, 'showChildren', 'boolean', true)
+				checkvar_type(color, 'color', 'string', true)
+				checkvar_type(outlineColor, 'outlineColor', 'string', true)
+				checkvar_enum(anchor, 'anchor', enums.textanchor, true)
+				checkvar_type(fadeOutRate, 'fadeOutRate', 'number', true)
+
 				x = x or 50
 				y = y or 50
-				text = text or ''
 				times = times or {}
 				size = size or 8
 				angle = angle or 0
@@ -290,6 +384,8 @@ local extension = function(_level)
 
 			-- set theme
 			function room:settheme(beat, theme)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(theme, 'theme', enums.theme)
 				self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = theme})
 			end
 
@@ -310,6 +406,7 @@ local extension = function(_level)
 				-- properties may, additionally, be a table:
 					-- the first element of the table is the actual value
 					-- the second is the order of the property in the function
+					-- the third is an optional type of the property: if omitted, will default to 'number'
 				-- the order is used because pairs() is random :( so you never know in what order the parameters will be. the order fixes this by ordering the table using it
 				local roomPresets = {
 					Sepia = {_onTop = true},
@@ -354,7 +451,7 @@ local extension = function(_level)
 					Rain = {intensity = 100},
 					Grain = {intensity = 100},
 					Mosaic = {intensity = 100},
-					Bloom = {threshold = {0.3, 0}, intensity = {2, 1}, color = {'000000', 2}},
+					Bloom = {threshold = {0.3, 0}, intensity = {2, 1}, color = {'000000', 2, 'color'}},
 					ScreenWaves = {intensity = 100},
 					Drawing = {intensity = 100},
 					JPEG = {intensity = 100},
@@ -450,6 +547,13 @@ local extension = function(_level)
 						-- and make a base function in string form
 						local functionBase = [[
 function room:ALIAS(beat, state, ..., duration, ease)
+	checkvar_type(beat, 'beat', 'number', false, 4)
+	checkvar_type(state, 'state', 'boolean', false, 4)
+	checkvar_type(duration, 'duration', 'number', true, 4)
+	checkvar_enum(ease, 'ease', enums.ease, true, 4)
+
+	duration = duration or 0
+	ease = ease or 'Linear'
 
 	-- get real name of preset from alias
 	local preset = aliasToPreset['ALIAS'] or 'ALIAS'
@@ -513,6 +617,11 @@ end]]
 								-- generate 'PARAM = PARAM or DEFAULT' text
 								local paramt = {}
 								for _, param in ipairs(additionalProperties) do
+									if v[param][3] == 'color' then -- whatever
+										paramt[#paramt+1] = string.format('checkvar_color(%s, "%s", true, 4)', param, param)
+									else
+										paramt[#paramt+1] = string.format('checkvar_type(%s, "%s", "%s", true, 4)', param, param, v[param][3] or 'number')
+									end
 									paramt[#paramt+1] = string.format('faket.%s = %s or %s', param, param, v[param][1])
 									paramt[#paramt+1] = string.format('newt.%s = %s or %s', param, param, v[param][1])
 								end
@@ -533,7 +642,7 @@ end]]
 
 								f = loadstring(final) -- haha lmao
 
-								local env = {level = level, room = room, index = index, getvalue = getvalue, setvalue = setvalue, type = type, print = print, aliasToPreset = aliasToPreset, pairs = pairs}
+								local env = {level = level, room = room, index = index, getvalue = getvalue, setvalue = setvalue, type = type, print = print, aliasToPreset = aliasToPreset, pairs = pairs, checkvar_type = checkvar_type, checkvar_enum = checkvar_enum, checkvar_color = checkvar_color, enums = enums}
 								setfenv(f, env)   --   haha      lmao
 								
 								f()                 --                                haha                                         lmao
@@ -561,141 +670,6 @@ end]]
 
 						end
 
-						--[[
-						for _,name in ipairs(v._alias) do
-
-							local lowercase = name:lower()
-
-							-- the additionalProperties will be empty when we have a preset with only true/false (e.g. sepia) and not empty when we have a preset with more values (e.g. aberration)
-							if #additionalProperties > 0 then -- for now, let's cover presets with more values
-
-								-- we'll make the function out of a string as it's complex!
-
-								local final = '' -- ill make three functions in this so have one final string
-								local createdfunction = ''
-								local firstline = '' -- gonna use this for the other functions too
-
-								-----------------------------------
-								-- FIRST FUNCTION: room:method() --
-								-----------------------------------
-
-								-- create the first line
-								firstline = 'function room:' .. lowercase .. '(beat, state, '
-								
-								-- add every additional to the function argument, if any
-								for _,property in ipairs(additionalProperties) do
-									property = property:lower()
-									firstline = firstline .. property .. ', '
-								end
-
-								-- add the rest of the args
-								firstline = firstline .. 'duration, ease)\n'
-
-								createdfunction = firstline .. 'duration = duration or 0\nease = ease or "Linear"\n'
-
-								-- actual code
-								-- initialize stuff
-								createdfunction = createdfunction .. 'if type(state) ~= "boolean" then state = getvalue(self, "' .. lowercasekey .. '", beat) end\n'
-
-								if v._customFunc then -- if the property has a function we run that too
-									createdfunction = v._customFunc(room, createdfunction)
-								end
-
-								for _,property in ipairs(additionalProperties) do
-									property = property:lower()
-									local valuename = lowercasekey .. property -- aberration + intensity -> aberrationintensity
-									createdfunction = createdfunction .. property .. ' = ' .. property .. ' or getvalue(self, "' .. valuename .. '", beat)\n'
-								end
-
-								createdfunction = createdfunction .. '\nsetvalue(self, "' .. lowercasekey .. '", beat, state)\n'
-
-								for _,property in ipairs(additionalProperties) do
-									property = property:lower()
-									local valuename = lowercasekey .. property -- aberration + intensity -> aberrationintensity
-									createdfunction = createdfunction .. 'setvalue(self, "' .. valuename .. '", beat, ' .. property .. ')\n'
-								end
-
-								createdfunction = createdfunction .. '\nself.level:addevent(\nbeat,\n"SetVFXPreset",\n{\nrooms = level:roomtable(index),\n'
-								createdfunction = createdfunction .. 'preset = "' .. k .. '",\nenable = state,\n'
-
-								for _,property in ipairs(additionalProperties) do
-									createdfunction = createdfunction .. property .. ' = ' .. property:lower() .. ',\n'
-								end
-
-								createdfunction = createdfunction .. 'duration = duration,\nease = ease\n}\n)\n'
-
-								createdfunction = createdfunction .. 'end'
-
-								final = final .. createdfunction .. '\n\n'
-
-								-------------------------------------
-								-- SECOND FUNCTION: level:method() --
-								-------------------------------------
-
-								-- this one's simpler
-
-								-- transform from room:method(beat, arg, duration, beat) to level:method(beat, room, arg, duration, beat)
-
-								local firstlinegsub = firstline:gsub('room', 'level')
-								local beatlocation = firstlinegsub:find('beat, ')
-								local firstlinefinal = firstlinegsub:sub(1,beatlocation+5) .. 'room, ' .. firstlinegsub:sub(beatlocation+6,-1)
-
-								local parenthesis_start = firstline:find('%(')
-								local parenthesis_end = firstline:find(')')
-								local betweenparenthesis = firstline:sub(parenthesis_start, parenthesis_end)
-
-								createdfunction = firstlinefinal .. 'return level:getroom(room):' .. lowercase .. betweenparenthesis .. '\nend\n'
-
-								final = final .. createdfunction
-
-								-----------------------------------------
-								-- THIRD FUNCTION: level:ontopmethod() -- (where applicable)
-								-----------------------------------------
-
-								if v._onTop then
-
-									-- level:method(beat, room, arg, duration, beat) -> level:ontopmethod(beat, arg, duration, beat)
-
-									firstlinefinal = firstlinegsub:gsub(lowercase, 'ontop'..lowercase)
-
-									createdfunction = firstlinefinal .. 'return level:getroom(4):' .. lowercase .. betweenparenthesis .. '\nend\n'
-
-									final = final .. createdfunction
-
-								end
-
-								-- actually make the functions (thank you lua for such a function)
-								f = loadstring(final) -- haha lmao
-
-								local env = {level = level, room = room, index = index, getvalue = getvalue, setvalue = setvalue, type = type}
-								setfenv(f, env)   --   haha      lmao
-								
-								f()                 --                                haha                                         lmao
-
-							else -- now let's cover presets with just true/false!
-
-								-- this is simple enough, we just make a shorthand
-								-- don't even need to construct the function out of a string for this one!
-
-								room[lowercase] = function(room, beat, state)
-									room:setpreset(beat, k, state)
-								end
-
-								level[lowercase] = function(level, beat, room, state)
-									level:getroom(room):setpreset(beat, k, state)
-								end
-
-								if v._onTop then
-									level['ontop'..lowercase] = function(level, beat, state)
-										level:getroom(4):setpreset(beat, k, state)
-									end
-								end
-
-							end
-
-						end
-						]]
-
 					end
 
 				end
@@ -704,6 +678,10 @@ end]]
 
 			-- set or toggle a boolean vfx preset
 			function room:setpreset(beat, preset, state)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(preset, 'preset', 'string')
+				checkvar_type(state, 'state', 'boolean')
+
 				preset = tostring(preset):lower()
 				preset = aliasToPreset[preset] or preset -- allow for stuff like room:setpreset(beat, 'screentile', true) even though the preset is actually 'tilen'
 
@@ -738,6 +716,10 @@ end]]
 
 			-- get the state of a preset or of a preset's property
 			function room:getpreset(beat, preset, property)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(preset, 'preset', 'string')
+				checkvar_type(property, 'property', 'string', true)
+
 				preset = tostring(preset):lower()
 				preset = aliasToPreset[preset] or preset -- allow for stuff like room:getpreset(beat, 'screentile') even though the preset is actually 'tilen'
 				-- :)
@@ -763,6 +745,14 @@ end]]
 			end
 			
 			function room:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_color(startcolor, 'startcolor', 'string', true)
+				checkvar_type(startopacity, 'startopacity', 'number', true)
+				checkvar_color(endcolor, 'endcolor', 'string', true)
+				checkvar_type(endopacity, 'endopacity', 'number', true)
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+				checkvar_type(bg, 'bg', 'boolean', true)
 
 				startcolor = startcolor or 'ffffff'
 				startopacity = startopacity or 100
@@ -776,6 +766,10 @@ end]]
 			end
 
 			function room:pulsecamera(beat, count, frequency, strength)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(count, 'count', 'number', true)
+				checkvar_type(frequency, 'frequency', 'number', true)
+				checkvar_type(strength, 'strength', 'number', true)
 
 				count = count or 1
 				frequency = frequency or 1
@@ -786,6 +780,11 @@ end]]
 			
 			--hands
 			function room:showhand(beat,hand,instant,align)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(hand, 'hand', enums.handpos, true)
+				checkvar_type(instant, 'instant', 'boolean', true)
+				checkvar_type(align, 'align', 'boolean', true)
+
 				hand = hand or 'Right'
 				instant = instant or false
 				if align == nil then align = true end
@@ -796,6 +795,11 @@ end]]
 				
 			end
 			function room:hidehand(beat,hand,instant,align)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(hand, 'hand', enums.handpos, true)
+				checkvar_type(instant, 'instant', 'boolean', true)
+				checkvar_type(align, 'align', 'boolean', true)
+
 				hand = hand or 'Right'
 				instant = instant or false
 				if align == nil then align = true end
@@ -807,6 +811,11 @@ end]]
 			end
 			
 			function room:togglehand(beat,hand,instant,align)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(hand, 'hand', enums.handpos, true)
+				checkvar_type(instant, 'instant', 'boolean', true)
+				checkvar_type(align, 'align', 'boolean', true)
+
 				if getvalue(self, "handvis", beat) then
 					self:hidehand(beat,hand,instant,align)
 				else
@@ -818,6 +827,16 @@ end]]
 			
 			-- background
 			function room:setbg(beat,filenames,bgtype,fps,mode,sx,sy,color,filter,duration,ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(bgtype, 'bgtype', enums.bgtype, true)
+				checkvar_enum(filter, 'filter', enums.bgfilter, true)
+				checkvar_type(fps, 'fps', 'number', true)
+				checkvar_enum(mode, 'mode', enums.roomcontentmode, true)
+				checkvar_type(sx, 'sx', 'number', true)
+				checkvar_type(sy, 'sy', 'number', true)
+				checkvar_color(color, 'color')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				mode = mode or 'ScaleToFill'
 				sx = sx or 0
@@ -857,6 +876,14 @@ end]]
 
 			-- foreground
 			function room:setfg(beat,filenames,fps,mode,sx,sy,color,duration,ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(fps, 'fps', 'number', true)
+				checkvar_enum(mode, 'mode', enums.roomcontentmode, true)
+				checkvar_type(sx, 'sx', 'number', true)
+				checkvar_type(sy, 'sy', 'number', true)
+				checkvar_color(color, 'color')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				mode = mode or 'ScaleToFill'
 				sx = sx or 0
@@ -891,6 +918,10 @@ end]]
 
 			-- fade (this is the last function im commenting)
 			function room:fade(beat,opacity,duration,ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(opacity, 'opacity', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				opacity = opacity or 100
 				duration = duration or 0
@@ -911,6 +942,8 @@ end]]
 
 			end
 			function room:bassdrop(beat, strength)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(strength, 'strength', enums.bassdropstrength, true)
 
 				strength = strength or 'Low'
 
@@ -926,6 +959,9 @@ end]]
 			end
 
 			function room:shake(beat, shakelevel)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(shakelevel, 'shakelevel', enums.shakestrength, true)
+
 				shakelevel = shakelevel or 'Low'
 
 				self.level:addevent(
@@ -940,6 +976,9 @@ end]]
 			end
 
 			function room:invertcolors(beat, state)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(state, 'state', 'boolean', true)
+
 				if state == nil then
 					state = not getvalue(self, 'invert', beat)
 				end
@@ -958,6 +997,12 @@ end]]
 			end
 
 			function room:textexplosion(beat, text, color, mode, direction)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(text, 'text', 'string', true)
+				checkvar_color(color, 'color')
+				checkvar_enum(mode, 'mode', enums.textexplosionmode, true)
+				checkvar_enum(direction, 'direction', enums.textexplosiondirection, true)
+
 				text = text or ''
 				color = color or '000000'
 				mode = mode or 'OneColor'
@@ -978,6 +1023,12 @@ end]]
 			end
 
 			function room:stutter(beat, action, sourcebeat, length, loops)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(action, 'action', enums.stutteraction, true)
+				checkvar_type(sourcebeat, 'sourcebeat', 'number', true)
+				checkvar_type(length, 'length', 'number', true)
+				checkvar_type(loops, 'loops', 'number', true)
+
 				action = action or 'Add'
 				sourcebeat = sourcebeat or 0
 				length = length or 0
@@ -1009,6 +1060,8 @@ end]]
 		
 		-- get the version of a room that is needed for your usecase
 		function level:parseroom(room,returntable)
+			checkvar_type(room, 'room', 'table')
+			checkvar_type(returntable, 'returntable', 'boolean')
 			
 			if type(room) == 'table' then 
 				if room.objecttype == 'room' then
@@ -1038,7 +1091,8 @@ end]]
 		
 		
 		function level:setuprooms(beat)
-			beat = beat or 0
+			checkvar_type(beat, 'beat', 'number')
+
 			self:addevent(
 				beat,
 				"SetBackgroundColor",
@@ -1060,7 +1114,12 @@ end]]
 		
 		--reorder rooms (find a cleaner solution later)
 		function level:reorderrooms(beat,r1,r2,r3,r4)
-			beat = beat or 0
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(r1, 'r1', 'number')
+			checkvar_type(r2, 'r2', 'number')
+			checkvar_type(r3, 'r3', 'number')
+			checkvar_type(r4, 'r4', 'number')
+
 			self:addevent(
 				beat,
 				'ReorderRooms',
