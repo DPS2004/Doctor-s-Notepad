@@ -61,7 +61,7 @@ local extension = function(_level)
 		function level:comment(beat, text, color, tab, target)
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(text, 'text', 'string')
-			checkvar_type(color, 'color', 'string', true)
+			checkvar_color(color, 'color', true)
 			checkvar_type(tab, 'tab', 'string', true)
 			checkvar_type(target, 'target', 'string', true)
 
