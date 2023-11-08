@@ -117,9 +117,10 @@ local extension = function(_level)
 		end
 
 		function level:getconditionalids(conditionals, duration)
-			checkvar_type(conditionals, 'conditionals', 'table')
+			checkvar_type(conditionals, 'conditionals', 'table', true)
 			checkvar_type(duration, 'duration', 'number')
 
+			if not conditionals then return nil end
 			if #conditionals < 1 then return nil end
 
 			local ids = {}
