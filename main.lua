@@ -132,6 +132,20 @@ function create_enum(name, list)
     return new_enum
 end
 
+create_enum('ease', {
+    'Linear',
+    'InSine', 'OutSine', 'InOutSine',
+    'InQuad', 'OutQuad', 'InOutQuad', 
+    'InCubic', 'OutCubic', 'InOutCubic',
+    'InQuart', 'OutQuart', 'InOutQuart',
+    'InQuint', 'OutQuint', 'InOutQuint',
+    'InExpo', 'OutExpo', 'InOutExpo',
+    'InCirc', 'OutCirc', 'InOutCirc',
+    'InElastic', 'OutElastic', 'InOutElastic',
+    'InBack', 'OutBack', 'InOutBack',
+    'InBounce', 'OutBounce', 'InOutBounce'
+})
+
 -- Load Libraries
 json = require "lib/json" -- json parser
 
