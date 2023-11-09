@@ -1060,7 +1060,6 @@ end]]
 		
 		-- get the version of a room that is needed for your usecase
 		function level:parseroom(room,returntable)
-			checkvar_type(room, 'room', 'table')
 			checkvar_type(returntable, 'returntable', 'boolean')
 			
 			if type(room) == 'table' then 
