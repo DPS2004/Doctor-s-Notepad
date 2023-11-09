@@ -2,6 +2,7 @@ local extension = function(_level)
 	_level.initqueue.queue(1,function(level,beat)
 
 		create_enum('rowborder', {'None', 'Outline', 'Glow'})
+		create_enum('expressiontarget', {'Neutral', 'Happy', 'Barely', 'Missed', 'Anticipation', 'Beep'})
 
 		--defines a row object
 		function level:getrow(index)
@@ -300,8 +301,9 @@ local extension = function(_level)
 			
 			function row:swapexpression(beat,target,expression)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(target, 'target', 'string')
+				checkvar_enum(target, 'target', enums.expressiontarget)
 				checkvar_type(expression, 'expression', 'string')
+				
 
 				self.level:addevent(beat, "PlayExpression", {row = index, target = target, expression = expression, replace = true})
 			end
@@ -526,6 +528,11 @@ local extension = function(_level)
 		end
 
 		function level:alloutline(beat, color, opacity, duration, ease)
+			--backwards compatibility with older levels
+			beat = beat or 0
+			color = color or '000000'
+			opacity = opacity or 1
+			
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_color(color, 'color')
 			checkvar_type(opacity, 'opacity', 'number')

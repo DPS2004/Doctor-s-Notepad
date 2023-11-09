@@ -548,7 +548,7 @@ local extension = function(_level)
 						local functionBase = [[
 function room:ALIAS(beat, state, ..., duration, ease)
 	checkvar_type(beat, 'beat', 'number', false, 4)
-	checkvar_type(state, 'state', 'boolean', false, 4)
+	checkvar_type(state, 'state', 'boolean', true, 4)
 	checkvar_type(duration, 'duration', 'number', true, 4)
 	checkvar_enum(ease, 'ease', enums.ease, true, 4)
 
@@ -680,7 +680,7 @@ end]]
 			function room:setpreset(beat, preset, state)
 				checkvar_type(beat, 'beat', 'number')
 				checkvar_type(preset, 'preset', 'string')
-				checkvar_type(state, 'state', 'boolean')
+				checkvar_type(state, 'state', 'boolean',true)
 
 				preset = tostring(preset):lower()
 				preset = aliasToPreset[preset] or preset -- allow for stuff like room:setpreset(beat, 'screentile', true) even though the preset is actually 'tilen'
@@ -834,7 +834,7 @@ end]]
 				checkvar_enum(mode, 'mode', enums.roomcontentmode, true)
 				checkvar_type(sx, 'sx', 'number', true)
 				checkvar_type(sy, 'sy', 'number', true)
-				checkvar_color(color, 'color')
+				checkvar_color(color, 'color',true)
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -1090,6 +1090,8 @@ end]]
 		
 		
 		function level:setuprooms(beat)
+			--backwards compatibility with older levels
+			beat = beat or 0
 			checkvar_type(beat, 'beat', 'number')
 
 			self:addevent(

@@ -50,7 +50,7 @@ bgroom:setbg(0,'bg.png','Image',nil,'AspectFit')
 -- intro
 
 ontop:flash(0,'000000',100)
-ontop:flash(0.01,'000000',100,'000000',0,1,'linear')
+ontop:flash(0.01,'000000',100,'000000',0,1)
 
 samurai:move(0.01, {x=20+2.5,crotate = 90},1.2,'outSine')
 
@@ -78,10 +78,10 @@ level:endtag()
 
 level:offset(7)
 
-bird:swapexpression(0,'neutral','flying')
-bird:swapexpression(0,'missed','flyingSad')
-bird:swapexpression(0,'happy','flyingHappy')
-bird:swapexpression(0,'barely','flyingSad')
+bird:swapexpression(0,'Neutral','flying')
+bird:swapexpression(0,'Missed','flyingSad')
+bird:swapexpression(0,'Happy','flyingHappy')
+bird:swapexpression(0,'Barely','flyingSad')
 
 bird:move(0,{x=20-2.5,y=56},2.1,'linear')
 bird:move(2.2,{csx=-1.1},1,'inOutSine')
@@ -140,7 +140,7 @@ samurai:move(13,{csx=-1.1},0.3,'inOutSine')
 bird:move(13.4,{csx=-1.1},0.3,'inOutSine')
 bird:move(13.5,{y=48},0.7,'linear')
 
-bird:swapexpression(14.2,'neutral','neutral')
+bird:swapexpression(14.2,'Neutral','Neutral')
 bird:playexpression(14.75,'happy')
 samurai:playexpression(14.75,'happy')
 

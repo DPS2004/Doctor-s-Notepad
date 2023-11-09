@@ -80,7 +80,7 @@ local extension = function(_level)
 		function level:speed(beat, speed, dmult, ease, duration)
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(speed, 'speed', 'number')
-			checkvar_type(dmult, 'dmult', 'number', true)
+			checkvar_type(dmult, 'dmult', 'boolean', true)
 			checkvar_enum(ease, 'ease', enums.ease, true)
 			checkvar_type(duration, 'duration', 'number', true)
 

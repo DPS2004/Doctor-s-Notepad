@@ -85,9 +85,22 @@ function checkvar_type(v, n, t, nilAccepted, stackLevel)
     end
 end
 
+shown_ease_warning = false
+
 function checkvar_enum(v, n, enum, nilAccepted)
     if checkvar_override then return end
     if v == nil and nilAccepted then return end
+	
+	if enum == enums.ease then
+		if enums.ease_lower[v] then
+			if not shown_ease_warning then
+				print('WARNING: camelCase for eases may not be supported for all events.')
+				shown_ease_warning = true
+			end
+			return
+		end
+	end
+	
     if not enum[v] then
         checkvar_throw('invalid type exception: ' .. n .. ' is ' .. quoteifstring(v) .. ' but must be one of ' .. enum.__stringformat, 4)
     end
@@ -135,6 +148,20 @@ create_enum('ease', {
     'InElastic', 'OutElastic', 'InOutElastic',
     'InBack', 'OutBack', 'InOutBack',
     'InBounce', 'OutBounce', 'InOutBounce'
+})
+
+create_enum('ease_lower', {
+    'linear',
+    'inSine', 'outSine', 'inOutSine',
+    'inQuad', 'outQuad', 'inOutQuad', 
+    'inCubic', 'outCubic', 'inOutCubic',
+    'inQuart', 'outQuart', 'inOutQuart',
+    'inQuint', 'outQuint', 'inOutQuint',
+    'inExpo', 'outExpo', 'inOutExpo',
+    'inCirc', 'outCirc', 'inOutCirc',
+    'inElastic', 'outElastic', 'inOutElastic',
+    'inBack', 'outBack', 'inOutBack',
+    'inBounce', 'outBounce', 'inOutBounce'
 })
 
 -- Load Libraries
