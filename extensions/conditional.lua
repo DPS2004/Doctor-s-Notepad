@@ -157,8 +157,8 @@ local extension = function(_level)
 
 		function level:conditional(conditionals, duration, func)
 			checkvar_type(conditionals, 'conditionals', 'table')
-			checkvar_type(duration, 'duration', 'number')
 			checkvar_type(func, 'func', 'function', true)
+			duration = duration or 0
 
 			if not conditionals[1] then -- if this is not a list, and just a conditional
 				conditionals = {conditionals} -- make it a list to not have issues later
