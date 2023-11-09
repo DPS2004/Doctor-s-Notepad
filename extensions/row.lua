@@ -1,5 +1,8 @@
 local extension = function(_level)
 	_level.initqueue.queue(1,function(level,beat)
+
+		create_enum('rowborder', {'None', 'Outline', 'Glow'})
+
 		--defines a row object
 		function level:getrow(index)
 			if level.rows[index] then
@@ -55,11 +58,19 @@ local extension = function(_level)
 			}
 
 			function row:setroom(beat, room)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(room, 'room', 'number')
+
 				setvalue(self, "room", beat, room)
 				self.level:addfakeevent(beat, "updaterowx", {row = index, duration = 0, ease = "Linear"})
 			end
 
 			function row:movex(beat, x, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(x, 'x', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "x", beat, x)
@@ -67,6 +78,11 @@ local extension = function(_level)
 			end
 
 			function row:movey(beat, y, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(y, 'y', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "y", beat, y)
@@ -74,6 +90,11 @@ local extension = function(_level)
 			end
 			
 			function row:movesx(beat, x, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(x, 'x', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "sx", beat, x)
@@ -81,12 +102,22 @@ local extension = function(_level)
 			end
 
 			function row:movesy(beat, y, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(y, 'y', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "sy", beat, y)
 				self.level:addfakeevent(beat, "updaterowsy", {row = index, duration = duration, ease = ease})
 			end
 			function row:rotate(beat, rot, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(rot, 'rot', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "rot", beat, rot)
@@ -94,6 +125,11 @@ local extension = function(_level)
 			end
 
 			function row:movepivot(beat, pivot, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(pivot, 'pivot', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "pivot", beat, pivot)
@@ -102,6 +138,11 @@ local extension = function(_level)
 			
 			
 			function row:movecx(beat, x, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(x, 'x', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "cx", beat, x)
@@ -109,12 +150,22 @@ local extension = function(_level)
 			end
 
 			function row:movecy(beat, y, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(y, 'y', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "cy", beat, y)
 				self.level:addfakeevent(beat, "updaterowcy", {row = index, duration = duration, ease = ease})
 			end
 			function row:crotate(beat, rot, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(rot, 'rot', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "crot", beat, rot)
@@ -122,6 +173,11 @@ local extension = function(_level)
 			end
 
 			function row:movecsx(beat, x, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(x, 'x', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "csx", beat, x)
@@ -129,6 +185,11 @@ local extension = function(_level)
 			end
 
 			function row:movecsy(beat, y, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(y, 'y', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "csy", beat, y)
@@ -136,6 +197,11 @@ local extension = function(_level)
 			end
 
 			function row:movehx(beat, x, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(x, 'x', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "hx", beat, x)
@@ -143,12 +209,22 @@ local extension = function(_level)
 			end
 
 			function row:movehy(beat, y, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(y, 'y', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "hy", beat, y)
 				self.level:addfakeevent(beat, "updaterowhy", {row = index, duration = duration, ease = ease})
 			end
 			function row:hrotate(beat, rot, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(rot, 'rot', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "hrot", beat, rot)
@@ -156,6 +232,11 @@ local extension = function(_level)
 			end
 
 			function row:movehsx(beat, x, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(x, 'x', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "hsx", beat, x)
@@ -163,6 +244,11 @@ local extension = function(_level)
 			end
 
 			function row:movehsy(beat, y, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(y, 'y', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "hsy", beat, y)
@@ -171,6 +257,11 @@ local extension = function(_level)
 			
 
 			function row:move(beat, p, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(p, 'p', 'table')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				for k, v in pairs(p) do
@@ -201,20 +292,24 @@ local extension = function(_level)
 			
 			
 			function row:playexpression(beat,expression)
-				beat = beat or 0
-				expression = expression or 'neutral'
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(expression, 'expression', 'string')
+
 				self.level:addevent(beat, "PlayExpression", {row = index, expression = expression, replace = false})
 			end
 			
 			function row:swapexpression(beat,target,expression)
-				beat = beat or 0
-				target = target or 'neutral'
-				expression = expression or 'neutral'
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(target, 'target', 'string')
+				checkvar_type(expression, 'expression', 'string')
+
 				self.level:addevent(beat, "PlayExpression", {row = index, target = target, expression = expression, replace = true})
 			end
 
 			-- set hideAtStart
 			function row:setvisibleatstart(vis)
+				checkvar_type(vis, 'vis', 'boolean', true)
+
 				if vis == nil then
 					vis = false
 				end
@@ -228,8 +323,13 @@ local extension = function(_level)
 			end
 
 			function row:setborder(beat, bordertype, color, opacity, duration, ease)
-				color = color or "000000"
-				opacity = opacity or 100
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(bordertype, 'bordertype', enums.rowborder)
+				checkvar_color(color, 'color')
+				checkvar_type(opacity, 'opacity', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "border", beat, bordertype)
@@ -240,8 +340,13 @@ local extension = function(_level)
 			end
 
 			function row:settint(beat, showtint, color, opacity, duration, ease)
-				color = color or "FFFFFF"
-				opacity = opacity or 100
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(showtint, 'showtint', 'boolean')
+				checkvar_color(color, 'color')
+				checkvar_type(opacity, 'opacity', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
 				duration = duration or 0
 				ease = ease or "Linear"
 				setvalue(self, "tint", beat, showtint)
@@ -252,6 +357,10 @@ local extension = function(_level)
 			end
 
 			function row:setopacity(beat, opacity, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(opacity, 'opacity', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				setvalue(self, "opacity", beat, opacity)
 				self.level:addfakeevent(beat, "updaterowtint", {duration = duration, ease = ease, row = index})
@@ -259,6 +368,8 @@ local extension = function(_level)
 			end
 			
 			function row:show(beat, smooth)
+				checkvar_type(beat, 'beat', 'number')
+
 				beat = beat or 0
 				smooth = smooth or 0
 				local smoothn = smooth
@@ -281,6 +392,8 @@ local extension = function(_level)
 			end
 			
 			function row:hide(beat, smooth)
+				checkvar_type(beat, 'beat', 'number')
+
 				smooth = smooth or 0
 				local smoothn = smooth
 				if type(smooth) == 'boolean' then
@@ -300,6 +413,8 @@ local extension = function(_level)
 			end
 			
 			function row:showchar(beat, smooth)
+				checkvar_type(beat, 'beat', 'number')
+
 				smooth = smooth or 0
 				local smoothn = smooth
 				if type(smooth) == 'boolean' then
@@ -321,6 +436,8 @@ local extension = function(_level)
 			end
 			
 			function row:showrow(beat, smooth)
+				checkvar_type(beat, 'beat', 'number')
+
 				smooth = smooth or 0
 				local smoothn = smooth
 				if type(smooth) == 'boolean' then
@@ -342,6 +459,8 @@ local extension = function(_level)
 			end
 			
 			function row:togglevis(beat,smooth)
+				checkvar_type(beat, 'beat', 'number')
+
 				if getvalue(self, "hidden", beat) then
 					self:show(beat,smooth)
 				else
@@ -369,6 +488,13 @@ local extension = function(_level)
 		
 		-- border every row
 		function level:allborder(beat, bordertype, color, opacity, duration, ease)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_enum(bordertype, 'bordertype', enums.rowborder)
+			checkvar_color(color, 'color')
+			checkvar_type(opacity, 'opacity', 'number')
+			checkvar_type(duration, 'duration', 'number', true)
+			checkvar_enum(ease, 'ease', enums.ease, true)
+
 			for k, v in pairs(self.rows) do
 				v:setborder(beat, bordertype, color, opacity, duration, ease)
 			end
@@ -376,17 +502,36 @@ local extension = function(_level)
 
 		-- tint every row
 		function level:alltint(beat, showtint, color, opacity, duration, ease)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(showtint, 'showtint', 'boolean')
+			checkvar_color(color, 'color')
+			checkvar_type(opacity, 'opacity', 'number')
+			checkvar_type(duration, 'duration', 'number', true)
+			checkvar_enum(ease, 'ease', enums.ease, true)
+
 			for k, v in pairs(self.rows) do
 				v:settint(beat, showtint, color, opacity, duration, ease)
 			end
 		end
 
 		function level:allglow(beat, color, opacity, duration, ease)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_color(color, 'color')
+			checkvar_type(opacity, 'opacity', 'number')
+			checkvar_type(duration, 'duration', 'number', true)
+			checkvar_enum(ease, 'ease', enums.ease, true)
+
 			beat = beat or 0
 			self:allborder(beat, "Glow", color, opacity, duration, ease)
 		end
 
 		function level:alloutline(beat, color, opacity, duration, ease)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_color(color, 'color')
+			checkvar_type(opacity, 'opacity', 'number')
+			checkvar_type(duration, 'duration', 'number', true)
+			checkvar_enum(ease, 'ease', enums.ease, true)
+
 			beat = beat or 0
 			self:allborder(beat, "Outline", color, opacity, duration, ease)
 		end
