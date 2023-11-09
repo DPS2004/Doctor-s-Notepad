@@ -243,7 +243,7 @@ function rd.load(filename)
 			end
 		end
 		return true
-	end	
+	end
 
     -- save level to file, and resolve fake events
 	

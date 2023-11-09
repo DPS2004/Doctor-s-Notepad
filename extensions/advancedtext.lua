@@ -5,6 +5,20 @@ local extension = function(_level)
 		
 		--typewriter effect
 		local function roomwrite(self, beat,text,speed,duration,x,y,size,angle,mode,color,outlineColor,anchor)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(text, 'text', 'number')
+			checkvar_type(speed, 'speed', 'number')
+			checkvar_type(duration, 'duration', 'number')
+			checkvar_type(times, 'times', 'table', true)
+			checkvar_type(x, 'x', 'number', true)
+			checkvar_type(y, 'y', 'number', true)
+			checkvar_type(size, 'size', 'number', true)
+			checkvar_type(angle, 'angle', 'number', true)
+			checkvar_enum(mode, 'mode', enums.textmode, true)
+			checkvar_color(color, 'color', true)
+			checkvar_color(outlineColor, 'outlineColor', true)
+			checkvar_enum(anchor, 'anchor', enums.textanchor, true)
+
 			mode = mode or 'HideAbruptly'
 			--split text up
 			local length = #text
@@ -27,7 +41,7 @@ local extension = function(_level)
 			return timetable[#timetable]
 		end
 		
-		function level:write(self,beat,room,text,speed,duration,x,y,size,angle,mode,color,outlineColor,anchor)
+		function level:write(beat,room,text,speed,duration,x,y,size,angle,mode,color,outlineColor,anchor)
 			return self.rooms[self:parseroom(room)]:write(beat,text,speed,duration,x,y,size,angle,mode,color,outlineColor,anchor)
 		end
 		

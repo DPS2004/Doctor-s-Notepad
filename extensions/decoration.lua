@@ -1,5 +1,7 @@
 local extension = function(_level)
 	_level.initqueue.queue(3,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
+
+		create_enum('decoborder', {'None', 'Outline', 'Glow'})
 		
 		--all of the functions you are adding to the level table go up here
 	
@@ -61,8 +63,7 @@ local extension = function(_level)
 
 
 			function deco:setvisibleatstart(visible)
-
-				visible = not not visible -- nil, false -> false; other cases -> true
+				checkvar_type(visible, 'visible', 'boolean')
 
 				setvalue(self, 'visible', 0, visible)
 				self.visibleatstart = visible
@@ -70,6 +71,8 @@ local extension = function(_level)
 			end
 
 			function deco:setroom(beat, room)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(room, 'room', 'number')
 
 				setvalue(self, 'room', beat, room)
 				self.level:addfakeevent(beat, 'updatedecox', {idx = self.idx, target = self.id, duration = 0, ease = 'Linear'})
@@ -77,6 +80,10 @@ local extension = function(_level)
 			end
 
 			function deco:movex(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				duration = duration or 0
 				ease = ease or 'Linear'
@@ -86,6 +93,10 @@ local extension = function(_level)
 			end
 
 			function deco:movey(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				duration = duration or 0
 				ease = ease or 'Linear'
@@ -95,6 +106,10 @@ local extension = function(_level)
 			end
 
 			function deco:movesx(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				duration = duration or 0
 				ease = ease or 'Linear'
@@ -104,6 +119,10 @@ local extension = function(_level)
 			end
 
 			function deco:movesy(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				duration = duration or 0
 				ease = ease or 'Linear'
@@ -113,6 +132,10 @@ local extension = function(_level)
 			end
 
 			function deco:movepx(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				duration = duration or 0
 				ease = ease or 'Linear'
@@ -122,6 +145,10 @@ local extension = function(_level)
 			end
 
 			function deco:movepy(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				duration = duration or 0
 				ease = ease or 'Linear'
@@ -131,6 +158,10 @@ local extension = function(_level)
 			end
 
 			function deco:rotate(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				duration = duration or 0
 				ease = ease or 'Linear'
@@ -140,6 +171,10 @@ local extension = function(_level)
 			end
 
 			function deco:move(beat, t, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(t, 't', 'table')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				duration = duration or 0
 				ease = ease or 'Linear'
@@ -158,6 +193,7 @@ local extension = function(_level)
 			end
 
 			function deco:show(beat)
+				checkvar_type(beat, 'beat', 'number')
 
 				setvalue(self, 'visible', beat, true)
 
@@ -166,6 +202,7 @@ local extension = function(_level)
 			end
 
 			function deco:hide(beat)
+				checkvar_type(beat, 'beat', 'number')
 
 				setvalue(self, 'visible', beat, false)
 
@@ -174,6 +211,8 @@ local extension = function(_level)
 			end
 
 			function deco:playexpression(beat, expression)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(expression, 'expression', 'string')
 
 				beat = beat or 0
 				expression = expression or 'neutral'
@@ -183,9 +222,13 @@ local extension = function(_level)
 			end
 
 			function deco:setborder(beat, bordertype, color, opacity, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(bordertype, 'bordertype', enums.decoborder)
+				checkvar_color(color, 'color')
+				checkvar_type(opacity, 'opacity', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
-				color = color or "000000"
-				opacity = opacity or 100
 				duration = duration or 0
 				ease = ease or "Linear"
 
@@ -198,9 +241,13 @@ local extension = function(_level)
 			end
 
 			function deco:settint(beat, showtint, color, opacity, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(showtint, 'showtint', 'boolean')
+				checkvar_color(color, 'color')
+				checkvar_type(opacity, 'opacity', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
 
-				color = color or "FFFFFF"
-				opacity = opacity or 100
 				duration = duration or 0
 				ease = ease or "Linear"
 
@@ -213,7 +260,13 @@ local extension = function(_level)
 			end
 
 			function deco:setopacity(beat, opacity, duration, ease)
-				ease = ease or 'linear'
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(opacity, 'opacity', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
+				duration = duration or 0
+				ease = ease or 'Linear'
 				setvalue(self, "opacity", beat, opacity)
 				self.level:addfakeevent(beat, "updatedecotint", {idx = self.idx, target = self.id, duration = duration, ease = ease})
 

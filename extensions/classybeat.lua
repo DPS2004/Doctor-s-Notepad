@@ -285,6 +285,8 @@ local extension = function(_level)
 		end
 
 		local function reposition_all_classy(beat, row, duration, ease)
+			duration = duration or 0
+			ease = ease or 'Linear'
 
 			for i = 1, CLASSYCOUNT do
 				reposition_classy(beat, row, i, duration, ease)
@@ -534,7 +536,9 @@ local extension = function(_level)
 
 			-- generate classybeat stuff
 			function row:classyinit(disableHeartCrack)
-				row._classylistinit = function()
+				checkvar_type(disableHeartCrack, 'disableHeartCrack', 'boolean', true)
+
+				row.classyinit = function()
 					error('classyinit() already called for this row!', 2)
 				end
 
@@ -1029,7 +1033,7 @@ local extension = function(_level)
 
 					level:endconditional()
 
-					level:rdcode(classyHitTaggedEventsBeat, variable .. '++', 100)
+					level:rdcode(classyHitTaggedEventsBeat, variable .. '++', 'OnBar', 100)
 					level:endtag()
 
 				elseif not disableHeartCrack and varCount >= MAXVARCOUNT then
@@ -1052,6 +1056,7 @@ local extension = function(_level)
 				end
 
 				function row:showclassy(beat)
+					checkvar_type(beat, 'beat', 'number')
 
 					if getvalue(row, 'hidden', beat) then return end -- do nothing more if the row is hidden
 
@@ -1065,6 +1070,8 @@ local extension = function(_level)
 				end
 
 				function row:hideclassy(beat)
+					checkvar_type(beat, 'beat', 'number')
+
 					local hidden = getvalue(row, 'classyHidden', beat)
 					setvalue(row, 'classyHidden', beat, true)
 
@@ -1082,10 +1089,16 @@ local extension = function(_level)
 
 				-- makes classybeats' movements delayed by some amount of beats, good for fancy wavey effects and such
 				function row:delayclassy(beat, delay)
-					setvalue(row, 'classyDelay', beat, delay or 0)
+					checkvar_type(beat, 'beat', 'number')
+					checkvar_type(delay, 'delay', 'number')
+
+					setvalue(row, 'classyDelay', beat, delay)
 				end
 
 				function row:classyusepivot(beat, usePivot)
+					checkvar_type(beat, 'beat', 'number')
+					checkvar_type(usePivot, 'usePivot', 'boolean')
+
 					setvalue(row, 'classyPositionUsePivot', beat, not not usePivot)
 
 					for i = 1, CLASSYCOUNT do
@@ -1095,11 +1108,23 @@ local extension = function(_level)
 				end
 
 				function row:lockposition(beat, lock)
+					checkvar_type(beat, 'beat', 'number')
+					checkvar_type(lock, 'lock', 'boolean')
+
 					setvalue(row, 'classyLocked', beat, not not lock)
 
 				end
 
 				function row:classyoffset(beat, part, p, duration, ease)
+					checkvar_type(beat, 'beat', 'number')
+					checkvar_type(part, 'part', 'number')
+					checkvar_type(p, 'p', 'table')
+					checkvar_type(duration, 'duration', 'number', true)
+					checkvar_enum(ease, 'ease', enums.ease, true)
+
+					duration = duration or 0
+					ease = ease or 'Linear'
+
 					if not getvalue(row, 'classyLocked', beat) then return end
 					if part < 1 then part = 9 end -- connector patch lol
 

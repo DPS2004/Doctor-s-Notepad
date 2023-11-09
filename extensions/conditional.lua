@@ -1,7 +1,7 @@
 local extension = function(_level)
 	_level.initqueue.queue(7,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
-		
-		--all of the functions you are adding to the level table go up here
+
+		create_enum('rowhitjudgement', {'VeryEarly', 'SlightlyEarly', 'Perfect', 'SlightlyLate', 'VeryLate', 'AnyEarlyOrLate', 'Missed'})
 	
 		local function genericconditional(name, type)
 			local cond = {}
@@ -34,6 +34,9 @@ local extension = function(_level)
 		end
 
 		function level:customconditional(name, expression)
+			checkvar_type(name, 'name', 'string')
+			checkvar_type(expression, 'expression', 'string')
+
 			local cond = genericconditional(name, 'Custom')
 
 			cond.expression = expression
@@ -42,9 +45,11 @@ local extension = function(_level)
 			return cond
 		end
 
-		-- result can be
-		-- VeryEarly, SlightlyEarly, Perfect, SlightlyLate, VeryLate, AnyEarlyOrLate, Missed
 		function level:lasthitconditional(name, row, result)
+			checkvar_type(name, 'name', 'string')
+			checkvar_type(row, 'row', 'number')
+			checkvar_enum(result, 'result', enums.rowhitjudgement)
+
 			local cond = genericconditional(name, 'LastHit')
 
 			if type(row) == 'table' then -- row object, get its id
@@ -64,6 +69,9 @@ local extension = function(_level)
 		end
 
 		function level:timesexecutedconditional(name, times)
+			checkvar_type(name, 'name', 'string')
+			checkvar_type(times, 'times', 'number')
+
 			local cond = genericconditional(name, 'TimesExecuted')
 
 			cond.maxTimes = times
@@ -75,6 +83,9 @@ local extension = function(_level)
 		-- language can be
 		-- English, Spanish, Portuguese, ChineseSimplified, ChineseTraditional, Korean, Polish, Japanese, German
 		function level:languageconditional(name, language)
+			checkvar_type(name, 'name', 'string')
+			checkvar_type(language, 'language', 'number')
+
 			local cond = genericconditional(name, 'Language')
 
 			cond.language = language
@@ -84,6 +95,9 @@ local extension = function(_level)
 		end
 
 		function level:playermodeconditional(name, isTwoPlayer)
+			checkvar_type(name, 'name', 'string')
+			checkvar_type(isTwoPlayer, 'isTwoPlayer', 'boolean')
+
 			local cond = genericconditional(name, 'PlayerMode')
 
 			cond.isTwoPlayer = not not isTwoPlayer
@@ -93,6 +107,8 @@ local extension = function(_level)
 		end
 
 		function level:getconditional(idx)
+			checkvar_type(idx, 'idx', 'number')
+
 			if idx < #level.data.conditionals then
 				return level.data.conditionals[idx + 1]
 			else
@@ -101,6 +117,9 @@ local extension = function(_level)
 		end
 
 		function level:getconditionalids(conditionals, duration)
+			checkvar_type(conditionals, 'conditionals', 'table', true)
+			checkvar_type(duration, 'duration', 'number')
+
 			if not conditionals then return nil end
 			if #conditionals < 1 then return nil end
 
@@ -121,7 +140,8 @@ local extension = function(_level)
 		end
 
 		function level:copyconditionals(conditionals)
-			if not conditionals then return nil end
+			checkvar_type(conditionals, 'conditionals', 'table')
+
 			local copies = {}
 
 			for i = 1, #conditionals do
@@ -136,6 +156,10 @@ local extension = function(_level)
 		end
 
 		function level:conditional(conditionals, duration, func)
+			checkvar_type(conditionals, 'conditionals', 'table')
+			checkvar_type(func, 'func', 'function', true)
+			duration = duration or 0
+
 			if not conditionals[1] then -- if this is not a list, and just a conditional
 				conditionals = {conditionals} -- make it a list to not have issues later
 			end

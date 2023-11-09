@@ -4,19 +4,30 @@ local extension = function(_level)
 		--all of the functions you are adding to the level table go up here
 		
 		function level:rgb(r,g,b)
+			checkvar_type(r, 'r', 'number')
+			checkvar_type(g, 'g', 'number')
+			checkvar_type(b, 'b', 'number')
 			return string.format("%02X%02X%02X", math.floor(r+0.5), math.floor(g+0,5), math.floor(b+0,5))
 		end
 		
 		function level:rgba(r,g,b,a)
+			checkvar_type(r, 'r', 'number')
+			checkvar_type(g, 'g', 'number')
+			checkvar_type(b, 'b', 'number')
+			checkvar_type(a, 'a', 'number')
 			return string.format("%02X%02X%02X%02X", math.floor(r+0,5), math.floor(g+0,5), math.floor(b+0,5), math.floor(a+0,5))
 		end
 
 		-- transforms number from 0-100 to 0-255 then to hex format
 		function level:alpha(a)
+			checkvar_type(a, 'a', 'number')
 			return string.format("%02X", math.floor(a*2.55+0.5))
 		end
 		
 		function level:hsvraw(h,s,v)
+			checkvar_type(h, 'h', 'number')
+			checkvar_type(s, 's', 'number')
+			checkvar_type(v, 'v', 'number')
 			--adapted from https://github.com/EmmanuelOga/columns/blob/master/utils/color.lua
 			h = h / 255
 			s = s / 255
@@ -41,16 +52,27 @@ local extension = function(_level)
 		end
 		
 		function level:hsvaraw(h,s,v,a)
+			checkvar_type(h, 'h', 'number')
+			checkvar_type(s, 's', 'number')
+			checkvar_type(v, 'v', 'number')
+			checkvar_type(a, 'a', 'number')
 			local r,g,b = self:hsvraw(h,s,v)
 			return r,g,b,a
 		end
 		
 		function level:hsv(h,s,v)
+			checkvar_type(h, 'h', 'number')
+			checkvar_type(s, 's', 'number')
+			checkvar_type(v, 'v', 'number')
 			local r,g,b = self:hsvraw(h,s,v)
 			return self:rgb(r,g,b)
 		end
 		
 		function level:hsva(h,s,v,a)
+			checkvar_type(h, 'h', 'number')
+			checkvar_type(s, 's', 'number')
+			checkvar_type(v, 'v', 'number')
+			checkvar_type(a, 'a', 'number')
 			local r,g,b = self:hsvraw(h,s,v)
 			return self:rgba(r,g,b,a)
 		end

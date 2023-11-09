@@ -1,24 +1,57 @@
 local extension = function(_level)
 	_level.initqueue.queue(5, function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
+
+		create_enum('cuetype', {
+			'SayReaDyGetSetGoNew', 'SayGetSetGo', 'SayReaDyGetSetOne', 'SayGetSetOne', 'SayReadyGetSetGo', 'JustSayReady',
+			'JustSayRea', 'JustSayAnd', 'JustSayStop', 'JustSayDy', 'JustSayGo', 'JustSayAndStop', 'JustSayGet', 'JustSaySet',
+			'Count1', 'Count2', 'Count3', 'Count4', 'Count5'
+		})
+
+		create_enum('cuevoice', {'Nurse', 'NurseTired', 'IanExcited', 'IanCalm', 'IanSlow', 'NoneBottom', 'NoneTop'})
+
+		create_enum('voicesource', {
+			'JyiCount', 'JyiCountFast', 'JyiCountTired', 'JyiCountVeryTired', 'JyiCountJapanese', 'JyiCountLegacy',
+			'IanCount', 'IanCountFast', 'IanCountCalm', 'IanCountSlow', 'IanCountSlower',
+			'BirdCount', 'OwlCount', 'WhistleCount'
+		})
+
+		create_enum('beatsound', {
+			'None', 'Shaker', 'ShakerHi', 'Stick', 'StickOld', 'Sidestick', 'Punch', 'Ride2',
+			'Kick', 'KickChroma', 'KickClean', 'KickTight', 'KickHouse', 'KickRupture', 'KickEcho',
+			'Hammer', 'Chuck', 'ClosedHat', 'HatTight', 'HatHouse', 'Sizzle', 'ClavesLow', 'ClavesHigh',
+			'TomLowE', 'TomMidG', 'TomMidB', 'TomHighD', 'WoodblockHigh', 'WoodblockLow', 'TriangleMute', 'Cowbell'
+		})
+
+		create_enum('playsoundtype', {'CueSound', 'MusicSound', 'BeatSound', 'HitSound', 'OtherSound'})
+
+		create_enum('heartexplosioninterval', {'OneBeatAfter', 'Instant', 'GatherNoCeil', 'GatherAndCeil'})
+
+		create_enum('rowtype', {'Classic', 'Oneshot'})
+
+		create_enum('clapsound', {
+			'ClapHit', 'ClapHitP2', 'ClapHitCPU', 'ReverbClap', 'ClapHitMassivePreEcho', 'ClapHitEcho',
+			'SnareAcoustic2', 'SnareAcoustic4', 'SnareHouse', 'SnareVapor'
+		})
+
+		create_enum('gamesound', {
+			'SmallMistake', 'BigMistake',
+			'Hand1PopSound', 'Hand2PopSound',
+			'HeartExplosion', 'HeartExplosion2', 'HeartExplosion3',
+			'Skipshot', 'ClapSoundHold', 'FreezeshotSound', 'BurnshotSound'
+		})
+
+		create_enum('voicesource_oneshot', {'JyiCount', 'IanCountEnglish', 'IanCountEnglishFast', 'IanCountEnglishCalm'})
 		
 		--all of the functions you are adding to the level table go up here
-		
-		-- future notes for documentation
-
-		-- ctype can be any of the below
-		-- SayReaDyGetSetGoNew, SayGetSetGo, SayReaDyGetSetOne, SayGetSetOne, SayReadyGetSetGo, JustSayReady,
-		-- JustSayRea, JustSayAnd, JustSayStop, JustSayDy, JustSayGo, JustSayAndStop, JustSayGet, JustSaySet,
-		-- Count1, Count2, Count3, Count4, Count5
-
-		-- voice can be any of the below
-		-- Nurse, NurseTired, IanExcited, IanCalm, IanSlow, NoneBottom, NoneTop
 
 		function level:cue(beat, ctype, voice, volume, tick)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(tick, 'tick', 'number', true)
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_enum(ctype, 'ctype', enums.cuetype)
+			checkvar_enum(voice, 'voice', enums.cuevoice)
 
-			beat = beat or 0
-			ctype = ctype or "SayGetSetGo"
 			tick = tick or 1
-			voice = voice or 'Nurse'
 			volume = volume or 100
 
 			self:addevent(beat, "SayReadyGetSetGo", {phraseToSay = ctype, tick = tick, voiceSource = voice, volume = volume})
@@ -26,6 +59,8 @@ local extension = function(_level)
 
 
 		function level:setbpm(beat, bpm)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(bpm, 'bpm', 'number')
 
 			beat = beat or 0
 			bpm = bpm or 100
@@ -33,14 +68,15 @@ local extension = function(_level)
 			self:addevent(beat, "SetBeatsPerMinute", {beatsPerMinute = bpm})
 
 		end
-
-
-		-- soundtype can be any of the below
-		-- CueSound, MusicSound, BeatSound, HitSound, OtherSound
 		
 		function level:playsound(beat, sound, volume, pitch, pan, offset, soundtype)
-
-			beat = beat or 0
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(sound, 'sound', 'string')
+			checkvar_enum(soundtype, 'soundtype', enums.playsoundtype, true)
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_type(pitch, 'pitch', 'number', true)
+			checkvar_type(pan, 'pan', 'number', true)
+			checkvar_type(offset, 'offset', 'number', true)
 
 			volume = volume or 100
 			pitch = pitch or 100
@@ -52,41 +88,51 @@ local extension = function(_level)
 
 		end
 
-
-		-- p1sound, p2sound, cpusound can be any of the below
-		-- ClapHit, ClapHitP2, ClapHitCPU, ReverbClap, ClapHitMassivePreEcho, ClapHitEcho,
-		-- SnareAcoustic2, SnareAcoustic4, SnareHouse, SnareVapor
-
-		-- oh boy i cant wait to document this
-
 		function level:setclapsounds(beat, rowtype, p1sound, p1volume, p1pitch, p1pan, p1offset, p2sound, p2volume, p2pitch, p2pan, p2offset, cpusound, cpuvolume, cpupitch, cpupan, cpuoffset, p1used, p2used, cpuused)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_enum(rowtype, 'rowtype', enum.rowtype)
+			checkvar_type(p1used, 'p1used', 'boolean')
+			checkvar_type(p2used, 'p2used', 'boolean')
+			checkvar_type(cpuused, 'cpuused', 'boolean')
 
-			beat = beat or 0
-			rowtype = rowtype or 'Classic' -- can also be 'Oneshot'
+			if p1used then
+				checkvar_enum(p1sound, 'p1sound', enum.clapsound)
+				checkvar_type(p1volume, 'p1volume', 'number', true)
+				checkvar_type(p1pitch, 'p1pitch', 'number', true)
+				checkvar_type(p1pan, 'p1pan', 'number', true)
+				checkvar_type(p1offset, 'p1offset', 'number', true)
 
-			p1sound = p1sound or 'ClapHit'
-			p2sound = p2sound or 'ClapHitP2'
-			cpusound = cpusound or 'ClapHitCPU'
+				p1volume = p1volume or 100
+				p1pitch = p1pitch or 100
+				p1pan = p1pan or 0
+				p1offset = p1offset or 0
+			end
 
-			p1volume = p1volume or 100
-			p2volume = p2volume or 100
-			cpuvolume = cpuvolume or 100
+			if p2used then
+				checkvar_enum(p2sound, 'p2sound', enum.clapsound)
+				checkvar_type(p2volume, 'p2volume', 'number', true)
+				checkvar_type(p2pitch, 'p2pitch', 'number', true)
+				checkvar_type(p2pan, 'p2pan', 'number', true)
+				checkvar_type(p2offset, 'p2offset', 'number', true)
 
-			p1pitch = p1pitch or 100
-			p2pitch = p2pitch or 100
-			cpupitch = cpupitch or 100
+				p2volume = p2volume or 100
+				p2pitch = p2pitch or 100
+				p2pan = p2pan or 0
+				p2offset = p2offset or 0
+			end
 
-			p1pan = p1pan or 0
-			p2pan = p2pan or 0
-			cpupan = cpupan or 0
+			if cpuused then
+				checkvar_enum(cpusound, 'cpusound', enum.clapsound)
+				checkvar_type(cpuvolume, 'cpuvolume', 'number', true)
+				checkvar_type(cpupitch, 'cpupitch', 'number', true)
+				checkvar_type(cpupan, 'cpupan', 'number', true)
+				checkvar_type(cpuoffset, 'cpuoffset', 'number', true)
 
-			p1offset = p1offset or 0
-			p2offset = p2offset or 0
-			cpuoffset = cpuoffset or 0
-
-			p1used = not not p1used
-			p2used = not not p2used
-			cpuused = not not cpuused
+				cpuvolume = cpuvolume or 100
+				cpupitch = cpupitch or 100
+				cpupan = cpupan or 0
+				cpuoffset = cpuoffset or 0
+			end
 
 			-- god
 			self:addevent(beat, "SetClapSounds", {
@@ -104,55 +150,130 @@ local extension = function(_level)
 
 		end
 
-
-		-- intervaltype can be
-		-- OneBeatAfter,	Instant,	GatherNoCeil,				GatherAndCeil
-
-		-- Fixed Interval,	Instant,	Combine on Fixed Interval,	Combine on Downbeat
-		-- ^ actual names in the event the hell why are they so different
-
 		function level:heartexplosioninterval(beat, intervaltype, interval)
-
-			beat = beat or 0
-			intervaltype = intervaltype or 'OneBeatAfter'
-			interval = interval or 0
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(interval, 'interval', 'number')
+			checkvar_enum(intervaltype, 'intervaltype', enum.heartexplosioninterval)
 
 			self:addevent(beat, "SetHeartExplodeInterval", {intervalType = intervaltype, interval = interval})
 
 		end
 
-
-		-- soundtype can be
-		-- SmallMistake, BigMistake, Hand1PopSound, Hand2PopSound, HeartExplosion, HeartExplosion2, HeartExplosion3
-
 		function level:setgamesound(beat, soundtype, filename, volume, pitch, pan)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_enum(soundtype, 'soundtype', enum.gamesound)
+			checkvar_type(filename, 'filename', 'string')
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_type(pitch, 'pitch', 'number', true)
+			checkvar_type(pan, 'pan', 'number', true)
 
-			beat = beat or 0
-
-			soundtype = soundtype or 'SmallMistake'
-			filename = filename or ''
+			if soundtype == 'ClapSoundHold'
+			or soundtype == 'FreezeshotSound'
+			or soundtype == 'BurnshotSound' then
+				error('Sound "' .. soundtype .. '" has extra parameters, and as such, setting them through setgamesound will result in an incorrect event! Use the designated methods.', 2)
+			end
 
 			volume = volume or 100
 			pitch = pitch or 100
 			pan = pan or 0
 
 			self:addevent(beat, 'SetGameSound', {soundType = soundtype, filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0})
-
 		end
 
+		local function setgroupsubtype(obj, name)
+			if obj then
+				obj.groupSubType = name
+				obj.used = true
+				obj.offset = 0
+				return obj
+			else
+				return {groupSubType = name, used = false}
+			end
+		end
 
-		-- filename can be
-		-- Shaker, None, ShakerHi, Stick, StickOld, Sidestick, Punch, Ride2,
-		-- Kick, KickChroma, KickClean, KickTight, KickHouse, KickRupture, KickEcho,
-		-- Hammer, Chuck, ClosedHat, HatTight, HatHouse, Sizzle, ClavesLow, ClavesHigh,
-		-- TomLowE, TomMidG, TomMidB, TomHighD, WoodblockHigh, WoodblockLow, TriangleMute, Cowbell
+		local function checksubtype(obj, name)
+			if not obj.used then return end
+
+			checkvar_type(obj.filename, name .. '.filename', 'string')
+			checkvar_type(obj.volume, name .. '.volume', 'number')
+			checkvar_type(obj.pitch, name .. '.pitch', 'number')
+			checkvar_type(obj.pan, name .. '.pan', 'number')
+		end
+
+		function level:setholdclapsound(beat, filename, longholdstart, longholdend, shortholdstart, shortholdend)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(filename, 'filename', 'string')
+
+			checkvar_type(longholdstart, 'longholdstart', 'table', true)
+			checkvar_type(longholdend, 'longholdend', 'table', true)
+			checkvar_type(shortholdstart, 'shortholdstart', 'table', true)
+			checkvar_type(shortholdend, 'shortholdend', 'table', true)
+
+			longholdstart = setgroupsubtype(longholdstart, 'ClapSoundHoldLongStart')
+			longholdend = setgroupsubtype(longholdend, 'ClapSoundHoldLongEnd')
+			shortholdstart = setgroupsubtype(shortholdstart, 'ClapSoundHoldShortStart')
+			shortholdend = setgroupsubtype(shortholdend, 'ClapSoundHoldShortEnd')
+
+			checksubtype(longholdstart, 'longholdstart')
+			checksubtype(longholdend, 'longholdend')
+			checksubtype(shortholdstart, 'shortholdstart')
+			checksubtype(shortholdend, 'shortholdend')
+
+			self:addevent(beat, 'SetGameSound', {soundType = 'ClapSoundHold', filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0, soundSubtypes = {longholdend, longholdstart, shortholdend, shortholdstart}})
+		end
+
+		function level:setfreezeshotsound(beat, filename, lowcue, highcue, risercue, cymbalcue)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(filename, 'filename', 'string')
+
+			checkvar_type(lowcue, 'lowcue', 'table', true)
+			checkvar_type(highcue, 'highcue', 'table', true)
+			checkvar_type(risercue, 'risercue', 'table', true)
+			checkvar_type(cymbalcue, 'cymbalcue', 'table', true)
+
+			lowcue = setgroupsubtype(lowcue, 'FreezeshotSoundCueLow')
+			highcue = setgroupsubtype(highcue, 'FreezeshotSoundCueHigh')
+			risercue = setgroupsubtype(risercue, 'FreezeshotSoundRiser')
+			cymbalcue = setgroupsubtype(cymbalcue, 'FreezeshotSoundCymbal')
+
+			checksubtype(lowcue, 'lowcue')
+			checksubtype(highcue, 'highcue')
+			checksubtype(risercue, 'risercue')
+			checksubtype(cymbalcue, 'cymbalcue')
+
+			self:addevent(beat, 'SetGameSound', {soundType = 'FreezeshotSound', filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0, soundSubtypes = {lowcue, highcue, risercue, cymbalcue}})
+		end
+
+		function level:setburnshotsound(beat, filename, lowcue, highcue, risercue, cymbalcue)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(filename, 'filename', 'string')
+
+			checkvar_type(lowcue, 'lowcue', 'table', true)
+			checkvar_type(highcue, 'highcue', 'table', true)
+			checkvar_type(risercue, 'risercue', 'table', true)
+			checkvar_type(cymbalcue, 'cymbalcue', 'table', true)
+
+			lowcue = setgroupsubtype(lowcue, 'BurnshotSoundCueLow')
+			highcue = setgroupsubtype(highcue, 'BurnshotSoundCueHigh')
+			risercue = setgroupsubtype(risercue, 'BurnshotSoundRiser')
+			cymbalcue = setgroupsubtype(cymbalcue, 'BurnshotSoundCymbal')
+
+			checksubtype(lowcue, 'lowcue')
+			checksubtype(highcue, 'highcue')
+			checksubtype(risercue, 'risercue')
+			checksubtype(cymbalcue, 'cymbalcue')
+
+			self:addevent(beat, 'SetGameSound', {soundType = 'BurnshotSound', filename = filename, volume = volume, pitch = pitch, pan = pan, offset = 0, soundSubtypes = {lowcue, highcue, risercue, cymbalcue}})
+		end
 
 		function level:setbeatsound(beat, row, filename, volume, pitch, pan)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(row, 'row', 'number')
+			checkvar_enum(filename, 'filename', enums.beatsound)
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_type(pitch, 'pitch', 'number', true)
+			checkvar_type(pan, 'pan', 'number', true)
 
-			beat = beat or 0
-
-			row = row or 0
-			filename = filename or 'Shaker'
 			volume = volume or 100
 			pitch = pitch or 100
 			pan = pan or 0
@@ -162,23 +283,35 @@ local extension = function(_level)
 
 		end
 
-
-		-- voicesource can be
-		-- JyiCount, JyiCountFast, JyiCountTired, JyiCountVeryTired, JyiCountJapanese,
-		-- IanCount, IanCountFast, IanCountCalm, IanCountSlow, IanCountSlower,
-		-- BirdCount, OwlCount, WhistleCount, JyiCountLegacy
-
 		function level:setcountingsound(beat, row, voicesource, enabled, volume)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(row, 'row', 'number')
+			checkvar_enum(voicesource, 'voicesource', enums.voicesource, true)
+			checkvar_type(enabled, 'enabled', 'boolean', true)
+			checkvar_type(volume, 'volume', 'number', true)
 
-			beat = beat or 0
-
-			row = row or 0
 			voicesource = voicesource or 'JyiCount'
 			enabled = not not enabled
 			volume = volume or 100
 
 			self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = voicesource, enabled = enabled, volume = volume})
 
+		end
+
+		function level:setoneshotcountingsound(beat, row, voicesource, enabled, volume, subdivoffset)
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(row, 'row', 'number')
+			checkvar_enum(voicesource, 'voicesource', enum.voicesource_oneshot, true)
+			checkvar_type(enabled, 'enabled', 'boolean', true)
+			checkvar_type(volume, 'volume', 'number', true)
+			checkvar_type(subdivoffset, 'subdivoffset', 'number', true)
+
+			voicesource = voicesource or 'JyiCount'
+			enabled = not not enabled
+			volume = volume or 100
+			subdivoffset = subdivoffset or 0.5
+
+			self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = voicesource, enabled = enabled, volume = volume, subdivOffset = subdivoffset})
 		end
 		
 		--add event type condensers
