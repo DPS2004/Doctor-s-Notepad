@@ -275,7 +275,7 @@ local extension = function(_level)
 			-- mask
 			function room:mask(beat, filenames, fps)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(fps, 'fps', 'number')
+				checkvar_type(fps, 'fps', 'number',true)
 
 				filenames = filenames or ''
 				fps = fps or 30
@@ -881,7 +881,7 @@ end]]
 				checkvar_enum(mode, 'mode', enums.roomcontentmode, true)
 				checkvar_type(sx, 'sx', 'number', true)
 				checkvar_type(sy, 'sy', 'number', true)
-				checkvar_color(color, 'color')
+				checkvar_color(color, 'color',true)
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 

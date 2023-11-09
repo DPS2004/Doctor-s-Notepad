@@ -345,11 +345,12 @@ local extension = function(_level)
 				checkvar_type(beat, 'beat', 'number')
 				checkvar_type(showtint, 'showtint', 'boolean')
 				checkvar_color(color, 'color')
-				checkvar_type(opacity, 'opacity', 'number')
+				checkvar_type(opacity, 'opacity', 'number',true)
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
 				duration = duration or 0
+				opacity = opacity or 100
 				ease = ease or "Linear"
 				setvalue(self, "tint", beat, showtint)
 				setvalue(self, "tintcolor", beat, color)
