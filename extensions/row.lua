@@ -548,25 +548,21 @@ local extension = function(_level)
 		--makes row objects
 		
 		level.rows = {}
-		
-		if configHandler.getConfigValue("initevents") then
 
-			for i, v in ipairs(level.data.rows) do
-	            local oldroom = v.rooms[1]
+		for i, v in ipairs(level.data.rows) do
+            local oldroom = v.rooms[1]
 
-	            --v.rooms = level:roomtable(0)
-	            local newrow = level:getrow(v.row)
-				newrow.nativeroom = oldroom
-				
-	            setvalue(newrow, "room", 0, oldroom)
-				if not beat then
-					level:addfakeevent(0, "updaterowx", {row = v.row, duration = 0, ease = "Linear"})
-					level:addfakeevent(0, "updaterowy", {row = v.row, duration = 0, ease = "Linear"})
-					level:addfakeevent(0, "updaterowpivot", {row = v.row, duration = 0, ease = "Linear"})
-				end
-	        end
-		
-		end
+            --v.rooms = level:roomtable(0)
+            local newrow = level:getrow(v.row)
+			newrow.nativeroom = oldroom
+			
+            setvalue(newrow, "room", 0, oldroom)
+			if configHandler.getConfigValue("initevents") and not beat then
+				level:addfakeevent(0, "updaterowx", {row = v.row, duration = 0, ease = "Linear"})
+				level:addfakeevent(0, "updaterowy", {row = v.row, duration = 0, ease = "Linear"})
+				level:addfakeevent(0, "updaterowpivot", {row = v.row, duration = 0, ease = "Linear"})
+			end
+        end
 		
 		-- fake event handlers
 		
