@@ -85,24 +85,6 @@ function checkvar_type(v, n, t, nilAccepted, stackLevel)
     end
 end
 
--- method that checks if all of the members of a table are a given type
-function checkvar_nestedtype(v, n, t, stackLevel)
-    if checkvar_override then return end
-    stackLevel = stackLevel or 5
-
-    checkvar_type(v, n, 'table', stackLevel)
-
-    for k,v in ipairs(v) do
-        local vn = n .. '[' .. k .. ']'
-
-        if type(v) == 'table' then
-            checkvar_nestedtype(v, vn, t, array, stackLevel + 1)
-        else
-            checkvar_type(v, vn, t, stackLevel)
-        end
-    end
-end
-
 function checkvar_enum(v, n, enum, nilAccepted)
     if checkvar_override then return end
     if v == nil and nilAccepted then return end
