@@ -107,8 +107,9 @@ function checkvar_enum(v, n, enum, nilAccepted)
 end
 
 function checkvar_color(c, n, nilAccepted, stackLevel)
+    if checkvar_override then return end
     if c == nil and nilAccepted then return end
-    checkvar_type(c, n, 'string', stackLevel)
+    checkvar_type(c, n, 'string', false, stackLevel)
 
     if not c:match('^#?%x%x%x%x%x%x$') and not c:match('^#?%x%x%x%x%x%x%x%x$') then
         checkvar_throw(n .. ' not in valid hexadecimal format: ' .. c, stackLevel)
@@ -120,8 +121,9 @@ local function isspecialrdcodevar(v)
 end
 
 function checkvar_rdcodevar(c, n, t, nilAccepted, stackLevel)
+    if checkvar_override then return end
     if c == nil and nilAccepted then return end
-    checkvar_type(c, n, 'string', stackLevel)
+    checkvar_type(c, n, 'string', false, stackLevel)
 
     local ch = c:sub(1,1)
     if isspecialrdcodevar(c) then
