@@ -139,6 +139,16 @@ function checkvar_rdcodevar(c, n, t, nilAccepted, stackLevel)
     end
 end
 
+function checkvar_room(r, n, t, nilAccepted, stackLevel)
+    if checkvar_override then return end
+    if c == nil and nilAccepted then return end
+    checkvar_type(r, n, 'number', false, stackLevel)
+
+    if r < 0 or r > 3 then
+        checkvar_throw('the room ' .. r .. ' does not exist!', stackLevel)
+    end
+end
+
 function disable_checkvar()
     print('Parameter safety checks disabled!')
     checkvar_override = true
