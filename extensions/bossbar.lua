@@ -164,8 +164,8 @@ local extension = function(_level)
 			local onetime = level:timesexecuted(prefix .. '.onetime', 1)
 			local patientnegative = level:customconditional(prefix .. '.patientnegative', patienthpvar .. ' < 0')
 			local virusnegative = level:customconditional(prefix .. '.virusnegative', virushpvar .. ' < 0')
-			local patienthplow = level:customconditional(prefix .. '.patientlow', patienthpvar .. ' < 0.3')
-			local virushplow = level:customconditional(prefix .. '.viruslow', virushpvar .. ' < 0.3')
+			local patienthplow = level:customconditional(prefix .. '.patientlow', patienthpvar .. ' < ' .. patienthp / 3)
+			local virushplow = level:customconditional(prefix .. '.viruslow', virushpvar .. ' < ' .. virushp / 3)
 
 			local function setpatienthpstate(beat, state)
 				local action = state and 'EnableTag(' or 'DisableTag('
