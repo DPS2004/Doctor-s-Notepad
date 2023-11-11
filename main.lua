@@ -115,6 +115,28 @@ function checkvar_color(c, n, nilAccepted, stackLevel)
     end
 end
 
+local function isspecialrdcodevar(v)
+    return v:match('^[ifb]%d+$')
+end
+
+function checkvar_rdcodevar(c, n, t, nilAccepted, stackLevel)
+    if c == nil and nilAccepted then return end
+    checkvar_type(c, n, 'string', stackLevel)
+
+    local ch = c:sub(1,1)
+    if isspecialrdcodevar(c) then
+        if #c - 1 > 1 then
+            checkvar_throw('the variable ' .. n .. ' (' .. c .. ') does not exist - only up to ' .. ch .. '9 is accepted', stackLevel)
+        end
+
+        if (ch == 'i' and t ~= 'integer')
+            or (ch == 'f' and t ~= 'float')
+            or (ch == 'b' and t ~= 'boolean') then
+            checkvar_throw('the variable ' .. n .. ' (' .. c .. ') is not a ' .. t, stackLevel)
+        end
+    end
+end
+
 function disable_checkvar()
     print('Parameter safety checks disabled!')
     checkvar_override = true
