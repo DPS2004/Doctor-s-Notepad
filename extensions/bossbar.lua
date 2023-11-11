@@ -55,6 +55,23 @@ local extension = function(_level)
 			copied = true
 		end
 
+		local function getbeat(bar)
+			local beat = 0
+			local crotchets = {}
+			for eventi, event in ipairs(level.data.events) do
+				if event.bar > bar then break end
+				if event.type == "SetCrotchetsPerBar" then
+					table.insert(crotchets, event.crotchetsPerBar)
+				end
+			end
+			local crochet = 8
+			for i = 1, bar - 1 do
+				if crotchets[i] then crochet = crotchets[i] end
+				beat = beat + crochet
+			end
+			return beat
+		end
+
 		local function runondeco(bar, func, ...)
 			func(bar.bg, ...)
 			func(bar.fg, ...)
@@ -108,11 +125,12 @@ local extension = function(_level)
 
 		level.bossbars = {}
 		
-		function level:newbossbar(room, patienthp, virushp, gameoverbar, applyweight, hpflash, hpeaseduration, hpease, patienthpvar, virushpvar, weightvar)
+		function level:newbossbar(room, patienthp, virushp, gameoverbar, gameoverfunc, applyweight, hpflash, hpeaseduration, hpease, patienthpvar, virushpvar, weightvar)
 			checkvar_room(room, 'room')
 			checkvar_type(patienthp, 'patienthp', 'number')
 			checkvar_type(virushp, 'virushp', 'number')
 			checkvar_type(gameoverbar, 'gameoverbar', 'number')
+			checkvar_type(gameoverfunc, 'gameoverfunc', 'function', true)
 			checkvar_type(applyweight, 'applyweight', 'boolean', true)
 			checkvar_type(hpflash, 'hpflash', 'number', true)
 			checkvar_type(hpeaseduration, 'hpeaseduration', 'number', true)
@@ -121,6 +139,7 @@ local extension = function(_level)
 			checkvar_rdcodevar(virushpvar, 'virushpvar', 'float', true)
 			checkvar_rdcodevar(weightvar, 'weightvar', 'float', true)
 
+			gameoverfunc = gameoverfunc or function() end
 			hpeaseduration = hpeaseduration or 1
 			hpease = hpease or 'OutCubic'
 			hpflash = hpflash or 0.5
@@ -319,6 +338,14 @@ local extension = function(_level)
 
 				level:rdcode(beat, weightvar .. ' = ' .. weight)
 			end
+
+			local gameoverbeat = getbeat(gameoverbar)
+			if configHandler.getConfigValue('bossgameoverevents') then
+				level:rdcode(gameoverbeat, 'CurrentSongVol(0, 0)')
+				level:addevent(gameoverbeat, 'ShowStatusSign', {useBeats = false, narrate = true, text = 'GAME OVER', duration = 9999})
+				level:addevent(gameoverbeat, 'ShakeScreen', {rooms = {4}, shakeLevel = 'High'})
+			end
+			gameoverfunc(gameoverbeat)
 			
 			local stillalivecond = level:customconditional(prefix .. '.stillalive', patienthpvar .. ' > 0')
 			stillalivecond:red(true)
