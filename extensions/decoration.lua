@@ -81,7 +81,7 @@ local extension = function(_level)
 
 			function deco:movex(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -94,7 +94,7 @@ local extension = function(_level)
 
 			function deco:movey(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -107,7 +107,7 @@ local extension = function(_level)
 
 			function deco:movesx(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -120,7 +120,7 @@ local extension = function(_level)
 
 			function deco:movesy(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -159,7 +159,7 @@ local extension = function(_level)
 
 			function deco:rotate(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 

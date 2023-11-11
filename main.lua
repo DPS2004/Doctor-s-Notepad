@@ -149,6 +149,11 @@ function checkvar_room(r, n, t, nilAccepted, stackLevel)
     end
 end
 
+function checkvar_typewithrdcode(v, n, t, nilAccepted, stackLevel)
+    if type(v) == 'string' and v:match('^{.+}$') then return end
+    checkvar_type(v, n, t, nilAccepted, stackLevel)
+end
+
 function disable_checkvar()
     print('Parameter safety checks disabled!')
     checkvar_override = true
