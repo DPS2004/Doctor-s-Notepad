@@ -20,6 +20,8 @@ local extension = function(_level)
 
 	_level.initqueue.queue(10,function(level,beat)
 
+		create_enum('bossbartype', {'virus', 'patient'})
+
 		local copied = false
 
 		local function combinepath(path, file)
@@ -154,6 +156,16 @@ local extension = function(_level)
 			local prefix = 'dn.bossbar(' .. room .. ')'
 			local onmiss = '[onMiss]dn.bossbar(' .. room .. ')'
 			local onhit = '[onHit]dn.bossbar(' .. room .. ')'
+			local updatepatienthp = 'dn.bossbar(' .. room .. ').patientupdate'
+			local updatevirushp = 'dn.bossbar(' .. room .. ').virushp'
+			
+			local stillalivecond = level:customconditional(prefix .. '.stillalive', patienthpvar .. ' > 0')
+			stillalivecond:red(true)
+			local onetime = level:timesexecuted(prefix .. '.onetime', 1)
+			local patientnegative = level:customconditional(prefix .. '.patientnegative', patienthpvar .. ' < 0')
+			local virusnegative = level:customconditional(prefix .. '.virusnegative', virushpvar .. ' < 0')
+			local patienthplow = level:customconditional(prefix .. '.patientlow', patienthpvar .. ' < 0.3')
+			local virushplow = level:customconditional(prefix .. '.viruslow', virushpvar .. ' < 0.3')
 
 			local function setpatienthpstate(beat, state)
 				local action = state and 'EnableTag(' or 'DisableTag('
@@ -339,6 +351,36 @@ local extension = function(_level)
 				level:rdcode(beat, weightvar .. ' = ' .. weight)
 			end
 
+			function bars:sethp(beat, target, hp)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(target, 'target', enums.bossbartype)
+				checkvar_type(hp, 'hp', 'number')
+
+				if target == 'virus' then
+					hp = math.max(math.min(hp, virushp), 0)
+					level:rdcode(beat, virushpvar .. ' = ' .. hp)
+					level:runtag(beat, updatevirushp)
+				elseif target == 'patient' then
+					hp = math.max(math.min(hp, patienthp), 0)
+					level:rdcode(beat, patienthpvar .. ' = ' .. hp)
+					level:runtag(beat, updatepatienthp)
+				end
+			end
+
+			function bars:addhp(beat, target, hp)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(target, 'target', enums.bossbartype)
+				checkvar_type(hp, 'hp', 'number')
+
+				if target == 'virus' then
+					level:rdcode(beat, virushpvar .. ' = ' .. virushpvar .. '+' .. hp)
+					level:runtag(beat, updatevirushp)
+				elseif target == 'patient' then
+					level:rdcode(beat, patienthpvar .. ' = ' .. patienthpvar .. '+' .. hp)
+					level:runtag(beat, updatepatienthp)
+				end
+			end
+
 			local gameoverbeat = getbeat(gameoverbar)
 			if configHandler.getConfigValue('bossgameoverevents') then
 				level:rdcode(gameoverbeat, 'CurrentSongVol(0, 0)')
@@ -346,13 +388,6 @@ local extension = function(_level)
 				level:addevent(gameoverbeat, 'ShakeScreen', {rooms = {4}, shakeLevel = 'High'})
 			end
 			gameoverfunc(gameoverbeat)
-			
-			local stillalivecond = level:customconditional(prefix .. '.stillalive', patienthpvar .. ' > 0')
-			stillalivecond:red(true)
-			local patientnegative = level:customconditional(prefix .. '.patientnegative', patienthpvar .. ' < 0')
-			local virusnegative = level:customconditional(prefix .. '.virusnegative', virushpvar .. ' < 0')
-			local patienthplow = level:customconditional(prefix .. '.patientlow', patienthpvar .. ' < 0.3')
-			local virushplow = level:customconditional(prefix .. '.viruslow', virushpvar .. ' < 0.3')
 
 			local repeater = prefix .. '.repeat'
 			level:tag(repeater, function()
@@ -377,9 +412,13 @@ local extension = function(_level)
 				if applyweight then
 					level:rdcode(1, patienthpvar .. ' = ' .. patienthpvar .. ' - ' .. weightvar, 'OnPreBar', -1000)
 				else
-					level:rdcode(1.001, patienthpvar .. ' = ' .. patienthpvar .. ' - 1', 'OnPreBar', -1000)
+					level:rdcode(1, patienthpvar .. ' = ' .. patienthpvar .. ' - 1', 'OnPreBar', -1000)
 				end
 
+				level:runtag(1, updatepatienthp)
+			end)
+
+			level:tag(updatepatienthp, function()
 				level:conditional(patientnegative, 0)
 				patientnegative:red(true)
 				bars.patient.hp:movesx(1.001, '{' .. patienthpvar .. '/' .. patienthp .. '*' .. PATIENTHPLENGTH .. '}', hpeaseduration, hpease)
@@ -391,7 +430,7 @@ local extension = function(_level)
 				bars.patient.hp:settint(1, true, 'FFFFFF', 100, 0, 'Linear')
 				bars.patient.hp:settint(1 + hpflash, true, PATIENTBARCOLOR, 100, 0, 'Linear')
 
-				level:conditional(stillalivecond, 0)
+				level:conditional({stillalivecond, onetime}, 0)
 				level:rdcode(1, 'SetNextBarExtraImmediately(' .. gameoverbar .. ')', nil, 1)
 				level:endconditional()
 			end)
@@ -400,9 +439,13 @@ local extension = function(_level)
 				if applyweight then
 					level:rdcode(1, virushpvar .. ' = ' .. virushpvar .. ' - ' .. weightvar, 'OnPreBar', -1000)
 				else
-					level:rdcode(1.001, virushpvar .. ' = ' .. virushpvar .. ' - 1', 'OnPreBar', -1000)
+					level:rdcode(1, virushpvar .. ' = ' .. virushpvar .. ' - 1', 'OnPreBar', -1000)
 				end
 
+				level:runtag(1, updatevirushp)
+			end)
+
+			level:tag(updatevirushp, function()
 				level:conditional(virusnegative, 0)
 				virusnegative:red(true)
 				bars.virus.hp:movesx(1.001, '{' .. virushpvar .. '/' .. virushp .. '*' .. VIRUSHPLENGTH .. '}', hpeaseduration, hpease)
