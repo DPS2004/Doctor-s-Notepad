@@ -108,25 +108,28 @@ local extension = function(_level)
 
 		level.bossbars = {}
 		
-		function level:newbossbar(room, patienthp, virushp, gameoverbar, hpflash, hpeaseduration, hpease, patienthpvar, virushpvar)
+		function level:newbossbar(room, patienthp, virushp, gameoverbar, applyweight, hpflash, hpeaseduration, hpease, patienthpvar, virushpvar, weightvar)
 			checkvar_room(room, 'room')
 			checkvar_type(patienthp, 'patienthp', 'number')
 			checkvar_type(virushp, 'virushp', 'number')
-			checkvar_type(gameoverbar, 'gameoverbar', 'number')
+			checkvar_type(applyweight, 'applyweight', 'boolean', true)
 			checkvar_type(hpflash, 'hpflash', 'number', true)
 			checkvar_type(hpeaseduration, 'hpeaseduration', 'number', true)
 			checkvar_enum(hpease, 'hpease', enums.ease, true)
 			checkvar_rdcodevar(patienthpvar, 'patienthpvar', 'float', true)
 			checkvar_rdcodevar(virushpvar, 'virushpvar', 'float', true)
+			checkvar_rdcodevar(weightvar, 'weightvar', 'float', true)
 
 			hpeaseduration = hpeaseduration or 1
 			hpease = hpease or 'OutCubic'
 			hpflash = hpflash or 0.5
 			patienthpvar = patienthpvar or 'f0'
 			virushpvar = virushpvar or 'f1'
+			weightvar = weightvar or 'f2'
 
 			level:rdcode(0, patienthpvar .. ' = ' .. patienthp)
 			level:rdcode(0, virushpvar .. ' = ' .. virushp)
+			if applyweight then level:rdcode(0, weightvar .. ' = ' .. 1) end
 
 			local prefix = 'dn.bossbar(' .. room .. ')'
 			local onmiss = '[onMiss]dn.bossbar(' .. room .. ')'
@@ -168,7 +171,8 @@ local extension = function(_level)
 				room = {{beat = 0, state = room}},
 				virusenabled = {{beat = 0, state = true}},
 				patientenabled = {{beat = 0, state = true}},
-				enabled = {{beat = 0, state = false}}
+				enabled = {{beat = 0, state = false}},
+				gameoverbar = {{beat = 0, state = 1}}
 			}
 
 			function bars:setroom(beat, room)
@@ -307,13 +311,19 @@ local extension = function(_level)
 
 				adjustpos(self, beat, duration, ease)
 			end
+
+			function bars:setweight(beat, weight)
+				if not applyweight then return end
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(weight, 'weight', 'number')
+
+				level:rdcode(beat, weightvar .. ' = ' .. weight)
+			end
 			
 			local stillalivecond = level:customconditional(prefix .. '.stillalive', patienthpvar .. ' > 0')
 			stillalivecond:red(true)
-			local patienthpatleast0 = level:customconditional(prefix .. '.patientnegative', patienthpvar .. ' < 0')
-			patienthpatleast0:red(true)
-			local virushpatleast0 = level:customconditional(prefix .. '.virusnegative', virushpvar .. ' < 0')
-			virushpatleast0:red(true)
+			local patientnegative = level:customconditional(prefix .. '.patientnegative', patienthpvar .. ' < 0')
+			local virusnegative = level:customconditional(prefix .. '.virusnegative', virushpvar .. ' < 0')
 			local patienthplow = level:customconditional(prefix .. '.patientlow', patienthpvar .. ' < 0.3')
 			local virushplow = level:customconditional(prefix .. '.viruslow', virushpvar .. ' < 0.3')
 
@@ -337,28 +347,45 @@ local extension = function(_level)
 			level:runtag(0.01, repeater)
 
 			level:tag(onmiss, function()
-				level:rdcode(1, patienthpvar .. ' = ' .. patienthpvar .. ' - 1', 'OnPreBar', -1000)
+				if applyweight then
+					level:rdcode(1, patienthpvar .. ' = ' .. patienthpvar .. ' - ' .. weightvar, 'OnPreBar', -1000)
+				else
+					level:rdcode(1.001, patienthpvar .. ' = ' .. patienthpvar .. ' - 1', 'OnPreBar', -1000)
+				end
 
-				level:conditional(patienthpatleast0, 0)
-				bars.patient.hp:movesx(1, '{' .. patienthpvar .. '/' .. patienthp .. '*' .. PATIENTHPLENGTH .. '}', hpeaseduration, hpease)
+				level:conditional(patientnegative, 0)
+				patientnegative:red(true)
+				bars.patient.hp:movesx(1.001, '{' .. patienthpvar .. '/' .. patienthp .. '*' .. PATIENTHPLENGTH .. '}', hpeaseduration, hpease)
+
+				patientnegative:red(false)
+				bars.patient.hp:movesx(1, 0, hpeaseduration, hpease)
+				level:endconditional()
+
 				bars.patient.hp:settint(1, true, 'FFFFFF', 100, 0, 'Linear')
 				bars.patient.hp:settint(1 + hpflash, true, PATIENTBARCOLOR, 100, 0, 'Linear')
 
 				level:conditional(stillalivecond, 0)
 				level:rdcode(1, 'SetNextBarExtraImmediately(' .. gameoverbar .. ')', nil, 1)
-
 				level:endconditional()
 			end)
 
 			level:tag(onhit, function()
-				level:rdcode(1, virushpvar .. ' = ' .. virushpvar .. ' - 1', 'OnPreBar', -1000)
+				if applyweight then
+					level:rdcode(1, virushpvar .. ' = ' .. virushpvar .. ' - ' .. weightvar, 'OnPreBar', -1000)
+				else
+					level:rdcode(1.001, virushpvar .. ' = ' .. virushpvar .. ' - 1', 'OnPreBar', -1000)
+				end
 
-				level:conditional(virushpatleast0, 0)
-				bars.virus.hp:movesx(1, '{' .. virushpvar .. '/' .. virushp .. '*' .. VIRUSHPLENGTH .. '}', hpeaseduration, hpease)
+				level:conditional(virusnegative, 0)
+				virusnegative:red(true)
+				bars.virus.hp:movesx(1.001, '{' .. virushpvar .. '/' .. virushp .. '*' .. VIRUSHPLENGTH .. '}', hpeaseduration, hpease)
+
+				virusnegative:red(false)
+				bars.virus.hp:movesx(1, 0, hpeaseduration, hpease)
+				level:endconditional()
+
 				bars.virus.hp:settint(1, true, 'FFFFFF', 100, 0, 'Linear')
 				bars.virus.hp:settint(1 + hpflash, true, VIRUSBARCOLOR, 100, 0, 'Linear')
-
-				level:endconditional()
 			end)
 
 			copyfilesifrequired()
