@@ -112,6 +112,7 @@ local extension = function(_level)
 			checkvar_room(room, 'room')
 			checkvar_type(patienthp, 'patienthp', 'number')
 			checkvar_type(virushp, 'virushp', 'number')
+			checkvar_type(gameoverbar, 'gameoverbar', 'number')
 			checkvar_type(applyweight, 'applyweight', 'boolean', true)
 			checkvar_type(hpflash, 'hpflash', 'number', true)
 			checkvar_type(hpeaseduration, 'hpeaseduration', 'number', true)
@@ -171,8 +172,7 @@ local extension = function(_level)
 				room = {{beat = 0, state = room}},
 				virusenabled = {{beat = 0, state = true}},
 				patientenabled = {{beat = 0, state = true}},
-				enabled = {{beat = 0, state = false}},
-				gameoverbar = {{beat = 0, state = 1}}
+				enabled = {{beat = 0, state = false}}
 			}
 
 			function bars:setroom(beat, room)
