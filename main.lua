@@ -110,7 +110,9 @@ end
 function checkvar_color(c, n, nilAccepted, stackLevel)
     if checkvar_override then return end
     if c == nil and nilAccepted then return end
-    checkvar_type(c, n, 'string', false, stackLevel)
+    stackLevel = stackLevel or defaultstacklevel
+
+    checkvar_type(c, n, 'string', false, stackLevel + 1)
 
     if not c:match('^#?%x%x%x%x%x%x$') and not c:match('^#?%x%x%x%x%x%x%x%x$') then
         checkvar_throw(n .. ' not in valid hexadecimal format: ' .. c, stackLevel)
@@ -134,7 +136,9 @@ end
 function checkvar_rdcodevar(c, n, t, nilAccepted, stackLevel)
     if checkvar_override then return end
     if c == nil and nilAccepted then return end
-    checkvar_type(c, n, 'string', false, stackLevel)
+    stackLevel = stackLevel or defaultstacklevel
+
+    checkvar_type(c, n, 'string', false, stackLevel + 1)
 
     local ch = c:sub(1,1)
     if isspecialrdcodevar(c) then
@@ -150,10 +154,36 @@ function checkvar_rdcodevar(c, n, t, nilAccepted, stackLevel)
     end
 end
 
+function checkvar_validrdcodenum(v, n, nilAccepted, stackLevel)
+    if checkvar_override then return end
+    if v == nil and nilAccepted then return end
+    stackLevel = stackLevel or defaultstacklevel
+
+    if type(v) == 'string' then
+        checkvar_rdcodevar(v, n, 'number', false, stackLevel+1)
+        return
+    end
+    
+    if type(v) ~= 'number' then
+        checkvar_throw(n .. ' should be a number or formula, but is a ' .. type(v), stackLevel)
+    end
+end
+
+function checkvar_validrdcodetype(v, n, nilAccepted, stackLevel)
+    if checkvar_override then return end
+    if v == nil and nilAccepted then return end
+    stackLevel = stackLevel or defaultstacklevel
+    if type(v) ~= 'number' and type(v) ~= 'string' and type(v) ~= 'boolean' then
+        checkvar_throw(n .. ' (' .. type(v) .. ') is not a valid rdcode type (number, formula or boolean)')
+    end
+end
+
 function checkvar_room(r, n, t, nilAccepted, stackLevel)
     if checkvar_override then return end
     if c == nil and nilAccepted then return end
-    checkvar_type(r, n, 'number', false, stackLevel)
+    stackLevel = stackLevel or defaultstacklevel
+
+    checkvar_type(r, n, 'number', false, stackLevel + 1)
 
     if r < 0 or r > 3 then
         checkvar_throw('the room ' .. r .. ' does not exist!', stackLevel)
@@ -162,11 +192,13 @@ end
 
 function checkvar_typewithrdcode(v, n, t, ct, nilAccepted, stackLevel)
     if checkvar_override then return end
+    stackLevel = stackLevel or defaultstacklevel
+
     if type(v) == 'string' and v:match('^{.+}$') then
-        checkvar_rdcodevar(v:sub(2, -2), n, ct, nilAccepted, (stackLevel or defaultstacklevel) + 1)
+        checkvar_rdcodevar(v:sub(2, -2), n, ct, nilAccepted, stackLevel + 1)
         return
     end
-    checkvar_type(v, n, t, nilAccepted, (stackLevel or defaultstacklevel) + 1)
+    checkvar_type(v, n, t, nilAccepted, stackLevel + 1)
 end
 
 function disable_checkvar()
