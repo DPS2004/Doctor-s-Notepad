@@ -344,7 +344,9 @@ local extension = function(_level)
 			end
 
 			function bars:setweight(beat, weight)
-				if not applyweight then return end
+				if not applyweight then
+					error('applyweight is false, bossbar:setweight() has no effect!', 2)
+				end
 				checkvar_type(beat, 'beat', 'number')
 				checkvar_type(weight, 'weight', 'number')
 
