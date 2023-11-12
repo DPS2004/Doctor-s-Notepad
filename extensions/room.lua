@@ -746,9 +746,9 @@ end]]
 			
 			function room:flash(beat,startcolor,startopacity,endcolor,endopacity,duration,ease,bg)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_color(startcolor, 'startcolor', 'string', true)
+				checkvar_color(startcolor, 'startcolor', true)
 				checkvar_type(startopacity, 'startopacity', 'number', true)
-				checkvar_color(endcolor, 'endcolor', 'string', true)
+				checkvar_color(endcolor, 'endcolor', true)
 				checkvar_type(endopacity, 'endopacity', 'number', true)
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)

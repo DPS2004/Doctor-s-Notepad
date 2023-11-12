@@ -81,7 +81,7 @@ local extension = function(_level)
 
 			function deco:movex(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -94,7 +94,7 @@ local extension = function(_level)
 
 			function deco:movey(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -107,7 +107,7 @@ local extension = function(_level)
 
 			function deco:movesx(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -120,7 +120,7 @@ local extension = function(_level)
 
 			function deco:movesy(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -159,7 +159,7 @@ local extension = function(_level)
 
 			function deco:rotate(beat, v, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(v, 'v', 'number')
+				checkvar_typewithrdcode(v, 'v', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -452,7 +452,7 @@ local extension = function(_level)
 					border = getvalue(self.decorations[v.idx], "border", v.beat),
 					borderColor = getvalue(self.decorations[v.idx], "bordercolor", v.beat) .. level:alpha(getvalue(self.decorations[v.idx], "borderopacity", v.beat)),
 					tint = getvalue(self.decorations[v.idx], "tint", v.beat),
-					tintColor = getvalue(self.decorations[v.idx], "tintcolor", v.beat) .. level:alpha(getvalue(self.decorations[v.idx], "borderopacity", v.beat)),
+					tintColor = getvalue(self.decorations[v.idx], "tintcolor", v.beat) .. level:alpha(getvalue(self.decorations[v.idx], "tintopacity", v.beat)),
 					opacity = getvalue(self.decorations[v.idx], 'opacity', v.beat),
 					duration = v.duration,
 					ease = v.ease
