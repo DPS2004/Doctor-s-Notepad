@@ -67,11 +67,12 @@ function quoteifstring(v)
     end
 end
 
+local defaultstacklevel = 3
 checkvar_override = false
 
 -- utility error methods
 function checkvar_throw(text, stackLevel)
-    error(text, stackLevel or 3)
+    error(text, stackLevel or defaultstacklevel)
 end
 
 -- method that checks if a variable is a certain type
@@ -149,12 +150,17 @@ function checkvar_room(r, n, t, nilAccepted, stackLevel)
     end
 end
 
-function checkvar_typewithrdcode(v, n, t, nilAccepted, stackLevel)
-    if type(v) == 'string' and v:match('^{.+}$') then return end
-    checkvar_type(v, n, t, nilAccepted, stackLevel)
+function checkvar_typewithrdcode(v, n, t, ct, nilAccepted, stackLevel)
+    if checkvar_override then return end
+    if type(v) == 'string' and v:match('^{.+}$') then
+        checkvar_rdcodevar(v:sub(2, -2), n, ct, nilAccepted, (stackLevel or defaultstacklevel) + 1)
+        return
+    end
+    checkvar_type(v, n, t, nilAccepted, (stackLevel or defaultstacklevel) + 1)
 end
 
 function disable_checkvar()
+    if checkvar_override then return end
     print('Parameter safety checks disabled!')
     checkvar_override = true
 end
