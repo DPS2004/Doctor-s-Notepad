@@ -118,17 +118,15 @@ function checkvar_color(c, n, nilAccepted, stackLevel)
 end
 
 local function isspecialrdcodevar(v)
-    return v:match('^[ifb]%d+$')
+    return v:match('^[ifb]%-?%d+$')
 end
 
 local function isinttype(t)
     return t == 'integer' or t == 'number'
 end
-
 local function isfloattype(t)
     return t == 'float' or t == 'number'
 end
-
 local function isbooltype(t)
     return t == 'boolean'
 end
@@ -141,7 +139,7 @@ function checkvar_rdcodevar(c, n, t, nilAccepted, stackLevel)
     local ch = c:sub(1,1)
     if isspecialrdcodevar(c) then
         if #c - 1 > 1 then
-            checkvar_throw('the variable ' .. n .. ' (' .. c .. ') does not exist - only up to ' .. ch .. '9 is accepted', stackLevel)
+            checkvar_throw('the variable ' .. n .. ' (' .. c .. ') does not exist - only ' .. ch .. '0-' .. ch .. '9 is accepted', stackLevel)
         end
 
         if (ch == 'i' and not isinttype(t))
