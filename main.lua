@@ -121,6 +121,18 @@ local function isspecialrdcodevar(v)
     return v:match('^[ifb]%d+$')
 end
 
+local function isinttype(t)
+    return t == 'integer' or t == 'number'
+end
+
+local function isfloattype(t)
+    return t == 'float' or t == 'number'
+end
+
+local function isbooltype(t)
+    return t == 'boolean'
+end
+
 function checkvar_rdcodevar(c, n, t, nilAccepted, stackLevel)
     if checkvar_override then return end
     if c == nil and nilAccepted then return end
@@ -132,9 +144,9 @@ function checkvar_rdcodevar(c, n, t, nilAccepted, stackLevel)
             checkvar_throw('the variable ' .. n .. ' (' .. c .. ') does not exist - only up to ' .. ch .. '9 is accepted', stackLevel)
         end
 
-        if (ch == 'i' and t ~= 'integer')
-            or (ch == 'f' and t ~= 'float')
-            or (ch == 'b' and t ~= 'boolean') then
+        if (ch == 'i' and not isinttype(t))
+            or (ch == 'f' and not isfloattype(t))
+            or (ch == 'b' and not isbooltype(t)) then
             checkvar_throw('the variable ' .. n .. ' (' .. c .. ') is not a ' .. t, stackLevel)
         end
     end
