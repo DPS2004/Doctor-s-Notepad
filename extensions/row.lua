@@ -68,7 +68,7 @@ local extension = function(_level)
 
 			function row:movex(beat, x, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(x, 'x', 'number')
+				checkvar_typewithrdcode(x, 'x', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -80,7 +80,7 @@ local extension = function(_level)
 
 			function row:movey(beat, y, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(y, 'y', 'number')
+				checkvar_typewithrdcode(y, 'y', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -92,7 +92,7 @@ local extension = function(_level)
 			
 			function row:movesx(beat, x, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(x, 'x', 'number')
+				checkvar_typewithrdcode(x, 'x', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -104,7 +104,7 @@ local extension = function(_level)
 
 			function row:movesy(beat, y, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(y, 'y', 'number')
+				checkvar_typewithrdcode(y, 'y', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -115,7 +115,7 @@ local extension = function(_level)
 			end
 			function row:rotate(beat, rot, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(rot, 'rot', 'number')
+				checkvar_typewithrdcode(rot, 'rot', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -140,7 +140,7 @@ local extension = function(_level)
 			
 			function row:movecx(beat, x, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(x, 'x', 'number')
+				checkvar_typewithrdcode(x, 'x', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -152,7 +152,7 @@ local extension = function(_level)
 
 			function row:movecy(beat, y, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(y, 'y', 'number')
+				checkvar_typewithrdcode(y, 'y', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -163,7 +163,7 @@ local extension = function(_level)
 			end
 			function row:crotate(beat, rot, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(rot, 'rot', 'number')
+				checkvar_typewithrdcode(rot, 'rot', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -175,7 +175,7 @@ local extension = function(_level)
 
 			function row:movecsx(beat, x, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(x, 'x', 'number')
+				checkvar_typewithrdcode(x, 'x', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -187,7 +187,7 @@ local extension = function(_level)
 
 			function row:movecsy(beat, y, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(y, 'y', 'number')
+				checkvar_typewithrdcode(y, 'y', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -199,7 +199,7 @@ local extension = function(_level)
 
 			function row:movehx(beat, x, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(x, 'x', 'number')
+				checkvar_typewithrdcode(x, 'x', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -211,7 +211,7 @@ local extension = function(_level)
 
 			function row:movehy(beat, y, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(y, 'y', 'number')
+				checkvar_typewithrdcode(y, 'y', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -222,7 +222,7 @@ local extension = function(_level)
 			end
 			function row:hrotate(beat, rot, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(rot, 'rot', 'number')
+				checkvar_typewithrdcode(rot, 'rot', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -234,7 +234,7 @@ local extension = function(_level)
 
 			function row:movehsx(beat, x, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(x, 'x', 'number')
+				checkvar_typewithrdcode(x, 'x', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
@@ -246,7 +246,7 @@ local extension = function(_level)
 
 			function row:movehsy(beat, y, duration, ease)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(y, 'y', 'number')
+				checkvar_typewithrdcode(y, 'y', 'number', 'number')
 				checkvar_type(duration, 'duration', 'number', true)
 				checkvar_enum(ease, 'ease', enums.ease, true)
 
