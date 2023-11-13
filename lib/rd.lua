@@ -248,6 +248,9 @@ function rd.load(filename)
     -- save level to file, and resolve fake events
 	
 	function level:getcondensable(elist,equalchecks)
+		table.insert(equalchecks, 'if')
+		table.insert(equalchecks, 'tag')
+
 		local groups = {}
 		
 		for i,v in ipairs(elist) do
