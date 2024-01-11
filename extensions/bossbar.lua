@@ -156,8 +156,8 @@ local extension = function(_level)
 			local prefix = 'dn.bossbar(' .. room .. ')'
 			local onmiss = '[onMiss]dn.bossbar(' .. room .. ')'
 			local onhit = '[onHit]dn.bossbar(' .. room .. ')'
-			local updatepatienthp = 'dn.bossbar(' .. room .. ').patientupdate'
-			local updatevirushp = 'dn.bossbar(' .. room .. ').virushp'
+			local updatepatienthp = 'dn.bossbar(' .. room .. ').patientupdatehp'
+			local updatevirushp = 'dn.bossbar(' .. room .. ').virusupdatehp'
 			
 			local stillalivecond = level:customconditional(prefix .. '.stillalive', patienthpvar .. ' > 0')
 			stillalivecond:red(true)
@@ -344,7 +344,9 @@ local extension = function(_level)
 			end
 
 			function bars:setweight(beat, weight)
-				if not applyweight then return end
+				if not applyweight then
+					error('applyweight is false, bossbar:setweight() has no effect!', 2)
+				end
 				checkvar_type(beat, 'beat', 'number')
 				checkvar_type(weight, 'weight', 'number')
 
