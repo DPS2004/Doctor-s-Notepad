@@ -19,6 +19,7 @@ local extension = function(_level)
 		create_enum('textexplosionmode', {'OneColor', 'Random'})
 		create_enum('textexplosiondirection', {'Left', 'Right'})
 		create_enum('stutteraction', {'Add', 'Cancel'})
+		create_enum('maskmode', {'Normal', 'Inverted'})
 		
 		--all of the functions you are adding to the level table go up here
 		
@@ -41,7 +42,7 @@ local extension = function(_level)
 				py = {{beat = 0, state = 50}},
 				angle = {{beat = 0, state = 0}},
 				stretch = {{beat = 0, state = true}},
-				mask = {{beat = 0, state = {''}}},
+				mask = {{beat = 0, state = {type = 'Image', mode = 'Normal'}}},
 				bg = {{beat = 0, state = {''}}},
 				fg = {{beat = 0, state = {''}}},
 				xflip = {{beat = 0, state = false}},
@@ -273,9 +274,14 @@ local extension = function(_level)
 			end
 
 			-- mask
-			function room:mask(beat, filenames, fps)
+			function room:mask(beat, filenames, fps, mode)
+				room:maskimage(beat, mode or 'Normal', filenames, fps)
+			end
+
+			function room:maskimage(beat, mode, filenames, fps)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(fps, 'fps', 'number',true)
+				checkvar_enum(mode, 'mode', enums.maskmode)
+				checkvar_type(fps, 'fps', 'number', true)
 
 				filenames = filenames or ''
 				fps = fps or 30
@@ -284,10 +290,100 @@ local extension = function(_level)
 					filenames = {tostring(filenames)}
 				end
 
-				setvalue(self, 'mask', beat, filenames)
+				setvalue(self, 'mask', beat, {
+					type = 'Image',
+					mode = mode,
+					image = filenames
+				})
 
-				self.level:addevent(beat, "MaskRoom", {image = filenames, fps = fps, y = index, contentMode = 'ScaleToFill'})
+				self.level:addevent(beat, "MaskRoom", {
+					maskType = 'Image',
+					colorFeathering = 0,
+					alphaMode = mode,
+					colorCutoff = 0,
+					sourceRoom = 0,
+					keyColor = 'FFFFFF',
+					image = filenames,
+					fps = fps,
+					y = index,
+					contentMode = 'ScaleToFill'
+				})
+			end
 
+			function room:maskroom(beat, mode, source)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(mode, 'mode', enums.maskmode)
+				checkvar_type(source, 'source', 'number')
+
+				setvalue(self, 'mask', beat, {
+					type = 'Room',
+					mode = mode,
+					source = source
+				})
+
+				self.level:addevent(beat, "MaskRoom", {
+					maskType = 'Room',
+					colorFeathering = 0,
+					alphaMode = mode,
+					colorCutoff = 0,
+					sourceRoom = source,
+					keyColor = 'FFFFFF',
+					image = {''},
+					fps = 0,
+					y = index,
+					contentMode = 'ScaleToFill'
+				})
+			end
+
+			function room:maskcolor(beat, mode, keyColor, colorCutoff, colorFeathering)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(mode, 'mode', enums.maskmode)
+				checkvar_color(keyColor, 'keyColor')
+				checkvar_type(colorCutoff, 'colorCutoff', 'number', true)
+				checkvar_type(colorFeathering, 'colorFeathering', 'number', true)
+
+				colorFeathering = colorFeathering or 0
+				colorCutoff = colorCutoff or 0
+
+				setvalue(self, 'mask', beat, {
+					type = 'Color',
+					mode = mode,
+					keyColor = keyColor,
+					colorFeathering = colorFeathering,
+					colorCutoff = colorCutoff
+				})
+
+				self.level:addevent(beat, "MaskRoom", {
+					maskType = 'Color',
+					colorFeathering = colorFeathering,
+					alphaMode = mode,
+					colorCutoff = colorCutoff,
+					sourceRoom = 0,
+					keyColor = keyColor,
+					image = {''},
+					fps = 0,
+					y = index,
+					contentMode = 'ScaleToFill'
+				})
+			end
+
+			function room:masknone(beat)
+				setvalue(self, 'mask', beat, {
+					type = 'None'
+				})
+
+				self.level:addevent(beat, "MaskRoom", {
+					maskType = 'None',
+					colorFeathering = 0,
+					alphaMode = 'Normal',
+					colorCutoff = 0,
+					sourceRoom = 0,
+					keyColor = 'FFFFFF',
+					image = {''},
+					fps = 0,
+					y = index,
+					contentMode = 'ScaleToFill'
+				})
 			end
 
 			-- perspective
