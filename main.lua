@@ -88,7 +88,7 @@ end
 
 shown_ease_warning = false
 
-function checkvar_enum(v, n, enum, nilAccepted)
+function checkvar_enum(v, n, enum, nilAccepted, stackLevel)
     if checkvar_override then return end
     if v == nil and nilAccepted then return end
 	
@@ -103,7 +103,7 @@ function checkvar_enum(v, n, enum, nilAccepted)
 	end
 	
     if not enum[v] then
-        checkvar_throw('invalid type exception: ' .. n .. ' is ' .. quoteifstring(v) .. ' but must be one of ' .. enum.__stringformat, 4)
+        checkvar_throw('invalid type exception: ' .. n .. ' is ' .. quoteifstring(v) .. ' but must be one of ' .. enum.__stringformat, stackLevel)
     end
 end
 
