@@ -642,7 +642,9 @@ theme must be one of ' .. enums.theme.__stringformat, 2)
 					Brightness = {intensity = 100, _onTop = true},
 					Contrast = {intensity = 100, _onTop = true},
 					Saturation = {intensity = 100, _onTop = true},
-					Dots = {intensity = 100, _alias = {'dots', 'dotmatrix'}}
+					Dots = {intensity = 100, _alias = {'dots', 'dotmatrix'}},
+					Diamonds = {intensity = {100, 0}, color = {'FF4545', 1, 'color'}},
+					Tutorial = {intensity = {100, 0}, color = {'FF4545', 1, 'color'}, _alias = {'tutorial', 'tutorialnotes'}}
 				}
 
 				for k,v in pairs(roomPresets) do
