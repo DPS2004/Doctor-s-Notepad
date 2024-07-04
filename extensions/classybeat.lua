@@ -174,6 +174,7 @@ local extension = function(_level)
 		end
 
 		local function getBeatFromPair(bar, beat)
+			if not bar or not beat then return end -- failsafe
 
 			-- calculate beat from bar, beat pair
 			local crotchets = {}
