@@ -67,7 +67,7 @@ function quoteifstring(v)
     end
 end
 
-local defaultstacklevel = 3
+local defaultstacklevel = 4
 checkvar_override = false
 
 -- utility error methods
