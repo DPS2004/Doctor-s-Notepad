@@ -102,7 +102,7 @@ function checkvar_enum(v, n, enum, nilAccepted, stackLevel)
 		end
 	end
 	
-    if not enum[v] then
+    if not inenum(enum, v) then
         checkvar_throw('invalid type exception: ' .. n .. ' is ' .. quoteifstring(v) .. ' but must be one of ' .. enum.__stringformat, stackLevel)
     end
 end
@@ -221,6 +221,22 @@ function create_enum(name, list)
     new_enum.__stringformat = table.concat(builder, ', ')
     enums[name] = new_enum
     return new_enum
+end
+
+function inenum(enum, value)
+    if not type(enum) == 'table' then
+        error("invalid type exception: 'enum' is not an enum", 2)
+    end
+
+    return enum[value] ~= nil
+end
+
+function getenumvalueindex(enum, value)
+    if not type(enum) == 'table' then
+        error("invalid type exception: 'enum' is not an enum", 2)
+    end
+
+    return enum[value]
 end
 
 create_enum('ease', {
