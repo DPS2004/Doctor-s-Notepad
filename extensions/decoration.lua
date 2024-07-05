@@ -2,6 +2,7 @@ local extension = function(_level)
 	_level.initqueue.queue(3,function(level,beat) --the number is in what order your extension will be loaded. lower = sooner
 
 		create_enum('decoborder', {'None', 'Outline', 'Glow'})
+		create_enum('decotiletype', {'Scroll', 'Pulse'})
 		
 		--all of the functions you are adding to the level table go up here
 	
@@ -39,7 +40,13 @@ local extension = function(_level)
 				tintcolor = {{beat = 0, state = "FFFFFF"}},
 				tintopacity = {{beat = 0, state = 100}},
 				visible = {{beat = 0, state = true}},
-				opacity = {{beat = 0, state = 100}}
+				opacity = {{beat = 0, state = 100}},
+				tilex = {{beat = 0, state = 1}},
+				tiley = {{beat = 0, state = 1}},
+				tilepx = {{beat = 0, state = 0}},
+				tilepy = {{beat = 0, state = 0}},
+				tilesx = {{beat = 0, state = 0}},
+				tilesy = {{beat = 0, state = 0}}
 			}
 
 			self.decoid = self.decoid + 1
@@ -168,6 +175,80 @@ local extension = function(_level)
 				setvalue(self, 'rot', beat, v)
 				self.level:addfakeevent(beat, 'updatedecorot', {idx = self.idx, target = self.id, duration = duration, ease = ease})
 
+			end
+
+			function deco:tilex(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
+				duration = duration or 0
+				ease = ease or 'Linear'
+				setvalue(self, 'tilex', beat, v)
+				self.level:addfakeevent(beat, 'updatedecotilex', {idx = self.idx, target = self.id, duration = duration, ease = ease})
+			end
+
+			function deco:tiley(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
+				duration = duration or 0
+				ease = ease or 'Linear'
+				setvalue(self, 'tiley', beat, v)
+				self.level:addfakeevent(beat, 'updatedecotiley', {idx = self.idx, target = self.id, duration = duration, ease = ease})
+			end
+
+			function deco:tilepx(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
+				duration = duration or 0
+				ease = ease or 'Linear'
+				setvalue(self, 'tilepx', beat, v)
+				self.level:addfakeevent(beat, 'updatedecotilepx', {idx = self.idx, target = self.id, duration = duration, ease = ease})
+			end
+
+			function deco:tilepy(beat, v, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
+				duration = duration or 0
+				ease = ease or 'Linear'
+				setvalue(self, 'tilepy', beat, v)
+				self.level:addfakeevent(beat, 'updatedecotilepy', {idx = self.idx, target = self.id, duration = duration, ease = ease})
+			end
+
+			function deco:tilesx(beat, v, tiletype, type, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_enum(tiletype, 'tiletype', enums.decotiletype)
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
+				duration = duration or 0
+				ease = ease or 'Linear'
+				setvalue(self, 'tilesx', beat, v)
+				self.level:addfakeevent(beat, 'updatedecotilesx', {idx = self.idx, target = self.id, tiletype = tiletype, duration = duration, ease = ease})
+			end
+
+			function deco:tilesy(beat, v, tiletype, duration, ease)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_type(v, 'v', 'number')
+				checkvar_enum(tiletype, 'tiletype', enums.decotiletype)
+				checkvar_type(duration, 'duration', 'number', true)
+				checkvar_enum(ease, 'ease', enums.ease, true)
+
+				duration = duration or 0
+				ease = ease or 'Linear'
+				setvalue(self, 'tilesy', beat, v)
+				self.level:addfakeevent(beat, 'updatedecotilesy', {idx = self.idx, target = self.id, tiletype = tiletype, duration = duration, ease = ease})
 			end
 
 			function deco:move(beat, t, duration, ease)
@@ -423,6 +504,116 @@ local extension = function(_level)
 				{
 					target = v.target,
 					angle = getvalue(self.decorations[v.idx], 'rot', v.beat),
+					duration = v.duration,
+					ease = v.ease
+				}, v._tag,v._cond
+			)
+
+		end)
+
+		level:fakehandler('updatedecotilepx', function(self,v)
+
+			self:addevent(
+				v.beat,
+				'Tile',
+				{
+					target = v.target,
+					position = {
+						getvalue(self.decorations[v.idx], 'tilepx', v.beat),
+						null
+					},
+					duration = v.duration,
+					ease = v.ease
+				}, v._tag,v._cond
+			)
+
+		end)
+
+		level:fakehandler('updatedecotilepy', function(self,v)
+
+			self:addevent(
+				v.beat,
+				'Tile',
+				{
+					target = v.target,
+					position = {
+						null,
+						getvalue(self.decorations[v.idx], 'tilepy', v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}, v._tag,v._cond
+			)
+
+		end)
+
+		level:fakehandler('updatedecotilex', function(self,v)
+
+			self:addevent(
+				v.beat,
+				'Tile',
+				{
+					target = v.target,
+					tiling = {
+						getvalue(self.decorations[v.idx], 'tilex', v.beat),
+						null
+					},
+					duration = v.duration,
+					ease = v.ease
+				}, v._tag,v._cond
+			)
+
+		end)
+
+		level:fakehandler('updatedecotiley', function(self,v)
+
+			self:addevent(
+				v.beat,
+				'Tile',
+				{
+					target = v.target,
+					tiling = {
+						null,
+						getvalue(self.decorations[v.idx], 'tiley', v.beat)
+					},
+					duration = v.duration,
+					ease = v.ease
+				}, v._tag,v._cond
+			)
+
+		end)
+
+		level:fakehandler('updatedecotilesx', function(self,v)
+
+			self:addevent(
+				v.beat,
+				'Tile',
+				{
+					target = v.target,
+					speed = {
+						getvalue(self.decorations[v.idx], 'tilesx', v.beat),
+						null
+					},
+					tilingType = v.tiletype,
+					duration = v.duration,
+					ease = v.ease
+				}, v._tag,v._cond
+			)
+
+		end)
+
+		level:fakehandler('updatedecotilesy', function(self,v)
+
+			self:addevent(
+				v.beat,
+				'Tile',
+				{
+					target = v.target,
+					speed = {
+						null,
+						getvalue(self.decorations[v.idx], 'tilesy', v.beat)
+					},
+					tilingType = v.tiletype,
 					duration = v.duration,
 					ease = v.ease
 				}, v._tag,v._cond

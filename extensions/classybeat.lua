@@ -60,13 +60,16 @@ local extension = function(_level)
 				nextPulse = 'barely'
 			},
 			['synco'] = {
-				appear = 'syncoPulse',
-				disappear = 'neutral',
-				pulse = 'happy',
-				nextPulse = 'syncoPulseExit',
-				swingLeft = 'W-Left',
-				swingRight = 'W-Right',
-				swingBounce = 'W-Bounce'
+				appear = 'SyncoAppear',
+				disappear = 'SyncoExit',
+				pulse = 'SyncoPulse',
+				nextPulse = 'SyncoIdle'
+			},
+			['syncoX'] = {
+				appear = 'XSyncoAppear',
+				disappear = 'XSyncoExit',
+				pulse = 'XSyncoPulse',
+				nextPulse = 'XSyncoIdle'
 			}
 		}
 
@@ -171,6 +174,7 @@ local extension = function(_level)
 		end
 
 		local function getBeatFromPair(bar, beat)
+			if not bar or not beat then return end -- failsafe
 
 			-- calculate beat from bar, beat pair
 			local crotchets = {}
@@ -779,8 +783,14 @@ local extension = function(_level)
 								if event.syncoBeat > -1 then
 									local cbeat = row._classylist[event.syncoBeat+1]
 
-									setvalue(cbeat, 'currentPattern', beat, patternToExpression.synco)
-									cbeat:playexpression(beat, patternToExpression.synco.appear)
+									if pattern:sub(event.syncoBeat + 1, event.syncoBeat + 1) == 'x' then
+										-- Special case: X-ed synco
+										setvalue(cbeat, 'currentPattern', beat, patternToExpression.syncoX)
+										cbeat:playexpression(beat, patternToExpression.syncoX.appear)
+									else
+										setvalue(cbeat, 'currentPattern', beat, patternToExpression.synco)
+										cbeat:playexpression(beat, patternToExpression.synco.appear)
+									end
 
 								end
 

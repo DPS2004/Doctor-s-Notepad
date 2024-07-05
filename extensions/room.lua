@@ -3,12 +3,17 @@ local extension = function(_level)
 
 		create_enum('textanchor', {'UpperLeft', 'UpperCenter', 'UpperRight', 'MiddleLeft', 'MiddleCenter', 'MiddleRight', 'LowerLeft', 'LowerCenter', 'LowerRight'})
 		create_enum('textmode', {'FadeOut', 'HideAbruptly'})
-		create_enum('theme', {
+		create_enum('themeold', {
 			'None', 'Intimate', 'IntimateSimple', 'InsomniacDay', 'InsomniacNight', 'Matrix', 'NeonMuseum', 'CrossesStraight', 'CrossesFalling', 'CubesFalling', 'CubesFallingNiceBlue',
 			'OrientalTechno', 'Kaleidoscope', 'PoliticiansRally', 'Rooftop', 'RooftopSummer', 'RooftopAutumn', 'BackAlley', 'Sky', 'NightSky', 'HallOfMirrors', 'CoffeeShop',
 			'CoffeeShopNight', 'Garden', 'GardenNight', 'TrainDay', 'TrainNight', 'DesertDay', 'DesertNight', 'HospitalWard', 'HospitalWardNight', 'PaigeOffice', 'Basement',
 			'ColeWardNight', 'ColeWardSunrise', 'BoyWard', 'GirlWard', 'Skyline', 'SkylineBlue', 'FloatingHeart', 'FloatingHeartWithCubes', 'FloatingHeartBroken',
 			'FloatingHeartBrokenWithCubes', 'ZenGarden', 'Space', 'RollerDisco', 'Vaporwave', 'Stadium', 'StadiumStormy', 'AthleteWard', 'AthleteWardNight', 'ProceduralTree'
+		})
+		create_enum('theme', {
+			'None', 'Intimate', 'Insomniac', 'Matrix', 'NeonMuseum', 'Crosses', 'CubesFalling', 'OrientalTechno', 'Kaleidoscope', 'PoliticiansRally', 'Rooftop', 'BackAlley', 'Sky',
+			'HallOfMirrors', 'CoffeeShop', 'Garden', 'Train', 'Desert', 'HospitalWard', 'PaigeOffice', 'Basement', 'ColeWard', 'BoyWard', 'GirlWard', 'Skyline', 'FloatingHeart',
+			'FloatingHeartBroken', 'ZenGarden', 'Space', 'RollerDisco', 'Vaporwave', 'Stadium', 'AthleteWard', 'ProceduralTree'
 		})
 		create_enum('handpos', {'Left', 'Right', 'p1', 'p2', 'Both'})
 		create_enum('roomcontentmode', {'Center', 'ScaleToFill', 'AspectFill', 'AspectFit', 'Tiled'})
@@ -19,6 +24,67 @@ local extension = function(_level)
 		create_enum('textexplosionmode', {'OneColor', 'Random'})
 		create_enum('textexplosiondirection', {'Left', 'Right'})
 		create_enum('stutteraction', {'Add', 'Cancel'})
+		create_enum('maskmode', {'Normal', 'Inverted'})
+
+		local themeData = {
+			Intimate = {
+				-- name not specified, so use theme name in the event
+				variants = create_enum('themeintimatevariants', {'Standard', 'Simple'})
+			},
+			Insomniac = {
+				name = 'InsomniacDay', -- name specified, so use this name in the event
+				variants = create_enum('themeinsomniacvariants', {'Day', 'Night'})
+			},
+			Crosses = {
+				name = 'CrossesStraight',
+				variants = create_enum('themecrossesvariants', {'Straight', 'Falling'})
+			},
+			CubesFalling = {
+				variants = create_enum('themecubesvariants', {'Standard', 'NiceBlue'})
+			},
+			Rooftop = {
+				variants = create_enum('themerooftopvariants', {'Standard', 'Summer', 'Autumn'})
+			},
+			Sky = {
+				variants = create_enum('themeskyvariants', {'Day', 'Night'})
+			},
+			CoffeeShop = {
+				variants = create_enum('themecoffeeshopvariants', {'Day', 'Night'})
+			},
+			Garden = {
+				variants = create_enum('themegardenvariants', {'Day', 'Night'})
+			},
+			Train = {
+				name = 'TrainDay',
+				variants = create_enum('themetrainvariants', {'Day', 'Night'})
+			},
+			Desert = {
+				name = 'DesertDay',
+				variants = create_enum('themedesertvariants', {'Day', 'Night'})
+			},
+			HospitalWard = {
+				variants = create_enum('themehospitalwardvariants', {'Day', 'Night'})
+			},
+			ColeWard = {
+				name = 'ColeWardNight',
+				variants = create_enum('themecolewardvariants', {'Night', 'Sunrise'})
+			},
+			Skyline = {
+				variants = create_enum('themeskylinevariants', {'Pink', 'Blue'})
+			},
+			FloatingHeart = {
+				variants = create_enum('themefloatingheartvariants', {'Standard', 'WithCubes'})
+			},
+			FloatingHeartBroken = {
+				variants = create_enum('themefloatingheartbrokenvariants', {'Standard', 'WithCubes'})
+			},
+			Stadium = {
+				variants = create_enum('themestadiumvariants', {'Sunny', 'Stormy'})
+			},
+			AthleteWard = {
+				variants = create_enum('themeathletewardvariants', {'Day', 'Night'})
+			}
+		}
 		
 		--all of the functions you are adding to the level table go up here
 		
@@ -41,7 +107,7 @@ local extension = function(_level)
 				py = {{beat = 0, state = 50}},
 				angle = {{beat = 0, state = 0}},
 				stretch = {{beat = 0, state = true}},
-				mask = {{beat = 0, state = {''}}},
+				mask = {{beat = 0, state = {type = 'Image', mode = 'Normal'}}},
 				bg = {{beat = 0, state = {''}}},
 				fg = {{beat = 0, state = {''}}},
 				xflip = {{beat = 0, state = false}},
@@ -273,9 +339,14 @@ local extension = function(_level)
 			end
 
 			-- mask
-			function room:mask(beat, filenames, fps)
+			function room:mask(beat, filenames, fps, mode)
+				room:maskimage(beat, mode or 'Normal', filenames, fps)
+			end
+
+			function room:maskimage(beat, mode, filenames, fps)
 				checkvar_type(beat, 'beat', 'number')
-				checkvar_type(fps, 'fps', 'number',true)
+				checkvar_enum(mode, 'mode', enums.maskmode)
+				checkvar_type(fps, 'fps', 'number', true)
 
 				filenames = filenames or ''
 				fps = fps or 30
@@ -284,10 +355,100 @@ local extension = function(_level)
 					filenames = {tostring(filenames)}
 				end
 
-				setvalue(self, 'mask', beat, filenames)
+				setvalue(self, 'mask', beat, {
+					type = 'Image',
+					mode = mode,
+					image = filenames
+				})
 
-				self.level:addevent(beat, "MaskRoom", {image = filenames, fps = fps, y = index, contentMode = 'ScaleToFill'})
+				self.level:addevent(beat, "MaskRoom", {
+					maskType = 'Image',
+					colorFeathering = 0,
+					alphaMode = mode,
+					colorCutoff = 0,
+					sourceRoom = 0,
+					keyColor = 'FFFFFF',
+					image = filenames,
+					fps = fps,
+					y = index,
+					contentMode = 'ScaleToFill'
+				})
+			end
 
+			function room:maskroom(beat, mode, source)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(mode, 'mode', enums.maskmode)
+				checkvar_type(source, 'source', 'number')
+
+				setvalue(self, 'mask', beat, {
+					type = 'Room',
+					mode = mode,
+					source = source
+				})
+
+				self.level:addevent(beat, "MaskRoom", {
+					maskType = 'Room',
+					colorFeathering = 0,
+					alphaMode = mode,
+					colorCutoff = 0,
+					sourceRoom = source,
+					keyColor = 'FFFFFF',
+					image = {''},
+					fps = 0,
+					y = index,
+					contentMode = 'ScaleToFill'
+				})
+			end
+
+			function room:maskcolor(beat, mode, keyColor, colorCutoff, colorFeathering)
+				checkvar_type(beat, 'beat', 'number')
+				checkvar_enum(mode, 'mode', enums.maskmode)
+				checkvar_color(keyColor, 'keyColor')
+				checkvar_type(colorCutoff, 'colorCutoff', 'number', true)
+				checkvar_type(colorFeathering, 'colorFeathering', 'number', true)
+
+				colorFeathering = colorFeathering or 0
+				colorCutoff = colorCutoff or 0
+
+				setvalue(self, 'mask', beat, {
+					type = 'Color',
+					mode = mode,
+					keyColor = keyColor,
+					colorFeathering = colorFeathering,
+					colorCutoff = colorCutoff
+				})
+
+				self.level:addevent(beat, "MaskRoom", {
+					maskType = 'Color',
+					colorFeathering = colorFeathering,
+					alphaMode = mode,
+					colorCutoff = colorCutoff,
+					sourceRoom = 0,
+					keyColor = keyColor,
+					image = {''},
+					fps = 0,
+					y = index,
+					contentMode = 'ScaleToFill'
+				})
+			end
+
+			function room:masknone(beat)
+				setvalue(self, 'mask', beat, {
+					type = 'None'
+				})
+
+				self.level:addevent(beat, "MaskRoom", {
+					maskType = 'None',
+					colorFeathering = 0,
+					alphaMode = 'Normal',
+					colorCutoff = 0,
+					sourceRoom = 0,
+					keyColor = 'FFFFFF',
+					image = {''},
+					fps = 0,
+					y = index,
+					contentMode = 'ScaleToFill'
+				})
 			end
 
 			-- perspective
@@ -383,9 +544,20 @@ local extension = function(_level)
 			end
 
 			-- set theme
-			function room:settheme(beat, theme)
+			function room:settheme(beat, theme, variant)
 				checkvar_type(beat, 'beat', 'number')
+				if inenum(enums.themeold, theme) and not inenum(enums.theme, theme) then
+					error('invalid type exception: ' .. quoteifstring(theme) .. ' is in the old theme format, they have now been merged and use variants instead\n\
+theme must be one of ' .. enums.theme.__stringformat, 2)
+				end
+
 				checkvar_enum(theme, 'theme', enums.theme)
+				if themeData[theme] then
+					checkvar_enum(variant, 'variant', themeData[theme].variants)
+					self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = themeData[theme].name or theme, variant = getenumvalueindex(themeData[theme].variants, variant) - 1})
+					return
+				end
+
 				self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = theme})
 			end
 
@@ -470,7 +642,9 @@ local extension = function(_level)
 					Brightness = {intensity = 100, _onTop = true},
 					Contrast = {intensity = 100, _onTop = true},
 					Saturation = {intensity = 100, _onTop = true},
-					Dots = {intensity = 100, _alias = {'dots', 'dotmatrix'}}
+					Dots = {intensity = 100, _alias = {'dots', 'dotmatrix'}},
+					Diamonds = {intensity = {100, 0}, color = {'FF4545', 1, 'color'}},
+					Tutorial = {intensity = {100, 0}, color = {'FF4545', 1, 'color'}, _alias = {'tutorial', 'tutorialnotes'}}
 				}
 
 				for k,v in pairs(roomPresets) do

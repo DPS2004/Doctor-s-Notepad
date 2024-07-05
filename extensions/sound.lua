@@ -284,6 +284,10 @@ local extension = function(_level)
 		end
 
 		function level:setcountingsound(beat, row, voicesource, enabled, volume)
+			if voicesource == "Custom" then
+				error("The 'Custom' voice source has extra parameters! Use the designated 'setcustomcountingsound' method!", 2)
+			end
+
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(row, 'row', 'number')
 			checkvar_enum(voicesource, 'voicesource', enums.voicesource, true)
@@ -295,10 +299,46 @@ local extension = function(_level)
 			volume = volume or 100
 
 			self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = voicesource, enabled = enabled, volume = volume})
+		end
 
+		function level:setcustomcountingsound(beat, row, sounds, enabled, volume)
+			if not enabled then
+				self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = 'JyiCount', enabled = false, volume = 100})
+				return
+			end
+
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(row, 'row', 'number')
+			checkvar_type(sounds, 'sounds', 'table')
+			checkvar_type(enabled, 'enabled', 'boolean', true)
+			checkvar_type(volume, 'volume', 'number', true)
+
+			if #sounds ~= 7 then
+				error("The array 'sounds' must have exactly 7 elements!", 2)
+			end
+
+			for i = 1, 7 do
+				local sound = sounds[i]
+				local name = 'sounds[' .. i .. ']'
+				checkvar_type(sound, name, 'table')
+				checkvar_type(sound.filename, name .. '.filename', 'string')
+				checkvar_type(sound.volume, name .. '.volume', 'number', true)
+				checkvar_type(sound.pitch, name .. '.pitch', 'number', true)
+				checkvar_type(sound.pan, name .. '.pan', 'number', true)
+
+				sound.volume = sound.volume or 100
+				sound.pitch = sound.pitch or 100
+				sound.pan = sound.pan or 0
+			end
+
+			self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = 'Custom', enabled = enabled, volume = volume, sounds = sounds})
 		end
 
 		function level:setoneshotcountingsound(beat, row, voicesource, enabled, volume, subdivoffset)
+			if voicesource == "Custom" then
+				error("The 'Custom' voice source has extra parameters! Use the designated 'setcustomoneshotcountingsound' method!", 2)
+			end
+
 			checkvar_type(beat, 'beat', 'number')
 			checkvar_type(row, 'row', 'number')
 			checkvar_enum(voicesource, 'voicesource', enum.voicesource_oneshot, true)
@@ -312,6 +352,39 @@ local extension = function(_level)
 			subdivoffset = subdivoffset or 0.5
 
 			self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = voicesource, enabled = enabled, volume = volume, subdivOffset = subdivoffset})
+		end
+
+		function level:setcustomoneshotcountingsound(beat, row, sounds, enabled, volume)
+			if not enabled then
+				self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = 'JyiCount', enabled = false, volume = 100})
+				return
+			end
+
+			checkvar_type(beat, 'beat', 'number')
+			checkvar_type(row, 'row', 'number')
+			checkvar_type(sounds, 'sounds', 'table')
+			checkvar_type(enabled, 'enabled', 'boolean', true)
+			checkvar_type(volume, 'volume', 'number', true)
+
+			if #sounds ~= 10 then
+				error("The array 'sounds' must have exactly 10 elements!", 2)
+			end
+
+			for i = 1, 10 do
+				local sound = sounds[i]
+				local name = 'sounds[' .. i .. ']'
+				checkvar_type(sound, name, 'table')
+				checkvar_type(sound.filename, name .. '.filename', 'string')
+				checkvar_type(sound.volume, name .. '.volume', 'number', true)
+				checkvar_type(sound.pitch, name .. '.pitch', 'number', true)
+				checkvar_type(sound.pan, name .. '.pan', 'number', true)
+
+				sound.volume = sound.volume or 100
+				sound.pitch = sound.pitch or 100
+				sound.pan = sound.pan or 0
+			end
+
+			self:addevent(beat, 'SetCountingSound', {row = row, voiceSource = 'Custom', enabled = enabled, volume = volume, sounds = sounds})
 		end
 		
 		--add event type condensers
