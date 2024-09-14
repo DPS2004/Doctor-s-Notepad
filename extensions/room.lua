@@ -544,21 +544,22 @@ local extension = function(_level)
 			end
 
 			-- set theme
-			function room:settheme(beat, theme, variant)
+			function room:settheme(beat, theme, variant, skipPaintEffects)
 				checkvar_type(beat, 'beat', 'number')
 				if inenum(enums.themeold, theme) and not inenum(enums.theme, theme) then
 					error('invalid type exception: ' .. quoteifstring(theme) .. ' is in the old theme format, they have now been merged and use variants instead\n\
 theme must be one of ' .. enums.theme.__stringformat, 2)
 				end
 
+				checkvar_type(skipPaintEffects, 'skipPaintEffects', 'boolean', true)
 				checkvar_enum(theme, 'theme', enums.theme)
 				if themeData[theme] then
 					checkvar_enum(variant, 'variant', themeData[theme].variants)
-					self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = themeData[theme].name or theme, variant = getenumvalueindex(themeData[theme].variants, variant) - 1})
+					self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = themeData[theme].name or theme, variant = getenumvalueindex(themeData[theme].variants, variant) - 1, skipPaintEffects = skipPaintEffects or false})
 					return
 				end
 
-				self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = theme})
+				self.level:addevent(beat, "SetTheme", {rooms = self.level:roomtable(index), preset = theme, skipPaintEffects = skipPaintEffects or false})
 			end
 
 			-- haha        lmao
