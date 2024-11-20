@@ -213,7 +213,7 @@ local extension = function(_level)
 				if beat == 0 then beat = 0.01 end -- don't allow on the first beat to avoid merging with start events
 
 				setvalue(self, 'room', beat, room)
-				rundecomethod(bars, 'setroom', beat, room)
+				rundecomethod(true, true, bars, 'setroom', beat, room)
 			end
 
 			function bars:setpatientstate(beat, state)
