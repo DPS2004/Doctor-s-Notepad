@@ -96,7 +96,7 @@ function rd.load(filename)
             end
 
             for eventi, event in ipairs(crotchetevents) do
-                if event.bar == bar and event.beat == beat then
+                if event.bar == bar and (event.beat == nil or event.beat == beat) then
                     crotchet = event.crotchetsPerBar
                 end
             end
