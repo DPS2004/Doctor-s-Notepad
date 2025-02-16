@@ -112,6 +112,30 @@ function rd.load(filename)
         return bar, beat + remainder
     end
 	
+	--get beat (0 indexed) from bar-beat pair
+	function level:getbeat(bar, beat)
+		if not bar or not beat then return end -- failsafe
+
+		--bar = bar +1
+		-- calculate beat from bar, beat pair
+		local crotchets = {}
+
+		for eventi, event in ipairs(self.data.events) do
+			if event.type == "SetCrotchetsPerBar" then
+				crotchets[event.bar] = event.crotchetsPerBar
+			end
+		end
+
+		local crochet = 8
+		for i = 1, bar - 1 do
+			if crotchets[i] then crochet = crotchets[i] end
+			beat = beat + crochet
+		end
+
+		return beat - 1
+
+	end
+	
 	-- add an arbitrary event
     function level:addevent(beat, event, params,tag,cond,condduration)
         local newevent = {}
